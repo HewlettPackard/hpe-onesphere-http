@@ -1,0 +1,6427 @@
+#(C) Copyright 2017 Hewlett Packard Enterprise Development LP
+swagger: '2.0'
+info:
+  version: '1.0.0'
+  title: HPE OneSphere REST API's
+  description: REST API's exposed by the HPE OneSphere through swagger-2.0 specification. </BR>For calls requiring authentication use /rest/session to get a token. </BR>Click Authorize and add the token(prefix with "Bearer {yourtoken}">)
+  #TODO Change this url to HPE's terms and condition url
+  termsOfService: http://www.hpe.com/onesphere
+  contact:
+    name: HPE OneSphere API team
+    url: http://www.hpe.com/onesphere
+host: localhost:5556
+basePath: /rest
+schemes:
+  - https
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
+security:
+  - Bearer: []
+consumes:
+  - application/json
+  - application/vnd.hpe+json
+  - application/vnd.hpe.v1+json
+produces:
+  - application/json
+  - application/vnd.hpe.v1+json
+paths:
+
+  /status:
+    get:
+      description: Checks the service is running. *Does not require auth*
+      operationId: ReadStatus
+      responses:
+        '200':
+          description: Status response
+          schema:
+            $ref: '#/definitions/status'
+
+  /connect-app:
+    get:
+      description: Generates connect app s3 url
+      operationId: connect-app
+      parameters:
+        - name: os
+          in: query
+          description: OS type for which compatible connect app URL has to be generated.
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: generated connect-app url
+          schema:
+            type: string
+            format: url
+        '404':
+          description: Not Found.
+          schema:
+            $ref: '#/definitions/error'
+
+  /session:
+    get:
+      description: Gets information for the currently authorized user.
+      operationId: ReadSession
+      parameters:
+        - name: view
+          in: query
+          description: >
+            Return related resources:
+              * `full` - Include the related `user`
+          type: string
+          enum:
+            - full
+      responses:
+        '200':
+          description: Session response
+          schema:
+            $ref: '#/definitions/session'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/error'
+    post:
+      security: []
+      description: Authenticates a local user and generates a token if authenticated. *Does not require auth*
+      operationId: CreateSession
+      parameters:
+        - name: credentials
+          in: body
+          description: UserName and Password
+          required: true
+          schema:
+            $ref: '#/definitions/createSession'
+      responses:
+        '200':
+          description: Returns JWT token, if authenticated.
+          schema:
+            $ref: '#/definitions/session'
+        '400':
+          description: Invalid userName/Password.
+          schema:
+            $ref: '#/definitions/error'
+
+  /session/idp:
+    get:
+      description: Gets the Identity Provider login URL for a userName. **Not implemented**
+      operationId: ReadSessionIdp
+      parameters:
+        - name: userName
+          in: query
+          description: User Name of the User for which login context is needed.
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Returns URL of identity provider, if configured.
+          schema:
+            $ref: '#/definitions/sessionIdp'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/error'
+
+  /account:
+    get:
+      description: Returns the global account information. **Not implemented**
+      operationId: GetAccount
+      parameters:
+        - name: view
+          in: query
+          description: Whether to return related content.
+          type: string
+          enum:
+            - full
+      responses:
+        '200':
+          description: Account response
+          schema:
+            $ref: '#/definitions/account'
+
+  /provider-types:
+    get:
+      description: Returns all provider types.
+      operationId: FindProviderTypes
+      responses:
+        '200':
+          description: List of provider types
+          schema:
+            $ref: '#/definitions/providerTypeList'
+
+  /providers:
+    get:
+      description: Returns all providers. **Requires 'consumer' global role**
+      operationId: FindProviders
+      parameters:
+        - name: query
+          in: query
+          description: Usage providerTypeUri EQ /rest/provider-types/aws masterUri EQ /rest/providers/mastersUri.
+          required: false
+          type: string
+      responses:
+        '200':
+          description: List of providers
+          schema:
+            $ref: '#/definitions/providerList'
+    post:
+      description: Creates a new Master provider or Member provider.
+      operationId: CreateProvider
+      parameters:
+        - name: provider
+          in: body
+          description: Add new provider
+          required: true
+          schema:
+            $ref: '#/definitions/createProvider'
+      responses:
+        '201':
+          description: New provider sucessfully created and enabled.
+          schema:
+            $ref: '#/definitions/provider'
+        '202':
+          description: New provider sucessfully accepted for creation. Creation may not be complete.
+          schema:
+            $ref: '#/definitions/provider'
+        '400':
+          description: Bad Request</BR> Error Codes</BR>InvalidProviderTypeURI Invalid provider type URI</BR>ErrInvalidInitialProviderState Initial provider state can be Enabled or Disabled</BR>NotAMemberAccount An attempt was made to create Member provider with Master AWS Account</BR>ErrProviderIdMandatoryForMemberWhenNotEnabled Id is mandatory for state 'Not Enabled' Member </BR>ErrIncorrectMasterAccount The master account supplied is not the Master Account for this Member account</BR>InvalidSignatureException Invalid Secrey Key</BR>UnrecognizedClientException The Access Key included in the request is invalid</BR>ErrCodeAccessDeniedException This could happen if access has not been set to ListAccount for Master account and to DescribeAccount for Member account</BR>ErrCodeAccountNotFoundException Account not found in AWS</BR>ErrCodeAWSOrganizationsNotInUseException AWS Organization is not in use</BR>ErrCodeTooManyRequestsException AWS detects it is under DOS attack</BR>ErrInvalidCostBucket Invalid S3 cost bucket</BR>ErrInvalidAWSKeys Invalid AWS keys</BR>ErrAccessDeniedForCostBucket Access denied for the cost bucket</BR>ErrInvalidCostBucketRegion Invalid Cost bucket region</BR>ErrCannotOnBoardWithRootCreds Please use credential for a user and not for an account.</BR>ErrInvalidProjectURIKey Check if the provided projectUri is valid.</BR>ErrProjectURIRequiredKey projectUri is required field for AWS Provider type.</BR>ErrProjectURIInUseKey projectUri is already associated with another AWS provider. Only one provider can be associated with a project.
+          schema:
+            $ref: '#/definitions/error'
+
+  /providers/{id}:
+    get:
+      description: Returns a provider based on its id. **Requires 'consumer' global role**
+      operationId: GetProviderById
+      parameters:
+        - name: id
+          in: path
+          description: ID of provider to fetch
+          required: true
+          type: string
+        - name: view
+          in: query
+          description: Whether to return related content.
+          type: string
+          enum:
+            - full
+        - name: discover
+          in: query
+          description: will return child providers from aws.
+          type: boolean
+          enum:
+            - true
+            - false
+      responses:
+        '200':
+          description: Provider found
+          schema:
+            $ref: '#/definitions/provider'
+        '404':
+          description: Not Found.
+          schema:
+            $ref: '#/definitions/error'
+        '400':
+          description: Bad Request</BR> Error Codes</BR>ErrAccessKeyOrSecretKeyCannotBeEmptyKey The aws access key and access previously stored cannot be empty</BR>ErrCodeAccessDeniedException This could happen if discover=true and the right access has not been set</BR>ErrCodeAccountNotFoundException Master Account not found in AWS</BR>ErrCodeAWSOrganizationsNotInUseException AWS Organization is not in use</BR>ErrCodeTooManyRequestsException AWS detects it is under DOS attack</BR>ErrCannotDiscoverChildProvider Only Master paying account is allowed to discover</BR>ErrCanDiscoverOnlyWhenViewIsFull Discover is allowed only when view=full
+          schema:
+            $ref: '#/definitions/error'
+
+    delete:
+      description: Deletes a master provider or a child provider
+      operationId: DeleteProviderById
+      parameters:
+        - name: id
+          in: path
+          description: ID of provider to delete
+          required: true
+          type: string
+      responses:
+        '204':
+          description: Provider deleted
+        '404':
+          description: Not Found.
+        '400':
+          description: Following could be the reason for Bad Request. </BR>ErrCannotDeleteChildProvidersStillExist:If a Master provider is requested to be deleted Child providers mut be deleted first.
+          schema:
+            $ref: '#/definitions/error'
+        '403':
+          description: Forbidden
+        '401':
+          description: Not Authorized.
+
+    patch:
+      description: Updates a provider.
+      operationId: UpdateProvider
+      consumes: ["application/json-patch+json"]
+      parameters:
+        - name: id
+          in: path
+          description: ID of provider to update
+          required: true
+          type: string
+        - name: body
+          in: body
+          description: Update provider
+          required: true
+          schema:
+            $ref: '#/definitions/updateProvider'
+      responses:
+        '200':
+          description: Provider sucessfully updated.
+          schema:
+            $ref: '#/definitions/provider'
+        '400':
+          description: Bad Request</BR> Error Codes</BR>InvalidProviderTypeURI Invalid provider type URI</BR>ErrInvalidInitialProviderState Initial provider state can be Enabled or Disabled</BR>ErrIncorrectMasterAccount The master account supplied is not the Master Account for this Member account</BR>InvalidSignatureException Invalid Secrey Key</BR>UnrecognizedClientException The Access Key included in the request is invalid</BR>ErrCodeAccessDeniedException This could happen if access has not been set to ListAccount for Master account or GetUser for Member Account</BR>ErrCodeAccountNotFoundException Account not found in AWS</BR>ErrCodeTooManyRequestsException AWS detects it is under DOS attack</BR>ErrInvalidCostBucket Invalid S3 cost bucket</BR>ErrInvalidAWSKeys Invalid AWS keys</BR>ErrAccessDeniedForCostBucket Access denied for the cost bucket</BR>ErrInvalidCostBucketRegion Invalid Cost bucket region</BR>ErrCannotOnBoardWithRootCreds Please use credential for a user and not for an account.</BR>ErrProjectCannotBeChangedKey ProjectURI cannot be modified once set
+          schema:
+            $ref: '#/definitions/error'
+
+  /regions:
+    get:
+      description: Returns all regions. **Requires 'consumer' global role**
+      operationId: FindRegions
+      parameters:
+        - name: providerUri
+          in: query
+          description: The provider URI to prune regions by.
+          required: false
+          type: string
+        - name: view
+          in: query
+          description: Whether to return related content.
+          type: string
+          enum:
+            - full
+      responses:
+        '200':
+          description: List of regions
+          schema:
+            $ref: '#/definitions/regionList'
+    post:
+      description: Creates a new region.
+      operationId: CreateRegion
+      parameters:
+        - name: region
+          in: body
+          description: Add new region
+          required: true
+          schema:
+            $ref: '#/definitions/createRegion'
+      responses:
+        '201':
+          description: New region sucessfully created.
+          schema:
+            $ref: '#/definitions/region'
+        '202':
+          description: New region is accepted for creation.
+          schema:
+            $ref: '#/definitions/region'
+        '400':
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/error'
+
+  /regions/{id}:
+    get:
+      description: Returns a region based on its id. **Requires 'consumer' global role**
+      operationId: GetRegionById
+      parameters:
+        - name: id
+          in: path
+          description: ID of region to fetch
+          required: true
+          type: string
+        - name: view
+          in: query
+          description: Whether to return related content.
+          type: string
+          enum:
+            - full
+        - name: discover
+          in: query
+          description: will return child providers from aws.
+          type: boolean
+          enum:
+            - true
+            - false
+      responses:
+        '200':
+          description: Region response
+          schema:
+            $ref: '#/definitions/region'
+        '404':
+          description: Not Found.
+          schema:
+            $ref: '#/definitions/error'
+    patch:
+      description: Patches a region. PATCH only supports provider type(/rest/provider-types/ncs). Allowed fields to PATCH for NCS provider type are (name,location)
+      operationId: PatchRegion
+      consumes: ["application/json-patch+json"]
+      parameters:
+        - name: id
+          in: path
+          description: ID of region to patch
+          required: true
+          type: string
+        - name: body
+          in: body
+          description: Patch region
+          required: true
+          schema:
+            $ref: '#/definitions/patchRegion'
+      responses:
+        '200':
+          description: Region sucessfully patched.
+          schema:
+            $ref: '#/definitions/provider'
+        '400':
+          description: Bad Request</BR> Error Codes</BR>InvalidProviderTypeURI Invalid provider type URI</BR>ErrInvalidPatchData Invalid patch data.
+          schema:
+            $ref: '#/definitions/error'
+    put:
+      description: Updates a region. **Not implemented**
+      operationId: UpdateRegion
+      parameters:
+        - name: id
+          in: path
+          description: ID of region to update
+          required: true
+          type: string
+        - name: region
+          in: body
+          description: Update region
+          required: true
+          schema:
+            $ref: '#/definitions/region'
+      responses:
+        '200':
+          description: Region sucessfully updated.
+          schema:
+            $ref: '#/definitions/region'
+        '400':
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/error'
+    delete:
+      description: Deletes a region
+      operationId: Delete Region
+      parameters:
+        - name: id
+          in: path
+          description: ID of region to delete
+          required: true
+          type: string
+        - name: force
+          in: query
+          description: Region may be in an odd state. Force will attempt to delete again no matter the state.
+          required: false
+          type: boolean
+      responses:
+        '202':
+          description: Region accepted for deletion
+        '400':
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/error'
+
+  /regions/{id}/connection:
+    get:
+      summary: NOT IMPLEMENTED
+      description: Get region connection.
+      operationId: GetRegionConnection
+      parameters:
+        - name: id
+          in: path
+          description: ID of region
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Region connection response
+          schema:
+            $ref: '#/definitions/regionConnection'
+        '404':
+          description: Not Found.
+          schema:
+            $ref: '#/definitions/error'
+
+    post:
+      summary: NOT IMPLEMENTED
+      description: Creates a new region connection
+      operationId: CreateRegionConnection
+      parameters:
+        - name: id
+          in: path
+          description: ID of region
+          required: true
+          type: string
+        - name: regionConnection
+          in: body
+          description: Add new region connection
+          required: true
+          schema:
+            $ref: '#/definitions/createRegionConnection'
+      responses:
+        '201':
+          description: New region connection sucessfully created.
+          schema:
+            $ref: '#/definitions/regionConnection'
+        '400':
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/error'
+        '404':
+          description: Not Found.
+          schema:
+            $ref: '#/definitions/error'
+
+    delete:
+      summary: NOT IMPLEMENTED
+      operationId: DeleteRegionConnection
+      parameters:
+        - name: id
+          in: path
+          description: ID of region
+          required: true
+          type: string
+      responses:
+        '204':
+          description: |
+            Region connection successfully deleted.
+            No response content.
+        '404':
+          description: Not Found.
+          schema:
+            $ref: '#/definitions/error'
+
+  /regions/{id}/connector-image:
+    get:
+      description: Generates connector-image url for the region. **Requires 'administrator' role**
+      operationId: getConnectorImage
+      parameters:
+        - name: id
+          in: path
+          description: ID of region to fetch the connector-image
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: generated connector-image url
+          schema:
+            type: string
+            format: url
+        '404':
+          description: Not Found.
+          schema:
+            $ref: '#/definitions/error'
+
+  /zone-types:
+    get:
+      description: Returns all zone types.
+      operationId: FindZoneTypes
+      responses:
+        '200':
+          description: List of zone types
+          schema:
+            $ref: '#/definitions/zoneTypeList'
+
+  /zone-types/{id}/resource-profiles:
+    get:
+      description: Returns all available resourceProfile for **vcenter zone type**. **Requires 'administrator' role**
+      operationId: FindResourceProfileName
+      parameters:
+        - name: id
+          in: path
+          description: ID of zone-type to fetch
+          required: true
+          type: string
+      responses:
+        '200':
+          description: List of resourceProfile
+          schema:
+            $ref: '#/definitions/resourceProfileList'
+        '404':
+          description: Not Found.
+          schema:
+            $ref: '#/definitions/error'
+        '501':
+          description: Not Implemented.
+          schema:
+            $ref: '#/definitions/error'
+
+  /zones:
+    get:
+      description: Returns all zones.
+      operationId: FindZones
+      parameters:
+        - name: regionUri
+          in: query
+          description: The region URI to prune zones by.
+          required: false
+          type: string
+        - name: userQuery
+          in: query
+          description: Query string to prune zones by.
+          required: false
+          type: string
+        - name: applianceUri
+          in: query
+          description: The appliance URI to prune zones by.
+          required: false
+          type: string
+      responses:
+        '200':
+          description: List of zones
+          schema:
+            $ref: '#/definitions/zoneList'
+    post:
+      description: Creates a new zone
+      operationId: CreateZone
+      parameters:
+        - name: zone
+          in: body
+          description: Add new zone
+          required: true
+          schema:
+            $ref: '#/definitions/createZone'
+      responses:
+        '202':
+          description: New zone is accepted for creation.
+          schema:
+            $ref: '#/definitions/zone'
+          examples:
+            zone: {
+              "id": "2b5a8db7-e145-4ef9-b7f2-9b2d45976cd4",
+              "name": "Zone-VMware-1",
+              "uri": "/rest/zones/2b5a8db7-e145-4ef9-b7f2-9b2d45976cd4",
+              "created": "2017-08-09T22:06:49.064958385+05:30",
+              "modified": "2017-08-09T22:06:49.06495863+05:30",
+              "metrics": [],
+              "rates": [],
+              "providerUri": "/rest/providers/2b5a8db7-e145-4ef9-b7f2-9b2d45976cd1",
+              "regionUri": "/rest/regions/3caa8db7-e145-4ef9-b7f2-9b2d45976cd1",
+              "zoneTypeUri": "/rest/zone-types/vcenter",
+              "state": "Disabled",
+              "status": "OK",
+              "clusters": [ {
+                "id": "domain-c51",
+                "name": "NCSCluster1",
+                "status": "OK",
+                "state": "Enabled",
+                "error": "",
+                "created": "2017-08-09T22:06:49.064958385+05:30",
+                "modified": "2017-08-09T22:06:49.06495863+05:30",
+                "datastores": [ {
+                    "id": "datastore-d1",
+                    "name": "vn-datastore1",
+                    "sizeGiB": "100",
+                    "created": "2017-08-09T22:06:49.064958385+05:30",
+                    "modified": "2017-08-09T22:06:49.06495863+05:30",
+                    "status": "OK",
+                    "state": "Enabled"
+                  },
+                  {
+                    "id": "datastore-d2",
+                    "name": "vn-datastore2",
+                    "sizeGiB": "200",
+                    "created": "2017-08-09T22:06:49.064958385+05:30",
+                    "modified": "2017-08-09T22:06:49.06495863+05:30",
+                    "status": "OK",
+                    "state": "Enabled"
+                  } ]
+              },
+              {
+                "id": "domain-c52",
+                "name": "NCSCluster2",
+                "status": "Disabled",
+                "state": "Disabled",
+                "error": "",
+                "created": "2017-08-09T22:06:49.064958385+05:30",
+                "modified": "2017-08-09T22:06:49.06495863+05:30",
+                "datastores": [ {
+                    "id": "datastore-d3",
+                    "name": "vn-datastore3",
+                    "sizeGiB": "100",
+                    "created": "2017-08-09T22:06:49.064958385+05:30",
+                    "modified": "2017-08-09T22:06:49.06495863+05:30",
+                    "status": "OK",
+                    "state": "Enabled"
+                  },
+                  {
+                    "id": "datastore-d4",
+                    "name": "vn-datastore4",
+                    "sizeGiB": "200",
+                    "created": "2017-08-09T22:06:49.064958385+05:30",
+                    "modified": "2017-08-09T22:06:49.06495863+05:30",
+                    "status": "OK",
+                    "state": "Enabled"
+                  } ]
+              }],
+              "inTransitClusters": [],
+              "managed": false,
+              "esxLcmTask": {
+                "operationState": "",
+                "uuid": "009fc27b-b7f1-11e7-bb3f-0242ac110003",
+                "uri": "/rest/infrastructure-system-tasks/009fc27b-b7f1-11e7-bb3f-0242ac110003",
+                "type": "infrastructure-system-task",
+                "created": "2017-10-23T12:52:18.356685887Z",
+                "modified": "2017-10-23T12:53:18.742575801Z",
+                "name": "HCOE_ISM_INVENTORY_UPDATE",
+                "parentId": "",
+                "childTasks": [
+                    "00ccc1fc-b7f1-11e7-bb3f-0242ac110003"
+                ],
+                "percentComplete": 100,
+                "error": {
+                    "message": "",
+                    "details": "",
+                    "recommendedActions": null,
+                    "nestedErrors": null,
+                    "errorSource": "",
+                    "errorCode": "",
+                    "data": null,
+                    "canForce": false
+                },
+                "description": "Update inventory element",
+                "associatedResourceType": "zone",
+                "associatedResourceInstanceName": "",
+                "associatedResourceInstanceId": "",
+                "associatedResourceInstanceUri": "",
+                "taskType": "",
+                "state": "Completed",
+                "status": "OK",
+                "isPartialSuccess": false,
+                "terminalState": false,
+                "taskFailed": false,
+                "inUse": false,
+                "weight": 1,
+                "eTag": "",
+                "tag": ""
+              },
+            }
+
+        '400':
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/error'
+
+  /zones/{id}:
+    get:
+      description: Returns a zone based on its id.
+      operationId: GetZoneById
+      parameters:
+        - name: id
+          in: path
+          description: ID of zone to fetch
+          required: true
+          type: string
+        - name: view
+          in: query
+          description: Whether to return related content.
+          type: string
+          enum:
+            - full
+      responses:
+        '200':
+          description: Zone response
+          schema:
+            $ref: '#/definitions/zone'
+          examples:
+            zone: {
+              "id": "2b5a8db7-e145-4ef9-b7f2-9b2d45976cd4",
+              "name": "Zone-VMware-1",
+              "uri": "/rest/zones/2b5a8db7-e145-4ef9-b7f2-9b2d45976cd4",
+              "created": "2017-08-09T22:06:49.064958385+05:30",
+              "modified": "2017-08-09T22:06:49.06495863+05:30",
+              "metrics": [],
+              "providerUri": "/rest/providers/2b5a8db7-e145-4ef9-b7f2-9b2d45976cd1",
+              "regionUri": "/rest/regions/3caa8db7-e145-4ef9-b7f2-9b2d45976cd1",
+              "zoneTypeUri": "/rest/zone-types/vcenter",
+              "state": "Disabled",
+              "status": "OK",
+              "clusters": [ {
+                "id": "domain-c51",
+                "name": "NCSCluster1",
+                "status": "OK",
+                "state": "Enabled",
+                "error": "",
+                "created": "2017-08-09T22:06:49.064958385+05:30",
+                "modified": "2017-08-09T22:06:49.06495863+05:30",
+                "datastores": [ {
+                    "id": "datastore-d1",
+                    "name": "vn-datastore1",
+                    "sizeGiB": "100",
+                    "type": "vsan",
+                    "created": "2017-08-09T22:06:49.064958385+05:30",
+                    "modified": "2017-08-09T22:06:49.06495863+05:30",
+                    "status": "OK",
+                    "state": "Enabled"
+                  },
+                  {
+                    "id": "datastore-d2",
+                    "name": "vn-datastore2",
+                    "sizeGiB": "200",
+                    "type": "vsan",
+                    "created": "2017-08-09T22:06:49.064958385+05:30",
+                    "modified": "2017-08-09T22:06:49.06495863+05:30",
+                    "status": "OK",
+                    "state": "Enabled"
+                  } ]
+              },
+              {
+                "id": "domain-c52",
+                "name": "NCSCluster2",
+                "status": "Disabled",
+                "state": "Disabled",
+                "error": "",
+                "created": "2017-08-09T22:06:49.064958385+05:30",
+                "modified": "2017-08-09T22:06:49.06495863+05:30",
+                "datastores": [ {
+                    "id": "datastore-d3",
+                    "name": "vn-datastore3",
+                    "sizeGiB": "100",
+                    "type": "vsan",
+                    "created": "2017-08-09T22:06:49.064958385+05:30",
+                    "modified": "2017-08-09T22:06:49.06495863+05:30",
+                    "status": "OK",
+                    "state": "Enabled"
+                  },
+                  {
+                    "id": "datastore-d4",
+                    "name": "vn-datastore4",
+                    "sizeGiB": "200",
+                    "type": "vsan",
+                    "created": "2017-08-09T22:06:49.064958385+05:30",
+                    "modified": "2017-08-09T22:06:49.06495863+05:30",
+                    "status": "OK",
+                    "state": "Enabled"
+                  } ]
+              }],
+              "inTransitClusters": [],
+              "managed": false,
+              "esxLcmTask": {
+                "operationState": "",
+                "uuid": "009fc27b-b7f1-11e7-bb3f-0242ac110003",
+                "uri": "/rest/infrastructure-system-tasks/009fc27b-b7f1-11e7-bb3f-0242ac110003",
+                "type": "infrastructure-system-task",
+                "created": "2017-10-23T12:52:18.356685887Z",
+                "modified": "2017-10-23T12:53:18.742575801Z",
+                "name": "HCOE_ISM_INVENTORY_UPDATE",
+                "parentId": "",
+                "childTasks": [
+                    "00ccc1fc-b7f1-11e7-bb3f-0242ac110003"
+                ],
+                "percentComplete": 100,
+                "error": {
+                    "message": "",
+                    "details": "",
+                    "recommendedActions": null,
+                    "nestedErrors": null,
+                    "errorSource": "",
+                    "errorCode": "",
+                    "data": null,
+                    "canForce": false
+                },
+                "description": "Update inventory element",
+                "associatedResourceType": "zone",
+                "associatedResourceInstanceName": "",
+                "associatedResourceInstanceId": "",
+                "associatedResourceInstanceUri": "",
+                "taskType": "",
+                "state": "Completed",
+                "status": "OK",
+                "isPartialSuccess": false,
+                "terminalState": false,
+                "taskFailed": false,
+                "inUse": false,
+                "weight": 1,
+                "eTag": "",
+                "tag": ""
+            },
+              "resourceProfile": {
+                "name": "SY480-Gen9-Low-Density"
+                }
+            }
+            zone-full-view: {
+              "id": "2b5a8db7-e145-4ef9-b7f2-9b2d45976cd4",
+              "name": "Zone-VMware-1",
+              "uri": "/rest/zones/2b5a8db7-e145-4ef9-b7f2-9b2d45976cd4",
+              "created": "2017-08-09T22:06:49.064958385+05:30",
+              "modified": "2017-08-09T22:06:49.06495863+05:30",
+              "metrics": [],
+              "providerUri": "/rest/providers/2b5a8db7-e145-4ef9-b7f2-9b2d45976cd1",
+              "provider": {
+                "id": "2b5a8db7-e145-4ef9-b7f2-9b2d45976cd1",
+                "name": "Provider-VMware-1",
+                "uri": "/rest/providers/2b5a8db7-e145-4ef9-b7f2-9b2d45976cd1",
+                "created": "2017-08-09T22:06:49.064958385+05:30",
+                "modified": "2017-08-09T22:06:49.06495863+05:30",
+                "metrics": [],
+                "state": "Disabled",
+                "status": "OK",
+              },
+              "regionUri": "/rest/regions/3caa8db7-e145-4ef9-b7f2-9b2d45976cd1",
+              "region": {
+                "id": "3caa8db7-e145-4ef9-b7f2-9b2d45976cd1",
+                "name": "Region-VMware-1",
+                "uri": "/rest/regions/3caa8db7-e145-4ef9-b7f2-9b2d45976cd1",
+                "providerUri": "/rest/providers/2b5a8db7-e145-4ef9-b7f2-9b2d45976cd1",
+                "created": "2017-08-09T22:06:49.064958385+05:30",
+                "modified": "2017-08-09T22:06:49.06495863+05:30",
+                "metrics": [],
+                "type": "",
+                "status": "OK",
+              },
+              "zoneTypeUri": "/rest/zone-types/vcenter",
+              "zoneType": {
+                "id": "vcenter",
+                "name": "VMware-vcenter-1",
+                "uri": "/rest/zone-types/vcenter",
+                "created": "2017-08-09T22:06:49.064958385+05:30",
+                "modified": "2017-08-09T22:06:49.06495863+05:30",
+              },
+              "state": "Disabled",
+              "status": "OK",
+              "clusters": [ {
+                "id": "domain-c51",
+                "name": "NCSCluster1",
+                "status": "OK",
+                "state": "Enabled",
+                "error": "",
+                "created": "2017-08-09T22:06:49.064958385+05:30",
+                "modified": "2017-08-09T22:06:49.06495863+05:30",
+                "datastores": [ {
+                    "id": "datastore-d1",
+                    "name": "vn-datastore1",
+                    "sizeGiB": "100",
+                    "type": "vsan",
+                    "created": "2017-08-09T22:06:49.064958385+05:30",
+                    "modified": "2017-08-09T22:06:49.06495863+05:30",
+                    "status": "OK",
+                    "state": "Enabled"
+                  },
+                  {
+                    "id": "datastore-d2",
+                    "name": "vn-datastore2",
+                    "sizeGiB": "200",
+                    "type": "vsan",
+                    "created": "2017-08-09T22:06:49.064958385+05:30",
+                    "modified": "2017-08-09T22:06:49.06495863+05:30",
+                    "status": "OK",
+                    "state": "Enabled"
+                  } ]
+              },
+              {
+                "id": "domain-c52",
+                "name": "NCSCluster2",
+                "status": "Disabled",
+                "state": "Disabled",
+                "error": "",
+                "created": "2017-08-09T22:06:49.064958385+05:30",
+                "modified": "2017-08-09T22:06:49.06495863+05:30",
+                "datastores": [ {
+                    "id": "datastore-d3",
+                    "name": "vn-datastore3",
+                    "sizeGiB": "100",
+                    "type": "vsan",
+                    "created": "2017-08-09T22:06:49.064958385+05:30",
+                    "modified": "2017-08-09T22:06:49.06495863+05:30",
+                    "status": "OK",
+                    "state": "Enabled"
+                  },
+                  {
+                    "id": "datastore-d4",
+                    "name": "vn-datastore4",
+                    "sizeGiB": "200",
+                    "type": "vsan",
+                    "created": "2017-08-09T22:06:49.064958385+05:30",
+                    "modified": "2017-08-09T22:06:49.06495863+05:30",
+                    "status": "OK",
+                    "state": "Enabled"
+                  } ]
+              }],
+              "inTransitClusters": [],
+              "managed": true,
+              "esxLcmTask": {
+                "operationState": "",
+                "uuid": "009fc27b-b7f1-11e7-bb3f-0242ac110003",
+                "uri": "/rest/infrastructure-system-tasks/009fc27b-b7f1-11e7-bb3f-0242ac110003",
+                "type": "infrastructure-system-task",
+                "created": "2017-10-23T12:52:18.356685887Z",
+                "modified": "2017-10-23T12:53:18.742575801Z",
+                "name": "HCOE_ISM_INVENTORY_UPDATE",
+                "parentId": "",
+                "childTasks": [
+                    "00ccc1fc-b7f1-11e7-bb3f-0242ac110003"
+                ],
+                "percentComplete": 100,
+                "error": {
+                    "message": "",
+                    "details": "",
+                    "recommendedActions": null,
+                    "nestedErrors": null,
+                    "errorSource": "",
+                    "errorCode": "",
+                    "data": null,
+                    "canForce": false
+                },
+                "description": "Update inventory element",
+                "associatedResourceType": "zone",
+                "associatedResourceInstanceName": "",
+                "associatedResourceInstanceId": "",
+                "associatedResourceInstanceUri": "",
+                "taskType": "",
+                "state": "Completed",
+                "status": "OK",
+                "isPartialSuccess": false,
+                "terminalState": false,
+                "taskFailed": false,
+                "inUse": false,
+                "weight": 1,
+                "eTag": "",
+                "tag": ""
+            },
+              "resourceProfile": {
+                "name": "SY480-Gen9-Low-Density"
+                }
+            }
+
+        '404':
+          description: Not Found.
+          schema:
+            $ref: '#/definitions/error'
+
+    patch:
+      description: Updates a zone
+      operationId: UpdateZone
+      parameters:
+        - name: id
+          in: path
+          description: ID of zone to update
+          required: true
+          type: string
+        - name: zone
+          in: body
+          description: Update zone
+          required: true
+          schema:
+            type: object
+            properties:
+              op:
+                type: string
+                description: >
+                  The operation to take on the specified property.
+                  See: https://tools.ietf.org/html/rfc6902#section-4
+                enum:
+                  - add
+                  - replace
+                  - remove
+              path:
+                type: string
+                description: The path to the property to operate on.
+              value:
+                description: The new value (valid with op=replace)
+                type: object
+
+      responses:
+        '200':
+          description: Zone sucessfully updated.
+          schema:
+            $ref: '#/definitions/zone'
+          examples:
+            zone: {
+              "id": "2b5a8db7-e145-4ef9-b7f2-9b2d45976cd4",
+              "name": "Zone-VMware-1",
+              "uri": "/rest/zones/2b5a8db7-e145-4ef9-b7f2-9b2d45976cd4",
+              "created": "2017-08-09T22:06:49.064958385+05:30",
+              "modified": "2017-08-09T22:06:49.06495863+05:30",
+              "metrics": [],
+              "rates": [],
+              "providerUri": "/rest/providers/2b5a8db7-e145-4ef9-b7f2-9b2d45976cd1",
+              "regionUri": "/rest/regions/3caa8db7-e145-4ef9-b7f2-9b2d45976cd1",
+              "zoneTypeUri": "/rest/zone-types/vcenter",
+              "state": "Enabled",
+              "status": "OK",
+              "clusters": [ {
+                "id": "domain-c51",
+                "name": "NCSCluster1",
+                "status": "OK",
+                "state": "Enabled",
+                "error": "",
+                "created": "2017-08-09T22:06:49.064958385+05:30",
+                "modified": "2017-08-09T22:06:49.06495863+05:30",
+                "datastores": [ {
+                    "id": "datastore-d1",
+                    "name": "vn-datastore1",
+                    "sizeGiB": "100",
+                    "created": "2017-08-09T22:06:49.064958385+05:30",
+                    "modified": "2017-08-09T22:06:49.06495863+05:30",
+                    "status": "OK",
+                    "state": "Enabled"
+                  },
+                  {
+                    "id": "datastore-d2",
+                    "name": "vn-datastore2",
+                    "sizeGiB": "200",
+                    "created": "2017-08-09T22:06:49.064958385+05:30",
+                    "modified": "2017-08-09T22:06:49.06495863+05:30",
+                    "status": "OK",
+                    "state": "Enabled"
+                  } ]
+              },
+              {
+                "id": "domain-c52",
+                "name": "NCSCluster2",
+                "status": "Disabled",
+                "state": "Disabled",
+                "error": "",
+                "created": "2017-08-09T22:06:49.064958385+05:30",
+                "modified": "2017-08-09T22:06:49.06495863+05:30",
+                "datastores": [ {
+                    "id": "datastore-d3",
+                    "name": "vn-datastore3",
+                    "sizeGiB": "100",
+                    "created": "2017-08-09T22:06:49.064958385+05:30",
+                    "modified": "2017-08-09T22:06:49.06495863+05:30",
+                    "status": "OK",
+                    "state": "Enabled"
+                  },
+                  {
+                    "id": "datastore-d4",
+                    "name": "vn-datastore4",
+                    "sizeGiB": "200",
+                    "created": "2017-08-09T22:06:49.064958385+05:30",
+                    "modified": "2017-08-09T22:06:49.06495863+05:30",
+                    "status": "OK",
+                    "state": "Enabled"
+                  } ]
+              }],
+              "inTransitClusters": [],
+              "managed": false,
+              "esxLcmTask": {
+                "operationState": "",
+                "uuid": "009fc27b-b7f1-11e7-bb3f-0242ac110003",
+                "uri": "/rest/infrastructure-system-tasks/009fc27b-b7f1-11e7-bb3f-0242ac110003",
+                "type": "infrastructure-system-task",
+                "created": "2017-10-23T12:52:18.356685887Z",
+                "modified": "2017-10-23T12:53:18.742575801Z",
+                "name": "HCOE_ISM_INVENTORY_UPDATE",
+                "parentId": "",
+                "childTasks": [
+                    "00ccc1fc-b7f1-11e7-bb3f-0242ac110003"
+                ],
+                "percentComplete": 100,
+                "error": {
+                    "message": "",
+                    "details": "",
+                    "recommendedActions": null,
+                    "nestedErrors": null,
+                    "errorSource": "",
+                    "errorCode": "",
+                    "data": null,
+                    "canForce": false
+                },
+                "description": "Update inventory element",
+                "associatedResourceType": "zone",
+                "associatedResourceInstanceName": "",
+                "associatedResourceInstanceId": "",
+                "associatedResourceInstanceUri": "",
+                "taskType": "",
+                "state": "Completed",
+                "status": "OK",
+                "isPartialSuccess": false,
+                "terminalState": false,
+                "taskFailed": false,
+                "inUse": false,
+                "weight": 1,
+                "eTag": "",
+                "tag": ""
+            },
+            }
+
+        '400':
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/error'
+
+    delete:
+      description: Deletes a zone
+      operationId: DeleteZone
+      parameters:
+        - name: id
+          in: path
+          description: ID of zone to delete
+          required: true
+          type: string
+        - name: force
+          in: query
+          description: Zones may be in an odd state. Force will attempt to delete again no matter the state.
+          required: false
+          type: boolean
+      responses:
+        '202':
+          description: Zone accepted for deletion
+        '400':
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/error'
+
+  /zones/{id}/actions:
+    post:
+      description: Peforms an action to the zone. **Requires 'administrator' role**
+      operationId: ActOnZone
+      parameters:
+        - name: id
+          in: path
+          description: ID of zone to act on
+          required: true
+          type: string
+        - name: action
+          in: body
+          description: Action to perform
+          required: true
+          schema:
+            $ref: '#/definitions/zoneAction'
+      responses:
+        '202':
+          description: Zone action sucessfully initiated. No content.
+        '400':
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/error'
+
+  /zones/{id}/appliance-image:
+    get:
+      description: Generates appliance-image url for the zone
+      operationId: appliance-image
+      parameters:
+        - name: id
+          in: path
+          description: ID of zone to fetch the appliance-image
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: generated appliance-image url
+          schema:
+            type: string
+            format: url
+        '404':
+          description: Not Found.
+          schema:
+            $ref: '#/definitions/error'
+
+  /zones/{id}/connections:
+    get:
+      description: Gets the list of connection for the zone. **Requires 'administrator' role**
+      operationId: zoneConnectionInstances
+      parameters:
+        - name: id
+          in: path
+          description: ID of zone to fetch the list of connection for the zone
+          required: true
+          type: string
+        - name: uuid
+          in: query
+          description: Type to filter connection by.
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Gets the list of connection for the zone
+          schema:
+            $ref: '#/definitions/zoneConnectionList'
+        '404':
+          description: Not Found.
+          schema:
+            $ref: '#/definitions/error'
+
+    post:
+      description: Peforms an action to the zone. **Requires 'administrator' role**
+      operationId: RegisterZoneConnection
+      parameters:
+        - name: id
+          in: path
+          description: ID of zone to act on
+          required: true
+          type: string
+        - name: zoneConnection
+          in: body
+          description: Create a new connection instance for the zone
+          required: true
+          schema:
+            $ref: '#/definitions/createZoneConnection'
+      responses:
+        '202':
+          description: New zoneConnectioninstance successfully created
+          schema:
+            $ref: '#/definitions/zoneConnection'
+        '400':
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/error'
+
+  /zones/{id}/connections/{uuid}:
+    delete:
+      description: Deletes a connection instance of the zone
+      operationId: UnregisterZoneConnection
+      parameters:
+        - name: id
+          in: path
+          description: ID of zone
+          required: true
+          type: string
+        - name: uuid
+          in: path
+          description: ID of connection
+          required: true
+          type: string
+      responses:
+        '202':
+          description: connection of the zone accepted for deletion
+        '400':
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/error'
+    patch:
+      description: Updates a connection of the zone.
+      operationId: UpdateZoneConnection
+      parameters:
+        - name: id
+          in: path
+          description: ID of zone
+          required: true
+          type: string
+        - name: uuid
+          in: path
+          description: ID of connection
+          required: true
+          type: string
+        - name: zoneConnection
+          in: body
+          description: Update connection
+          required: true
+          schema:
+            type: object
+            properties:
+              op:
+                type: string
+                description: >
+                  The operation to take on the specified property.
+                  See: https://tools.ietf.org/html/rfc6902#section-4
+                enum:
+                  - add
+                  - replace
+                  - remove
+              path:
+                type: string
+                description: The path to the property to operate on.
+              value:
+                description: The new value (valid with op=replace)
+                type: object
+      responses:
+        '200':
+          description: vCenter Gateway sucessfully updated for the zone.
+          schema:
+            $ref: '#/definitions/zoneConnection'
+        '400':
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/error'
+
+  /catalog-types:
+    get:
+      description: Returns all catalog types.
+      operationId: FindCatalogTypes
+      responses:
+        '200':
+          description: List of catalog types
+          schema:
+            $ref: '#/definitions/catalogTypeList'
+
+  /catalogs:
+    get:
+      description: Returns all catalogs. **Requires 'consumer' global role**
+      operationId: FindCatalogs
+      parameters:
+        - name: userQuery
+          in: query
+          description: Query string to prune catalogs by.
+          required: false
+          type: string
+        - name: view
+          in: query
+          description: >
+            Return related resources:
+              * `full` - Whether to return related content.
+          type: string
+          enum:
+            - full
+      responses:
+        '200':
+          description: List of catalogs
+          schema:
+            $ref: '#/definitions/catalogList'
+    post:
+      description: Creates a new catalog.
+      operationId: CreateCatalog
+      parameters:
+        - name: catalog
+          in: body
+          description: Add new catalog
+          required: true
+          schema:
+            $ref: '#/definitions/createCatalog'
+      responses:
+        '201':
+          description: New catalog sucessfully created.
+          schema:
+            $ref: '#/definitions/catalog'
+        '400':
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/error'
+          examples:
+            id: "vsphere"
+            name: "VMware Templates"
+            uri: "/rest/catalogs/vsphere"
+            serviceTypeUri: "/rest/service-types/vm"
+            url: ""
+            status: ""
+            created: "2017-07-31T09:26:54Z"
+            modified: "2017-07-31T09:27:01Z"
+
+  /catalogs/{id}:
+    get:
+      description: Returns a catalog based on its id. **Requires 'consumer' global role**
+      operationId: GetCatalogById
+      parameters:
+        - name: id
+          in: path
+          description: ID of catalog to fetch
+          required: true
+          type: string
+        - name: view
+          in: query
+          description: >
+            Return related resources:
+              * `full` - Whether to return related content.
+          type: string
+          enum:
+            - full
+      responses:
+        '200':
+          description: Catalog response
+          schema:
+            $ref: '#/definitions/catalog'
+        '404':
+          description: Not Found.
+          schema:
+            $ref: '#/definitions/error'
+    patch:
+      description: Updates a catalog.
+      operationId: UpdateCatalog
+      parameters:
+        - name: id
+          in: path
+          description: ID of catalog to update
+          required: true
+          type: string
+        - name: catalog
+          in: body
+          description: Update catalog
+          required: true
+          schema:
+            $ref: '#/definitions/updateCatalog'
+      responses:
+        '200':
+          description: Catalog sucessfully updated.
+          schema:
+            $ref: '#/definitions/catalog'
+        '400':
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/error'
+    delete:
+      description: Delete a catalog and associated resources. **Not implemented**
+      operationId: DeleteCatalog
+      parameters:
+        - name: id
+          in: path
+          description: ID of catalog to delete
+          required: true
+          type: string
+      responses:
+        '204':
+          description: Catalog deleted; no content
+          examples:
+            'DELETE /rest/catalogs/c86f18f1-a611-470e-8a11-1645b70b63c8':
+              no content
+        '404':
+          description: No matching catalog found
+          schema:
+            $ref: '#/definitions/error'
+
+  /service-types:
+    get:
+      description: Returns all service types. **Requires 'consumer' global role**
+      operationId: FindServiceTypes
+      responses:
+        '200':
+          description: List of service types
+          schema:
+            $ref: '#/definitions/serviceTypeList'
+
+  /service-types/{id}:
+    get:
+      description: Return a service type based on its id. **Requires 'consumer' global role**
+      operationId: GetServiceTypeById
+      parameters:
+        - name: id
+          in: path
+          description: ID of service type to fetch
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Service type response
+          schema:
+            $ref: '#/definitions/serviceType'
+        '404':
+          description: Not Found.
+          schema:
+            $ref: '#/definitions/error'
+
+  /services:
+    get:
+      description: Returns all services. **Requires 'consumer' global role**
+      operationId: FindServices
+      parameters:
+        - name: query
+          in: query
+          description: URI query string to prune services by.
+          required: false
+          type: string
+        - name: userQuery
+          in: query
+          description: Userquery string to prune services by service name, version or description
+          required: false
+          type: string
+        - name: serviceTypeUri
+          in: query
+          description: Type to filter services by.
+          required: false
+          type: string
+        - name: zoneUri
+          in: query
+          description: Zone to filter services by.
+          required: false
+          type: string
+        - name: projectUri
+          in: query
+          description: Project to filter services by.
+          required: false
+          type: string
+        - name: catalogUri
+          in: query
+          description: catalog to filter services by.
+          required: false
+          type: string
+        - name: view
+          in: query
+          description: >
+            Return related resources:
+              * `full` - Include all the details of the services
+          required: false
+          type: string
+          enum: [full]
+      responses:
+        '200':
+          description: List of services
+          schema:
+            $ref: '#/definitions/serviceList'
+          examples:
+            'Filter services based on zoneUri':
+              '/rest/services?query=zoneUri+EQ+/rest/zones/v3d6e308-4b99-4b96-9b2c-835de6a5987c'
+            'Filter services based on projectUri':
+              '/rest/services?query=projectUri+EQ+/rest/projectUri/930381ba921b47c39960371d4145e0d2'
+            'Filter services based on serviceTypeUri':
+              '/rest/services?query=serviceTypeUri+EQ+/rest/service-types/vm'
+            'Filter services based on catalogUri':
+              '/rest/services?query=catalogUri+EQ+/rest/catalogs/kvm'
+            'Filter services based on userQuery':
+              '/rest/services?userQuery=<name|version|description>'
+            '/rest/services?userQuery=adminer':
+              id: "8bbc7abe-2ae1-a366-a4dd-f065618063a6"
+              name: "adminer"
+              description: "Database management in a single PHP file"
+              zoneUri: "/rest/zones/f0e474ba-f73d-405a-b158-31c210472eaa"
+              regionUri: "/rest/regions/f326e308-4b99-4b96-9b2c-835de6a5987c"
+              serviceTypeUri: "/rest/service-types/vm"
+              uri: "/rest/services/8bbc7abe-2ae1-a366-a4dd-f065618063a6"
+              icon: ""
+              catalogUri: "/rest/catalogs/aws"
+              versions: []
+              sizeMB: 334
+              created: "2017-07-31T09:26:54Z"
+              modified: "2017-07-31T09:27:01Z"
+            '/rest/services?userQuery=latest':
+              id: "8bbc7abe-2ae1-a366-a4dd-f065618063a6"
+              name: "adminer"
+              description: "Database management in a single PHP file"
+              zoneUri: "/rest/zones/f0e474ba-f73d-405a-b158-31c210472eaa"
+              regionUri: "/rest/regions/f326e308-4b99-4b96-9b2c-835de6a5987c"
+              serviceTypeUri: "/rest/service-types/vm"
+              uri: "/rest/services/8bbc7abe-2ae1-a366-a4dd-f065618063a6"
+              icon: ""
+              catalogUri: "/rest/catalogs/aws"
+              versions:
+              - "latest"
+              sizeMB: 334
+              created: "2017-07-31T09:26:54Z"
+              modified: "2017-07-31T09:27:01Z"
+            '/rest/services?userQuery=Database management in single PHP file':
+              id: "8bbc7abe-2ae1-a366-a4dd-f065618063a6"
+              name: "adminer"
+              description: "Database management in a single PHP file"
+              zoneUri: "/rest/zones/f0e474ba-f73d-405a-b158-31c210472eaa"
+              regionUri: "/rest/regions/f326e308-4b99-4b96-9b2c-835de6a5987c"
+              serviceTypeUri: "/rest/service-types/vm"
+              uri: "/rest/services/8bbc7abe-2ae1-a366-a4dd-f065618063a6"
+              icon: ""
+              catalogUri: "/rest/catalogs/aws"
+              versions:
+              - "latest"
+              sizeMB: 334
+              created: "2017-07-31T09:26:54Z"
+              modified: "2017-07-31T09:27:01Z"
+            '/rest/services?view=full':
+              id: "8dd410cc-4094-462a-813b-2a2bfd350d95"
+              name: "Ubuntu_cloud_init"
+              description: "ubuntu with cloud init"
+              regionUri: "/rest/regions/v3d6e308-4b99-4b96-9b2c-835de6a5987c"
+              zoneUri: "/rest/zones/f0e474ba-f73d-405a-b158-31c210472eaa"
+              zone:
+                  id: "f0e474ba-f73d-405a-b158-31c210472eaa"
+                  name: "vmware"
+                  uri: "/rest/zones/f0e474ba-f73d-405a-b158-31c210472eaa"
+              serviceTypeUri: "/rest/service-types/vm"
+              serviceType:
+                    id: "vm"
+                    name: "Virtual Machine"
+                    uri: "/rest/service-types/vm"
+              uri: "/rest/services/8dd410cc-4094-462a-813b-2a2bfd350d95"
+              icon: ""
+              catalogUri: "/rest/catalogs/vsphere"
+              catalog:
+                  name: "VMware Templates"
+                  uri: "/rest/catalogs/vsphere"
+              versions: []
+              sizeMB: 428
+              diskFormat: "vmdk"
+              created: "2017-08-17T07:05:10Z"
+              modified: "2017-08-30T08:56:47Z"
+
+  /services/{id}:
+    get:
+      description: Returns a service based on its id. **Requires 'consumer' global role**
+      operationId: GetServiceById
+      parameters:
+        - name: id
+          in: path
+          description: ID of service to fetch
+          required: true
+          type: string
+        - name: view
+          in: query
+          description: >
+            Return related resources:
+              * `full` - Include all the details of the services
+              * `deployment` - Return the zones to which the service can be deployed
+          required: false
+          type: string
+          enum: [full, deployment]
+      responses:
+        '200':
+          description: Service response
+          schema:
+            $ref: '#/definitions/service'
+          examples:
+            '/rest/services/8bbc7abe-2ae1-a366-a4dd-f065618063a6':
+              id: "8bbc7abe-2ae1-a366-a4dd-f065618063a6"
+              name: "centos-6.6-cloudinit.qcow2"
+              description: "Discovered from file /var/opt/pf9/imagelibrary/data/centos-6.6-cloudinit.qcow2"
+              regionUri: "/rest/regions/f326e308-4b99-4b96-9b2c-835de6a5987c"
+              serviceTypeUri: "/rest/service-types/vm"
+              uri: "/rest/services/8bbc7abe-2ae1-a366-a4dd-f065618063a6"
+              icon: ""
+              catalogUri: "/rest/catalogs/kvm"
+              versions: []
+              sizeMB: 334
+              created: "2017-07-31T09:26:54Z"
+              modified: "2017-07-31T09:27:01Z"
+            '/rest/services/8dd410cc-4094-462a-813b-2a2bfd350d95?view=deployment':
+              id: "8dd410cc-4094-462a-813b-2a2bfd350d95"
+              name: "Ubuntu_cloud_init"
+              description: "ubuntu with cloud init"
+              regionUri: "/rest/regions/v3d6e308-4b99-4b96-9b2c-835de6a5987c"
+              zoneUri: "/rest/zones/f0e474ba-f73d-405a-b158-31c210472eaa"
+              deployment:
+                  zones:
+                    id: "f0e474ba-f73d-405a-b158-31c210472eaa"
+                    name: "vmware"
+                    uri: "/rest/zones/f0e474ba-f73d-405a-b158-31c210472eaa"
+                    metrics: null
+                    regionUri: "/rest/regions/9a8e7603-3a5e-4e96-968f-95707d05ef21"
+                    zoneTypeUri: "/rest/zone-types/vcenter"
+                    providerUri: "/rest/providers/new"
+                    osRegionName: "vmware"
+                    p9RegionManagerTaskID: "-1"
+                    status: "Ok"
+                    state: "Enabled"
+                    created: "0001-01-01T00:00:00Z"
+                    modified: "0001-01-01T00:00:00Z"
+              serviceTypeUri: "/rest/service-types/vm"
+              uri: "/rest/services/8dd410cc-4094-462a-813b-2a2bfd350d95"
+              icon: ""
+              catalogUri: "/rest/catalogs/vsphere"
+              versions: []
+              sizeMB: 428
+              diskFormat: "vmdk"
+              created: "2017-08-17T07:05:10Z"
+              modified: "2017-08-30T09:06:50Z"
+            '/rest/services/8dd410cc-4094-462a-813b-2a2bfd350d95?view=full':
+              id: "8dd410cc-4094-462a-813b-2a2bfd350d95"
+              name: "Ubuntu_cloud_init"
+              description: "ubuntu with cloud init"
+              regionUri: "/rest/regions/v3d6e308-4b99-4b96-9b2c-835de6a5987c"
+              zoneUri: "/rest/zones/f0e474ba-f73d-405a-b158-31c210472eaa"
+              zone:
+                      id: "f0e474ba-f73d-405a-b158-31c210472eaa"
+                      name: "vmware"
+                      uri: "/rest/zones/f0e474ba-f73d-405a-b158-31c210472eaa"
+              serviceTypeUri: "/rest/service-types/vm"
+              serviceType:
+                      id: "vm"
+                      name: "Virtual Machine"
+                      uri: "/rest/service-types/vm"
+              uri: "/rest/services/8dd410cc-4094-462a-813b-2a2bfd350d95"
+              icon: ""
+              catalogUri: "/rest/catalogs/vsphere"
+              catalog:
+                  id: "vsphere"
+                  name: "VMware Templates"
+                  uri: "/rest/catalogs/vsphere"
+              versions: []
+              sizeMB: 428
+              diskFormat: "vmdk"
+              created: "2017-08-17T07:05:10Z"
+              modified: "2017-08-30T09:06:50Z"
+        '404':
+          description: Not Found.
+          schema:
+            $ref: '#/definitions/error'
+
+  /virtual-machine-profiles:
+    get:
+      description: Returns all virtual machine profiles. **Requires 'consumer' global role**
+      operationId: FindVirtualMachineProfiles
+      parameters:
+        - name: userQuery
+          in: query
+          description: Query string to prune virtual machine profiles by.
+          required: false
+          type: string
+        - name: zoneUri
+          in: query
+          description: Zone to filter virtual machine profiles by.
+          required: false
+          type: string
+        - name: serviceUri
+          in: query
+          description: service to filter virtual machine profiles by.
+          required: false
+          type: string
+      responses:
+        '200':
+          description: List of virtual machine profiles
+          schema:
+            $ref: '#/definitions/virtualMachineProfileList'
+          examples:
+            'Filter virtual machine profiles based on serviceUri':
+              '/rest/virtual-machine-profiles?query=serviceUri+EQ+/rest/services/2F8bbc7abe-2ae1-a366-a4dd-f065618063a6'
+            'Filter virtual machine profiles based on zoneUri':
+              '/rest/virtual-machine-profiles?query=zoneUri+EQ+/rest/zones/b1d0b94b-b3e2-459f-95ed-a1b4d4645338'
+            'Filter virtual machine profiles based on serviceUri of service type zone and regionUri, Needed by serviceType of zone':
+              '/rest/virtual-machine-profiles?query=serviceUri+EQ+/rest/services/8103ddca-a81a-11e7-ba96-0242ac11000b+AND+regionUri+EQ+/rest/regions/51d443fc-f2b5-4964-bd28-17bf223f2b9b'
+            'Sample Output':
+              id: "0d01e5ce-c948-415e-b7a0-123320875838"
+              name: "t2.small"
+              description: "t2.small"
+              regionUri: "/rest/regions/0781e5ce-c948-415e-b7a0-123320875567"
+              zoneUri: "/rest/zones/b1d0b94b-b3e2-459f-95ed-a1b4d4645338"
+              uri: "/rest/virtual-machine-profiles/0d01e5ce-c948-415e-b7a0-123320875838"
+              memorySizeGB: 2
+              cpuCount: 1
+              diskSizeGB: 0
+              created: "2017-08-23T14:03:50Z"
+              modified: "2017-08-23T14:03:50Z"
+  /virtual-machine-profiles/{id}:
+    get:
+      description: Returns a virtual machine profile based on its id. **Requires 'consumer' global role**
+      operationId: GetVirtualMachineProfileById
+      parameters:
+        - name: id
+          in: path
+          description: ID of virtual machine profile to fetch
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Virtual machine profile response
+          schema:
+            $ref: '#/definitions/virtualMachineProfile'
+        '404':
+          description: Not Found.
+          schema:
+            $ref: '#/definitions/error'
+
+  /networks:
+    get:
+      description: Returns all networks visible to the user. **Requires 'consumer' global and/or project roles**
+      operationId: FindNetworks
+      parameters:
+        - name: userQuery
+          in: query
+          description: Query string to prune networks by.
+          required: false
+          type: string
+        - name: zoneUri
+          in: query
+          description: Zone to filter networks by.
+          required: false
+          type: string
+      responses:
+        '200':
+          description: List of networks
+          schema:
+            $ref: '#/definitions/networkList'
+
+  /networks/{id}:
+    get:
+      description: Returns a network based on its id. **Requires 'consumer' global role and/or project roles**
+      operationId: GetNetworkById
+      parameters:
+        - name: id
+          in: path
+          description: ID of network to fetch
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Network response
+          schema:
+            $ref: '#/definitions/network'
+        '404':
+          description: Not Found.
+          schema:
+            $ref: '#/definitions/error'
+
+    patch:
+      description: Updates a network
+      operationId: ModifyNetwork
+      parameters:
+        - name: id
+          in: path
+          description: ID of the network to update
+          required: true
+          type: string
+        - name: network
+          in: body
+          description: Update network
+          required: true
+          schema:
+            $ref: '#/definitions/updateNetwork'
+      responses:
+        '200':
+          description: Network sucessfully updated.
+          schema:
+            $ref: '#/definitions/network'
+        '400':
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/error'
+
+  /projects:
+    get:
+      description: Returns all projects. **Requires 'consumer' global role**
+      operationId: FindProjects
+      parameters:
+        - name: userQuery
+          in: query
+          description: >
+            Query string to prune projects by. Any projects whose 'name' contains the userQuery will match.
+          required: false
+          type: string
+        - name: view
+          in: query
+          description: >
+            Return related resources:
+              * `full` - Any deployments in the project; any tags referred to by tagUris (**not implemented**)
+          type: string
+          enum: [full]
+      responses:
+        '200':
+          description: List of projects
+          schema:
+            $ref: '#/definitions/projectList'
+    post:
+      description: Creates a new project. **Requires 'consumer' global role**
+      operationId: CreateProject
+      parameters:
+        - name: project
+          in: body
+          description: Add new project
+          required: true
+          schema:
+            $ref: '#/definitions/createProject'
+      responses:
+        '201':
+          description: New project sucessfully created.
+          schema:
+            $ref: '#/definitions/project'
+        '400':
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/error'
+
+  /projects/{id}:
+    get:
+      description: Returns a project based on its id. **Requires 'consumer' role on project**
+      operationId: GetProjectById
+      parameters:
+        - name: id
+          in: path
+          description: ID of project to fetch
+          required: true
+          type: string
+        - name: view
+          in: query
+          description: >
+            Return related resources:
+              * `full` - Any deployments in the project; any tags referred to by tagUris (**not implemented**)
+          type: string
+          enum: [full]
+      responses:
+        '200':
+          description: Project response
+          schema:
+            $ref: '#/definitions/project'
+        '404':
+          description: Not Found.
+          schema:
+            $ref: '#/definitions/error'
+    patch:
+      description: Updates a project. **Requires 'administrator' global role or 'administrator' role on project**
+      operationId: UpdateProject
+      parameters:
+        - name: id
+          in: path
+          description: ID of project to update
+          required: true
+          type: string
+        - name: project
+          in: body
+          description: Update project
+          required: true
+          schema:
+            $ref: '#/definitions/updateProject'
+      responses:
+        '200':
+          description: Project sucessfully updated.
+          schema:
+            $ref: '#/definitions/project'
+        '400':
+          description: Bad Request</BR> Error Codes</BR>ErrProviderInUseKey Project cannot be deleted. It is associated with a provider.
+          schema:
+            $ref: '#/definitions/error'
+    delete:
+      description: >
+        Deletes a project. If resources (currently Deployments) exist within the project
+        they must first be deleted. In this case, the response will be a 409 Conflict with
+        the body listing the first ten offending items.
+        **Requires 'admin' global role or 'owner' project role (not implemented)**
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '204':
+          description: Project deleted; no response content
+        '403':
+          description: Forbidden; not allowed to delete the project.
+          schema:
+           $ref: '#/definitions/error'
+        '404':
+          description: Not Found.
+          schema:
+            $ref: '#/definitions/error'
+        '409':
+          description: Conflict; resources still exist belonging to the projects
+          schema:
+            $ref: '#/definitions/error'
+
+  /deployments:
+    get:
+      description: Returns all deployments. **Requires 'consumer' role on project**
+      operationId: FindDeployments
+      parameters:
+        - name: query
+          in: query
+          description: URI query string to prune deployments by.
+          required: true
+          type: string
+        - name: userQuery
+          in: query
+          type: string
+          description: Userquery string to prune deployments by deployment name.
+        - name: view
+          in: query
+          description: >
+            Return related resources:
+              * `full` - include zone, service, volume details.
+          type: string
+          enum:
+            - full
+      responses:
+        '200':
+          description: List of deployments
+          schema:
+            $ref: '#/definitions/deploymentList'
+          examples:
+            'Filter deployments by workSpaceUri':
+              '/rest/deployments?query=workSpaceUri+EQ+/rest/projects/930381ba921b47c39960371d4145e0d2'
+            'Filter deployments by regionUri':
+              '/rest/deployments?query=regionUri+EQ+/rest/regions/v3d6e308-4b99-4b96-9b2c-835de6a5987c'
+            'Filter deployments by deployment name':
+              '/rest/deployments?userQuery=test-instance'
+            '/rest/deployments':
+              id: "c86f18f1-a611-470e-8a11-1645b70b63c7"
+              name: "test-instance"
+              regionUri: "/rest/regions/v3d6e308-4b99-4b96-9b2c-835de6a5987c"
+              serviceUri: "/rest/services/8bbc7abe-2ae1-a366-a4dd-f065618063a6"
+              zoneUri: "/rest/zones/c2b6e308-4b99-4b96-9b2c-835de6a56a8c"
+              created: "2017-08-07T09:15:10Z"
+              modified: "2017-08-07T09:20:48Z"
+              status: "Ok"
+              memorySizeGB: 2
+              cpuCount: 1
+              cpuGhz: 1
+              diskSizeGB: 20
+              uri: "/rest/deployments/c86f18f1-a611-470e-8a11-1645b70b63c7"
+              projectUri: "/rest/projects/930381ba921b47c39960371d4145e0d2"
+              virtualMachineProfileUri: "/rest/virtual-machine-profiles/a464ecd0-d16d-447d-af41-ff7437df2a09"
+              endpoints: [
+                  "10.10.0.8"
+              ]
+              hasConsole: true
+    post:
+      description: Creates a new deployment. **Requires 'consumer' role on project**
+      operationId: CreateDeployment
+      parameters:
+        - name: deployment
+          in: body
+          description: Add new deployment. If regionUri is specified and zoneUri is not specified, the zone that is configured as default will be used. If default zone is not configured then the first valid zone will be used to create the deployment.
+          required: true
+          schema:
+            $ref: '#/definitions/createDeployment'
+      responses:
+        '201':
+          description: New deployment sucessfully created.
+          schema:
+            $ref: '#/definitions/deployment'
+          examples:
+            '/rest/deployments':
+              'Request Body':
+                name: "test-deployment"
+                virtualMachineProfileUri: "/rest/virtual-machine-profiles/3"
+                networks: [
+                  networkUri: "/rest/networks/70c154ff-1707-4f73-a6fd-f370e5293a3c"
+                ]
+                regionUri: "/rest/regions/v3d6e308-4b99-4b96-9b2c-835de6a5987c"
+                projectUri: "/rest/projects/930381ba921b47c39960371d4145e0d2"
+                zoneUri: "/rest/zones/c2b6e308-4b99-4b96-9b2c-835de6a56a8c"
+                serviceUri: "/rest/services/8bbc7abe-2ae1-a366-a4dd-f065618063a6"
+                publicKey: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC+paa2aBHEFO3s9vKKR
+                            +LVISrTWH0bqAYXmAwzOutEVwHSEhZwYIXe8V70XVa2y90J34iq52PCl3njRp31vcgLFDi
+                            JxfmMLfGNW1laRlM7McH3Tj4rVslbKsbr62KrngnZJ2wUkSk3GvtDaoLE3hzZEXywfvpZravVo8k
+                            FBRpDRluVBmtrK5MFzaxsztNc3okXGiCxcyOhmCrPRRe5hcnknnipw/FTYzPL4z/Zs0I3XF8kgfap
+                            G0Iom72xWUJKK4fQuYpS14t145ls3ouzI5b3FQmZ+JIbHg/MWUbiZFlDCKHBBCrNbdjRQe4XHMumh
+                            tOfUypOe1WGNK/oZ0Xyqqnj ubuntu@ubuntu"
+                ports: [22,25]
+              'Response Body':
+                id: "2537bea1-7fb3-4997-a0c1-22ef0a3202d2"
+                name: "test-deployment"
+                regionUri: "/rest/regions/v3d6e308-4b99-4b96-9b2c-835de6a5987c"
+                zoneUri: "/rest/zones/c2b6e308-4b99-4b96-9b2c-835de6a56a8c"
+                created: ""
+                modified: ""
+                status: "Unknown"
+                uri: "/rest/deployments/2537bea1-7fb3-4997-a0c1-22ef0a3202d2"
+                projectUri: "/rest/projects/930381ba921b47c39960371d4145e0d2"
+                hasConsole: false
+            Note: "Only RSA key is supported for public key"
+        '400':
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/error'
+
+  /deployments/{id}:
+    get:
+      description: Returns a deployment based on its id. **Requires 'consumer' role on project**
+      operationId: GetDeploymentById
+      parameters:
+        - name: id
+          in: path
+          description: ID of deployment to fetch
+          required: true
+          type: string
+        - name: view
+          in: query
+          description: >
+            Return related resources:
+              * `full` - include region, zone, service, virtual machine profile,  firewall, volume details.
+          type: string
+          enum:
+            - full
+      responses:
+
+        '200':
+          description: Deployment response
+          schema:
+            $ref: '#/definitions/deployment'
+          examples:
+            '/rest/deployments/c86f18f1-a611-470e-8a11-1645b70b63c7':
+              id: "c86f18f1-a611-470e-8a11-1645b70b63c7"
+              name: "test-instance"
+              regionUri: "/rest/regions/v3d6e308-4b99-4b96-9b2c-835de6a5987c"
+              zoneUri: "/rest/zones/c2b6e308-4b99-4b96-9b2c-835de6a56a8c"
+              serviceUri: "/rest/services/8bbc7abe-2ae1-a366-a4dd-f065618063a6"
+              created: "2017-08-07T09:15:10Z"
+              modified: "2017-08-07T09:20:48Z"
+              status: "Ok"
+              memorySizeGB: 2
+              cpuCount: 1
+              cpuGhz: 1
+              diskSizeGB: 20
+              uri: "/rest/deployments/c86f18f1-a611-470e-8a11-1645b70b63c7"
+              projectUri: "/rest/projects/930381ba921b47c39960371d4145e0d2"
+              virtualMachineProfileUri: "/rest/virtual-machine-profiles/a464ecd0-d16d-447d-af41-ff7437df2a09"
+              endpoints: [
+                  "10.10.0.8"
+              ]
+              hasConsole: true
+        '404':
+          description: Not Found.
+          schema:
+            $ref: '#/definitions/error'
+
+    patch:
+      description: Updates a deployment. **Requires 'consumer' role on project**
+      operationId: UpdateDeployment
+      parameters:
+        - name: id
+          in: path
+          description: ID of deployment to update
+          required: true
+          type: string
+        - name: deployment
+          in: body
+          description: Update deployment
+          required: true
+          schema:
+            $ref: '#/definitions/updateDeployment'
+      responses:
+        '200':
+          description: Deployment sucessfully updated.
+          schema:
+            $ref: '#/definitions/deployment'
+          examples:
+            'Update name of deployment: /rest/deployments/825039a0-f2eb-4cd3-8112-6e91375bcebf':
+              'Request Body':
+                name: 'test'
+              'Response Body':
+                id: '825039a0-f2eb-4cd3-8112-6e91375bcebf'
+                name: 'test'
+                regionUri: '/rest/regions/v3d6e308-4b99-4b96-9b2c-835de6a5987c'
+                created: "2017-09-14T19:53:33Z"
+                modified: "2017-09-14T19:58:33Z"
+                status: "Ok"
+                uri: "/rest/deployments/825039a0-f2eb-4cd3-8112-6e91375bcebf"
+                projectUri: "/rest/projects/930381ba921b47c39960371d4145e0d2"
+                hasConsole: false
+        '400':
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/error'
+    delete:
+      description: Delete a deployment and associated resources. **Requires 'consumer' role on project**
+      operationId: DeleteDeployment
+      parameters:
+        - name: id
+          in: path
+          description: ID of deployment to delete
+          required: true
+          type: string
+      responses:
+        '204':
+          description: Deployment deleted; no content
+          examples:
+            'DELETE /rest/deployments/c86f18f1-a611-470e-8a11-1645b70b63c7':
+              no content
+        '404':
+          description: No matching deployment found
+          schema:
+            $ref: '#/definitions/error'
+
+  /deployments/{id}/actions:
+    post:
+      description: Peforms an action to change the state of a deployment. **Requires 'consumer' role on project**
+      operationId: ActOnDeployment
+      parameters:
+        - name: id
+          in: path
+          description: ID of deployment to act on
+          required: true
+          type: string
+        - name: action
+          in: body
+          description: Action to perform
+          required: true
+          schema:
+            $ref: '#/definitions/deploymentAction'
+      responses:
+        '200':
+          description: Deployment action sucessfully initiated. No content.
+        '400':
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/error'
+
+  /deployments/{id}/console:
+    post:
+      description: Returns a deployment console URL for deployment
+      operationId: GetDeploymentConsoleURL
+      parameters:
+        - name: id
+          in: path
+          description: ID of deployment for which console URL is required
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successfully got deployment console URL.
+          examples:
+            'Get Deployment Console URL:/rest/deployments/917b0738-351a-4a9e-b8c9-f1d1fdc804f3/console':
+                "http://172.18.196.154:6080/vnc_auto.html?token=9762a8af-c014-461f-9e61-5b955142e55e"
+        '400':
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/error'
+        '404':
+          description: Not Found.
+          schema:
+            $ref: '#/definitions/error'
+
+  /memberships:
+    get:
+      description: >
+          Returns all memberships. Supports filtering by projectURI, userURI, groupURI, roleURI (but only
+          individual values, not multiple) in 'query'. </BR>If projectURI and userURI/groupURI are given a different
+          backend path will be used that should be authorized to a project owner even if they wouldn't ordinarily
+          be able to see other users' roles. </BR>**Requires 'administrator' global role or 'administrator' role on project**
+      operationId: FindMembers
+      parameters:
+        - name: query
+          in: query
+          description: URI query to prune memberships by. An example of query can be</BR> 'projectUri EQ e0300a831e2740a4aad680cd89115845'</BR> OR </BR>'userUri EQ e0300a831e2740a4aad680cd89115845'</BR> OR </BR>'roleUri EQ e0300a831e2740a4aad680cd89115845'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: List of memberships
+          schema:
+            $ref: '#/definitions/membershipList'
+    post:
+      description: Creates a new membership. **Requires 'administrator' global role or 'administrator' role on project**
+      operationId: CreateMember
+      parameters:
+        - name: membership
+          in: body
+          description: Add new membership
+          required: true
+          schema:
+            $ref: '#/definitions/membership'
+      responses:
+        '201':
+          description: New membership sucessfully created.
+          schema:
+            $ref: '#/definitions/membership'
+        '400':
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/error'
+    delete:
+      description: Delete a membership. **Requires 'administrator' global role or 'administrator' role on project**
+      operationId: DeleteMember
+      parameters:
+        - name: membership
+          in: body
+          description: Delete membership
+          required: true
+          schema:
+            $ref: '#/definitions/membership'
+      responses:
+        '204':
+          description: New membership sucessfully created.
+        '400':
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/error'
+
+  /roles:
+    get:
+      description: Lists all global roles
+      operationId: ListRoles
+      responses:
+        '200':
+          description: List of roles
+          schema:
+            $ref: '#/definitions/roleList'
+
+  /membership-roles:
+    get:
+      description: Lists all membership (project-specific) roles
+      operationId: ListMembershipRoles
+      responses:
+        '200':
+          description: List of roles
+          schema:
+            $ref: '#/definitions/membershipRoleList'
+  /users:
+    get:
+      description: Lists all users. **Requires 'administrator' global role**
+      operationId: ListUsers
+      parameters:
+        - name: userQuery
+          in: query
+          description: >
+            Query string to prune names by. Any users whose 'name' or 'email' contains the userQuery will match.
+          required: false
+          type: string
+      responses:
+        '200':
+          description: List of users
+          schema:
+            $ref: '#/definitions/userList'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/error'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/error'
+    post:
+      description: Create a user. **Requires 'administrator' global role**</BR>Password must contain minimum one number, one uppercase, one lowercase, one special character and should be minimum 8 characters long.
+      operationId: CreateUser
+      parameters:
+        - name: user
+          in: body
+          description: New user
+          required: true
+          schema:
+            $ref: '#/definitions/createUser'
+      responses:
+        '201':
+          description: User
+          schema:
+            $ref: '#/definitions/user'
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/error'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/error'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/error'
+        '409':
+          description: Conflict
+          schema:
+            $ref: '#/definitions/error'
+
+  /users/{id}:
+    get:
+      description: Returns a user based on its id. **Requires 'administrator' global role, or matching user id**
+      operationId: GetUserById
+      parameters:
+        - name: id
+          in: path
+          description: ID of user to fetch
+          required: true
+          type: string
+      responses:
+        '200':
+          description: User response
+          schema:
+            $ref: '#/definitions/user'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/error'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/error'
+        '404':
+          description: Not Found.
+          schema:
+            $ref: '#/definitions/error'
+    patch:
+      description: Update a user. **Requires 'administrator' global role or matching user ID**</BR>If Password is updated it must contain minimum one number, one uppercase, one lowercase, one special character and should be minimum 8 characters long.
+      operationId: UpdateUser
+      parameters:
+        - name: id
+          in: path
+          description: ID of user to update
+          required: true
+          type: string
+        - name: user
+          in: body
+          description: Update user
+          required: true
+          schema:
+            $ref: '#/definitions/updateUser'
+      responses:
+        '200':
+          description: User sucessfully updated.
+          schema:
+            $ref: '#/definitions/user'
+        '400':
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/error'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/error'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/error'
+        '404':
+          description: Not Found.
+          schema:
+            $ref: '#/definitions/error'
+        '409':
+          description: Conflict
+          schema:
+            $ref: '#/definitions/error'
+    delete:
+      description: Delete a user. **Requires 'administrator' global role**
+      operationId: DeleteUser
+      parameters:
+        - name: id
+          in: path
+          description: Delete user
+          required: true
+          type: string
+      responses:
+        '204':
+          description: User sucessfully deleted.
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/error'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/error'
+        '404':
+          description: Not Found.
+          schema:
+            $ref: '#/definitions/error'
+
+  /password-reset:
+    post:
+      description: Request a single-use password reset token.
+      operationId: CreatePasswordReset
+      parameters:
+        - name: passwordResetRequest
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/passwordResetRequestInput'
+      responses:
+        '202':
+          description: >
+            Accepted; no response. Email will be sent. No indication is given if
+            the user does not exist (but no email will be sent).
+        '400':
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/error'
+
+  /password-reset/change:
+    post:
+      description: Process a password reset.
+      operationId: ProcessPasswordReset
+      parameters:
+        - name: passwordReset
+          in: body
+          description: Password reset information
+          required: true
+          schema:
+            $ref: '#/definitions/passwordReset'
+      responses:
+        '200':
+          description: >
+            Body will include the user definition (can e.g. redirect to a login
+            page with the user's email address)
+          schema:
+            $ref: '#/definitions/user'
+        '400':
+          description: Token is invalid or password does not meet criteria.
+          schema:
+            $ref: '#/definitions/error'
+
+  /metrics:
+    get:
+      description: >
+        Returns all metrics based on the supplied criteria. **Requires 'analyst' role**
+        Requires one and only one of resourceUri or category to be specified
+      operationId: FindMetrics
+      parameters:
+        - name: resourceUri
+          in: query
+          description: >
+            Resource(s) to return metrics for.
+            It is invalid to specify this property if a category, cluster,
+            or tag property is provided.
+
+            </br>
+            **resourceUri examples:**
+
+            </br>
+            GET /rest/metrics?**resourceUri=/rest/projects/85609a9e-31f5-4c7b-bd54-1ba50136bdf6**&periodStart=2017-09-01T00:00:00Z&period=hour&periodCount=-2&name=resource.cores.allocation
+            </br>
+
+          type: array
+          collectionFormat: multi
+          items:
+            type: string
+        - name: category
+          in: query
+          description: >
+            A category name.
+            Include resources that are in this category.
+            This can be combined with the query property to filter resources.
+            It is invalid to specify this property if a resourceUri property
+            is provided.
+
+            </br>
+            **category examples:**
+
+            </br>
+            *Get the cost.usage for all providers:*
+
+            GET /rest/metrics?"**category=providers&name=cost.usage**&periodStart=2017-12-01T00:00:00Z&period=month&periodCount=-1&view=full"
+
+            </br>
+            *Get the cost.usage for all projects:*
+
+            GET /rest/metrics?"**category=projects&name=cost.usage**&periodStart=2017-12-01T00:00:00Z&period=month&periodCount=-1&view=full"
+
+          type: array
+          uniqueItems: true
+          collectionFormat: multi
+          items:
+            type: string
+            enum:
+              - providers
+              - projects
+              - provider-services
+
+        - name: groupBy
+          in: query
+          description: >
+            A value to group the data by.
+            It is invalid to specify this property if a resourceUri property is provided.
+
+            </br>
+            **groupBy examples:**
+
+            </br>
+            *Get the cost.total for all providers grouped by provider type:*
+
+            GET /rest/metrics?"**category=providers&name=cost.total&groupBy=providerTypeUri**&periodStart=2017-12-01T00:00:00Z&period=month&periodCount=-2&view=full"
+
+            </br>
+            *Get the cost.usage for all providers grouped by provider type:*
+
+            GET /rest/metrics?"**category=providers&name=cost.usage&groupBy=providerTypeUri**&periodStart=2017-12-01T00:00:00Z&period=month&periodCount=-1&view=full"
+
+            </br>
+            *Get the cost.usage for all provider sservices grouped by provider service type:*
+
+            GET /rest/metrics?"**category=provider-services&name=cost.usage&groupBy=providerServiceTypeUri**&periodStart=2017-12-01T00:00:00Z&period=month&periodCount=-1&view=full"
+          type: string
+
+        - name: query
+          in: query
+          description: >
+            A query to filter the resources by.
+            For now, 'EQ' & 'AND' are the only supported operators.
+            It is invalid to specify this property if a resourceUri property
+            is provided.
+
+            This parameter is only valid for cost metrics
+
+            </br>
+            **query examples:**
+
+            </br>
+            *Get the cost.usage for all projects grouped by the tag key where the tag key is line-of-business:*
+
+            GET /rest/metrics?"**category=projects&name=cost.usage&groupBy=tagKeyUri&query=tagKeyUri+EQ+/rest/tag-keys/line-of-business**&periodStart=2017-10-01T00:00:00Z&period=month&periodCount=1"
+
+            </br>
+            *Get the cost.usage for all provider services grouped by provider service type for a specific provider:*
+
+            GET /rest/metrics?"**category=provider-services&name=cost.usge&groupBy=providerServiceTypeUri&query=providerUri+EQ+/rest/providers/:id**&periodStart=2017-10-01T00:00:00Z&period=month&periodCount=1&view=full"
+
+            </br>
+            *Get the cost.usage for all provider services grouped by provider service type with the tag of line-of-business=incubation for a specific provider:*
+
+            GET /rest/metrics?"**category=provider-services&name=cost.usge&groupBy=providerServiceTypeUri&query=tagUris+EQ+/rest/tags/line-of-business=incubation+AND+providerUri+EQ+/rest/providers/:id**&periodStart=2017-10-01T00:00:00Z&period=month&periodCount=1&view=full"
+            </br>
+
+          type: array
+          collectionFormat: multi
+          items:
+            type: string
+        - name: name
+          in: query
+          description: >
+            Name(s) of metrics to return.
+            Metric names are associated with resources.
+            Multiple metric names can be specified.
+
+            </br>
+
+            **Score Card Metrics**
+
+            ----------------
+
+            **name:**
+              - score.availability
+              - score.utilization
+              - score.performance
+              - score.overall
+
+            **units:** Does not apply for any score metrics.
+
+            **category:**
+              - providers
+              - regions
+              - zones
+
+            **resourceUri**
+             - /rest/providers/:id
+             - /rest/regions/:id
+             - /rest/zones/:id
+
+            **period:** Either **'month'**, **`day`**, or **`hour`** can be used for Score Card Metrics.
+
+            **periodCount:** Always **non-zero integer** for Score Card Metrics.
+
+            </br>
+
+            **Cost Metrics**
+
+            ----------------
+
+            **name:**
+              - cost.fixed
+              - cost.usage
+              - cost.efficiency
+              - cost.total
+
+            **units:** Always **`USD`** except for **`cost.efficiency`**, which has **percent** for the units.
+
+            **category:**
+              - providers
+              - projects
+              - provider-services
+
+            **resourceUri**
+             - /rest/providers/:id
+             - /rest/projects/:id
+             - /rest/provider-services/:id
+
+            **groupBy:**
+              - valid groupBy params for ***providers***
+                - providerTypeUri
+              - valid groupBy params for ***projects***
+                - tagKeyUri (**note** *requires that either query=tagKeyUri or query=tagUris is used in conjunction with it*)
+              - valid groupBy params for ***provider-services***
+                - providerServiceTypeUri
+
+            **query:**
+              - valid query params for ***providers***
+                - id
+                - name
+                - uri
+                - providerTypeUri
+              - valid query params for ***projects***
+                - id
+                - name
+                - uri
+                - providerTypeUri
+                - providerUri
+                - regionUris
+                - zoneUris
+                - tagUris
+              - valid query params for ***provider-services***
+                - id
+                - name
+                - uri
+                - providerServiceTypeUri
+                - providerTypeUri
+                - providerUri
+                - projectUri
+                - regionUris
+                - zoneUris
+                - tagUris
+
+            **period:** Always **`month`** for Cost Metrics.
+
+            **periodStart:** Always start of month for Cost Metrics (e.g. 2017-10-01T00:00:00Z, not 2017-10-04T00:00:00Z), defaults to current month.
+
+            **periodCount:** Always **`non-zero integer`** for Resource Usage Metrics.
+
+
+            </br>
+
+            **Resource Usage Metrics**
+
+            ----------------
+
+            **name:** (and units)
+              - resource.cores.allocation (cores)
+              - resource.memory.allocation (GB)
+              - resource.storage.allocation (GB)
+              - resource.cpu.utilization (%)
+              - resource.memory.utilization (%)
+              - resource.storage.utilization (%)
+
+            **category:** Either **`projects`** or **`deployments`** can be used for Resource Usage Metrics.
+
+            **resourceUri**
+             - /rest/projects/:id
+
+            **period:** Either **`day`** or **`hour`** can be used for Resource Usage Metrics.
+
+            **periodCount:** Always **non-zero integer** for Cost Metrics.
+
+            </br>
+
+            **Resource Score Drill Down Metrics**
+
+            ----------------
+
+            **name:** (and units)
+              - resource.cpu.total (cores)
+              - resource.cpu.usage (cores)
+              - resource.memory.total (GB)
+              - resource.memory.usage (GB)
+              - resource.network.in_packets_rate (packets/second)
+              - resource.network.in_packets_error_rate (errors/second)
+              - resource.network.in_packets_drop_rate (drops/second)
+              - resource.network.out_packets_rate (packets/second)
+              - resource.network.out_packets_error_rate (errors/second)
+              - resource.network.out_packets_drop_rate (drops/second)
+              - resource.node.ready_status_count (None)
+              - resource.node.ready_failed_count (None)
+
+            **category:** `N/A` ** Not currently implemented
+
+            **resourceUri**
+             - /rest/providers/:id
+             - /rest/regions/:id
+             - /rest/zones/:id
+
+            **period:** Either **`day`** or **`hour`** can be used for Resource Score Drill Down Metrics.
+
+            **periodCount:** Always **non-zero integer** for Score Drill Down Metrics.
+
+            </br>
+            **example:** score.availability
+          type: array
+          required: true
+          collectionFormat: multi
+          items:
+            type: string
+            enum:
+              - score.availability
+              - score.utilization
+              - score.performance
+              - score.overall
+              - cost.efficiency
+              - cost.fixed
+              - cost.usage
+              - resource.memory.allocation
+              - resource.memory.utilization
+              - resource.cores.allocation
+              - resource.cpu.utilization
+              - resource.storage.allocation
+              - resource.storage.utilization
+              - resource.cpu.total
+              - resource.cpu.usage
+              - resource.memory.total
+              - resource.memory.usage
+              - resource.network.in_packets_rate
+              - resource.network.in_packets_error_rate
+              - resource.network.in_packets_drop_rate
+              - resource.network.out_packets_rate
+              - resource.network.out_packets_error_rate
+              - resource.network.out_packets_drop_rate
+              - resource.node.ready_status_count
+              - resource.node.ready_failed_count
+
+        - name: periodStart
+          in: query
+          description: >
+            When the metric value(s) should be measured from.
+            This must be aligned to the period requested. For instance, if
+            the period is 'hour', this value must be at the top of an hour.
+
+            If not specified, it will default to the latest time for which
+            the data is expected to be valid, aligned to the period
+            boundary. For costs and resources, this will be the start of
+            the current UTC period. For scores (and score drill down metrics),
+            this will be the previous hour, unless the current UTC time is
+            less than 5 minutes into the current hour, in which case it will
+            be 2 hours previous. For example, if periodStart is not specified,
+            score metrics are requested and the current time is 2017-06-01T21:03:00 UTC,
+            scores will be returned for 2017-06-01T19:00:00Z, however if current time is
+            2017-06-01T21:05:00 UTC, scores will be returned for
+            2017-06-01T20:00:00Z. If periodStart is not specified, period is hour,
+            resource or cost metrics are requested and the current time is
+            2017-06-01T21:03:00 UTC, metrics will be returned for 2017-06-01T21:00:00Z
+
+            **example:** 2017-06-01T00:00:00Z
+          type: string
+          format: date-time
+        - name: period
+          in: query
+          description: >
+            How much time to cover per data point.
+            Certain metric names may support only a subset of these options.
+            Scores support a period of 'day' or 'hour'.
+            Costs only support a period of 'month'.
+            Resources support a period of 'day' or 'hour'.
+            422 or 400 is returned if the metric name is not supported.
+
+            **example:** hour
+          type: string
+          required: true
+          enum:
+            - month
+            - day
+            - hour
+        - name: periodCount
+          in: query
+          description: >
+            How many period data points to return relative to the periodStart
+            time.
+            This value can be positive or negative.  Zero is invalid.
+
+            **default:** 1
+          type: integer
+        - name: view
+          in: query
+          description: >
+            Whether to return related content.
+            This is to make it so that only one call is needed to return all the needed information.
+            Not currently supported for scores.
+
+            </br>
+            *example:*
+
+            GET /rest/metrics?category=deployments&category=service-types&query=tagUri+EQ+/rest/tags/line-of-business=incubation&periodStart=2017-08-01T00%3A00%3A00Z&period=month&periodCount=-1&name=cost.usage&**view=full**
+            </br>
+
+          type: string
+          enum:
+            - full
+        - name: start
+          in: query
+          description: >
+            Index into the response members to allow pagination.
+            Use in conjunction with the 'count' parameter to paginate
+            through many metrics.
+            **Not Implemented**
+          type: integer
+        - name: count
+          in: query
+          description: >
+            Maximum number of response members to return.
+            Use in conjunction with the 'start' parameter to paginate
+            through many metrics.
+            **Not Implemented**
+          type: integer
+      responses:
+        '200':
+          description: List of metrics
+          schema:
+            $ref: '#/definitions/metricList'
+
+  /rates:
+    get:
+      summary: "Get a list of rates"
+      description: |
+        **Requires 'administrator' global role**
+        Retrieve a list of rates.  Optionally this list may be filtered, or the default rates specified with a resourceUri of 'default'.
+      parameters:
+        - name: resourceUri
+          in: query
+          description: >
+            Resource(s) to return rates for.
+            N.B. a resourceUri of 'default' will obtain a skeleton set of the default rates
+          type: array
+          collectionFormat: multi
+          items:
+            type: string
+        - name: effectiveForDate
+          in: query
+          description: >
+            The date for which returned rates need be effective,
+            a special filter that allows a search for a rate that
+            would be effective on a date.  That is, to allow
+            a search for a rate whose effective date is on or
+            before the specified effectiveForDate.
+          type: string
+          format: date
+        - name: effectiveDate
+          in: query
+          description: >
+            The specific effective date to filter by.
+          type: string
+          format: date
+        - name: metricName
+          in: query
+          description: >
+            The metric name to filter by.
+          type: string
+        - name: active
+          in: query
+          description: >
+            Filter for active or inactive rates.
+          type: boolean
+        - name: start
+          in: query
+          description: >
+            Index into the response members to allow pagination.
+            Use in conjunction with the 'count' parameter to paginate
+            through many rates.
+          type: integer
+        - name: count
+          in: query
+          description: >
+            Maximum number of response members to return.
+            Use in conjunction with the 'start' parameter to paginate
+            through many rates.
+          type: integer
+      responses:
+        200:
+          description: List of rates
+          schema:
+            $ref: '#/definitions/rateList'
+
+    post:
+      summary: "Add a set of rates"
+      description: |
+        **Requires 'administrator' global role**
+        This will persist new rates
+      parameters:
+        - name: body
+          in: body
+          schema:
+            type: array
+            items:
+               $ref: '#/definitions/rate'
+      responses:
+        201:
+          description: Created. Request received and rates persisted.
+  /rates/{id}:
+    get:
+      summary: "Retrieve a rate by id"
+      description: "**Requires 'administrator' global role**"
+      parameters:
+        - name: id
+          in: path
+          description: Id of the rate to be retrieved
+          required: true
+          type: string
+      responses:
+        200:
+          description: Request received and rate retrieved.
+          schema:
+            $ref: '#/definitions/rate'
+    delete:
+      summary: "Delete a rate by id."
+      description: "**Requires 'administrator' global role**"
+      parameters:
+        - name: id
+          in: path
+          description: Id of the rate to be deleted
+          required: true
+          type: string
+      responses:
+        200:
+          description: Request received and rate deleted.
+
+  /events:
+    get:
+      description: Returns all events based on the supplied criteria. **Not implemented**
+      operationId: FindEvents
+      parameters:
+        - name: resourceUri
+          in: query
+          description: Resource to prune events by.
+          type: string
+      responses:
+        '200':
+          description: List of events
+          schema:
+            $ref: '#/definitions/eventList'
+
+  /volumes:
+    get:
+      description: Returns all volumes. **Requires 'consumer' role on projects**
+      operationId: FindVolumes
+      parameters:
+        - name: query
+          in: query
+          description: URI query string to prune volumes by.
+          type: string
+        - name: view
+          in: query
+          description: >
+            Return related resources:
+              * `full` - include zone, volume details.
+          type: string
+          enum:
+            - full
+      responses:
+        '200':
+          description: List of volumes
+          schema:
+            $ref: '#/definitions/volumeList'
+          examples:
+            'Filter deployments by workSpaceUri':
+              '/rest/volumes?query=projectUri+EQ+/rest/projects/930381ba921b47c39960371d4145e0d2'
+            '/rest/deployments':
+              id: "c86f18f1-a611-470e-8a11-1645b70b63c7"
+              name: "volume-A"
+              regionUri: "/rest/regions/v3d6e308-4b99-4b96-9b2c-835de6a5987c"
+              zoneUri: "/rest/zones/c2b6e308-4b99-4b96-9b2c-835de6a56a8c"
+              created: "2017-08-07T09:15:10Z"
+              modified: "2017-08-07T09:20:48Z"
+              status: "Ok"
+              sizeGiB: 20
+              uri: "/rest/volumes/c86f18f1-a611-470e-8a11-1645b70b63c7"
+              projectUri: "/rest/projects/930381ba921b47c39960371d4145e0d2"
+
+    post:
+      description: Creates a new volume. **Requires 'consumer' role on project**
+      operationId: CreateVolume
+      parameters:
+        - name: volume
+          in: body
+          description: Add new volume.
+          required: true
+          schema:
+            $ref: '#/definitions/createVolume'
+      responses:
+        '201':
+          description: New volume sucessfully created.
+          schema:
+            $ref: '#/definitions/volume'
+        '400':
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/error'
+
+  /volumes/{id}:
+    get:
+      description: Returns a volume based on its id. **Requires 'consumer' role on project**
+      operationId: GetVolumeById
+      parameters:
+        - name: id
+          in: path
+          description: ID of volume to fetch
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Volume response
+          schema:
+            $ref: '#/definitions/volume'
+        '404':
+          description: Not Found.
+          schema:
+            $ref: '#/definitions/error'
+    patch:
+      description: Updates a volume. **Requires 'consumer' role on project**
+      operationId: UpdateVolume
+      parameters:
+        - name: id
+          in: path
+          description: ID of volume to update
+          required: true
+          type: string
+        - name: volume
+          in: body
+          description: Update volume
+          required: true
+          schema:
+            $ref: '#/definitions/updateVolume'
+      responses:
+        '200':
+          description: Volume sucessfully updated.
+          schema:
+            $ref: '#/definitions/volume'
+        '400':
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/error'
+    delete:
+      description: Delete a volume. **Requires 'consumer' role on project**
+      operationId: DeleteVolume
+      parameters:
+        - name: id
+          in: path
+          description: ID of volume to delete
+          required: true
+          type: string
+      responses:
+        '202':
+          description: Volume delete accepted; no content
+          examples:
+            'DELETE /rest/volumes/c86f18f1-a611-470e-8a11-1645b70b63c7':
+              no content
+        '404':
+          description: No matching volume found
+          schema:
+            $ref: '#/definitions/error'
+
+  /tag-keys:
+    get:
+      description: Lists all tag keys.
+      operationId: ListTagKeys
+      parameters:
+        - name: view
+          in: query
+          description: >
+            Return related resources:
+              * `full` - include each tag-key's related `tags`
+          type: string
+          enum:
+            - full
+      responses:
+        '200':
+          description: List of tag keys
+          schema:
+            $ref: '#/definitions/tagKeyList'
+    post:
+      description: Create a tag key. **Requires 'analyst' global role**
+      operationId: CreateTagKey
+      parameters:
+        - name: name
+          in: body
+          description: New tag key
+          required: true
+          schema:
+            $ref: '#/definitions/createTagKey'
+      responses:
+        '201':
+          description: TagKey
+          schema:
+            $ref: '#/definitions/tagKey'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/error'
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/error'
+        '409':
+          description: Conflict
+          schema:
+            $ref: '#/definitions/error'
+
+  /tag-keys/{id}:
+    get:
+      description: Returns a tag key based on its id.
+      operationId: GetTagKeyById
+      parameters:
+        - name: id
+          in: path
+          description: ID of tag key to fetch
+          required: true
+          type: string
+        - name: view
+          in: query
+          description: >
+            Return related resources:
+              * `full` - Include the tag-keys related `tags`
+          type: string
+          enum:
+            - full
+      responses:
+        '200':
+          description: Tag key response
+          schema:
+            $ref: '#/definitions/tagKey'
+        '404':
+          description: Not Found.
+          schema:
+            $ref: '#/definitions/error'
+    delete:
+      description: Delete a tag key and associated tags. **Requires 'analyst' global role**
+      operationId: DeleteTagKey
+      parameters:
+        - name: id
+          in: path
+          description: ID of tag key to delete
+          required: true
+          type: string
+      responses:
+        '204':
+          description: Tag key deleted; no content
+        '404':
+          description: No matching tag key found
+          schema:
+            $ref: '#/definitions/error'
+
+  /tags:
+    get:
+      description: Lists all tags.
+      operationId: ListTags
+      parameters:
+        - name: view
+          in: query
+          description: >
+            Return related resources:
+              * `full` - include each tags related `tag-key`
+          type: string
+          enum:
+            - full
+      responses:
+        '200':
+          description: List of tags
+          schema:
+            $ref: '#/definitions/tagList'
+    post:
+      description: Create a tag. **Requires 'analyst' global role**
+      operationId: CreateTag
+      parameters:
+        - name: tag
+          in: body
+          description: New tag
+          required: true
+          schema:
+            $ref: '#/definitions/createTag'
+      responses:
+        '201':
+          description: Tag
+          schema:
+            $ref: '#/definitions/tag'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/error'
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/error'
+        '409':
+          description: Conflict
+          schema:
+            $ref: '#/definitions/error'
+
+  /tags/{id}:
+    get:
+      description: Returns a tag based on its id. **Requires 'consumer' global role**
+      operationId: GetTagById
+      parameters:
+        - name: id
+          in: path
+          description: ID of tag to fetch
+          required: true
+          type: string
+        - name: view
+          in: query
+          description: >
+            Return related resources:
+              * `full` - Include the tags related `tag-key`
+          type: string
+          enum:
+            - full
+      responses:
+        '200':
+          description: Tag response
+          schema:
+            $ref: '#/definitions/tag'
+        '404':
+          description: Not Found.
+          schema:
+            $ref: '#/definitions/error'
+    delete:
+      description: Delete a tag. **Requires 'analyst' global role**
+      operationId: DeleteTag
+      parameters:
+        - name: id
+          in: path
+          description: ID of tag to delete
+          required: true
+          type: string
+      responses:
+        '204':
+          description: Tag deleted; no content
+        '404':
+          description: No matching tag found
+          schema:
+            $ref: '#/definitions/error'
+
+  /keypairs:
+    get:
+      description: Get keypairs (per region, per user). Currently a projectUri is required
+      operationId: ListKeypairs
+      parameters:
+        - name: regionUri
+          in: query
+          required: true
+          type: string
+        - name: projectUri
+          in: query
+          required: true
+          type: string
+      responses:
+        '200':
+          description: List of keypairs
+          schema:
+            $ref: '#/definitions/keypairList'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/error'
+
+  /appliances:
+    get:
+      summary: NOT IMPLEMENTED
+      description: Get a list of appliances.
+      operationId: GetAppliance
+      parameters:
+        - name: name
+          in: query
+          type: string
+          required: false
+          description: |
+            The name of the desired appliance.
+            This parameter may be repeated with multiple appliance names.
+        - name: regionUri
+          in: query
+          description: |
+            Set of appliances in this region.
+          required: false
+          type: string
+      responses:
+        '200':
+          description: |
+            Successful response.
+            The query was performed successfully and the list of matching appliances
+            is returned.
+            This list may be empty if no appliances match the specified criteria.
+          schema:
+            $ref: '#/definitions/applianceList'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/error'
+
+    post:
+      summary: NOT IMPLEMENTED
+      description: Create an appliance.
+      operationId: CreateAppliance
+      parameters:
+        - name: appliance
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/createAppliance'
+      responses:
+        '202':
+          description: Appliance setup successfully initiated.
+          schema:
+            $ref: '#/definitions/appliance'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/error'
+
+
+  /appliances/{id}:
+    get:
+      summary: NOT IMPLEMENTED
+      description: Returns an appliance based on its ID.
+      operationId: GetApplianceById
+      parameters:
+        - name: id
+          description: ID of the appliance to retrieve.
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: |
+            Successful response.
+            The query successfully retrieved an appliance based on ID.
+          schema:
+            $ref: '#/definitions/appliance'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/error'
+        '404':
+          description: Appliance not found.
+          schema:
+            $ref: '#/definitions/error'
+
+    patch:
+      summary: NOT IMPLEMENTED
+      description: Update properties of an appliance.
+      operationId: UpdateAppliance
+      consumes: ["application/json-patch+json"]
+      parameters:
+        - name: id
+          in: path
+          description: ID of appliance to update.
+          required: true
+          type: string
+        - name: body
+          in: body
+          description: List of appliance updates.
+          required: true
+          schema:
+            $ref: '#/definitions/updateAppliance'
+
+      responses:
+        '200':
+          description: |
+            Successfully update the appliance.
+            Note that a '202' response may also be returned, depending on the nature
+            of the update.
+          schema:
+            $ref: '#/definitions/appliance'
+        '202':
+          description: |
+            Appliance update successfully initiated.
+            This response is returned if the update takes a considerable time, e.g.
+            the update of endpoint details.
+          schema:
+            $ref: '#/definitions/appliance'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/error'
+        '404':
+          description: Appliance not found.
+          schema:
+            $ref: '#/definitions/error'
+
+    delete:
+      summary: NOT IMPLEMENTED
+      description: |
+        Delete an appliance.
+        This removes the appliance registration and tears down the secure
+        comms link to the on-premise appliance.
+        If zones exist on this appliance, an '409' error will be returned.
+        The zones on this appliance must be removed before the appliance
+        delete request can be accepted.
+      operationId: DeleteAppliance
+      parameters:
+        - name: id
+          description: ID of the appliance to delete.
+          in: path
+          required: true
+          type: string
+      responses:
+        '202':
+          description: |
+            Appliance accepted for deletion.
+          schema:
+            $ref: '#/definitions/appliance'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/error'
+        '404':
+          description: Appliance not found.
+          schema:
+            $ref: '#/definitions/error'
+        '409':
+          description: Conflict. Zones still exist on this appliance.
+          schema:
+            $ref: '#/definitions/error'
+
+definitions:
+  status:
+    type: object
+    required:
+      - status
+    properties:
+      status:
+        type: string
+
+  session:
+    type: object
+    required:
+      - token
+      - userUri
+    properties:
+      token:
+        type: string
+      userUri:
+        type: string
+        description: URI for the logged in user
+      user:
+        $ref: '#/definitions/user'
+
+  createSession:
+    type: object
+    required:
+      - userName
+      - password
+    properties:
+      userName:
+        type: string
+      password:
+        type: string
+
+  sessionIdp:
+    type: object
+    required:
+      - url
+      - method
+    properties:
+      url:
+        type: string
+      method:
+        type: string
+
+  account:
+    type: object
+    required:
+      - id
+      - name
+      - uri
+    properties:
+      created:
+        type: string
+        format: date-time
+      events:
+        type: array
+        items:
+          $ref: '#/definitions/event'
+      id:
+        type: string
+      metrics:
+        type: array
+        items:
+          $ref: '#/definitions/metric'
+      modified:
+        type: string
+        format: date-time
+      name:
+        type: string
+      uri:
+        type: string
+
+  providerTypeList:
+    required:
+      - members
+      - total
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/providerType'
+      total:
+        type: integer
+        format: int64
+
+  providerType:
+    type: object
+    required:
+      - id
+      - logo
+      - name
+      - uri
+    properties:
+      created:
+        type: string
+        format: date-time
+      id:
+        type: string
+      logo:
+        type: string
+      metrics:
+        type: array
+        items:
+          $ref: '#/definitions/metric'
+      modified:
+        type: string
+        format: date-time
+      name:
+        type: string
+      uri:
+        type: string
+
+  providerList:
+    required:
+      - members
+      - total
+      - unfilteredTotal
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/provider'
+      total:
+        type: integer
+        format: int64
+      unfilteredTotal:
+        type: integer
+        format: int64
+
+  provider:
+    type: object
+    required:
+      - id
+      - name
+      - status
+      - state
+      - providerTypeUri
+      - uri
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      uri:
+        type: string
+      providerTypeUri:
+        type: string
+      status:
+        type: string
+        enum:
+          - OK
+          - Warning
+          - Critical
+          - Disabled
+          - Unknown
+      state:
+        type: string
+        enum:
+          - Enabling
+          - Enabled
+          - Disabling
+          - Disabled
+          - Unknown
+      accessKey:
+        type: string
+        description: only for /rest/provider-types/aws
+      secretKey:
+        type: string
+        description: only for /rest/provider-types/aws
+      paymentProvider:
+        type: boolean
+        description: only for /rest/provider-types/aws
+      s3CostBucket:
+        type: string
+        description: only for /rest/provider-types/aws when paymentProvider = true
+      children:
+        description: only for /rest/provider-types/aws when paymentProvider = true
+        type: array
+        items:
+          $ref: '#/definitions/childProvider'
+      projectUris:
+        type: array
+        description: only for /rest/provider-types/aws
+        items:
+          type: string
+      regions:
+        type: array
+        items:
+          $ref: '#/definitions/region'
+      masterUri:
+        description: only for /rest/provider-types/aws when paymentProvider = false
+      metrics:
+        type: array
+        items:
+          $ref: '#/definitions/metric'
+      created:
+        type: string
+        format: date-time
+      modified:
+        type: string
+        format: date-time
+
+  childProvider:
+    type: object
+    required:
+      - id
+      - name
+      - status
+      - state
+      - providerTypeUri
+      - uri
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      uri:
+        type: string
+      providerTypeUri:
+        type: string
+      status:
+        type: string
+        enum:
+          - OK
+          - Warning
+          - Critical
+          - Disabled
+          - Unknown
+      state:
+        type: string
+        enum:
+          - Adding
+          - Available
+          - Disabling
+          - Removing
+          - Unknown
+
+  createProvider:
+    type: object
+    required:
+      - providerTypeUri
+      - state
+    properties:
+      id:
+        type: string
+        description: id is mandatory only for Member provider's which are Disabled
+      providerTypeUri:
+        type: string
+      accessKey:
+        type: string
+        description: only for /rest/provider-types/aws
+      secretKey:
+        type: string
+        description: only for /rest/provider-types/aws
+      paymentProvider:
+        type: boolean
+        description: only for /rest/provider-types/aws
+      s3CostBucket:
+        type: string
+        description: only for /rest/provider-types/aws when paymentProvider = true
+      masterUri:
+        type: string
+        description: only for /rest/provider-types/aws when paymentProvider = false
+      state:
+        type: string
+        enum:
+          - Enabled
+          - Disabled
+        description: Initial state of the provider. If marked Enabling/Enabled the secretkey and accesskey will be validated.
+
+
+  updateProvider:
+    type: array
+    items:
+      $ref: '#/definitions/updateProviderPatch'
+
+  updateProviderPatch:
+    required:
+      - op
+      - path
+    properties:
+      op:
+        type: string
+        description: >
+          The operation to take on the specified property.
+          See: https://tools.ietf.org/html/rfc6902#section-4
+        enum:
+          - add
+          - replace
+          - remove
+      path:
+        type: string
+        description: The path to the property to operate on.
+      value:
+        description: The new value (valid with op=replace)
+        type: object
+    example:
+      op: replace
+      path: "/name"
+      value: "new name"
+
+  patchRegion:
+    type: array
+    items:
+      $ref: '#/definitions/patchRegionPatch'
+
+  patchRegionPatch:
+    required:
+      - op
+      - path
+    properties:
+      op:
+        type: string
+        description: >
+          The operation to take on the specified property.
+          See: https://tools.ietf.org/html/rfc6902#section-4
+        enum:
+          - add
+          - replace
+      path:
+        type: string
+        description: The path to the property to operate on.
+        enum:
+          - /name
+          - /location
+      value:
+        description: The new value (valid with op=replace)
+        type: object
+    example:
+      op: replace
+      path: "/name"
+      value: "new name"
+
+  regionList:
+    required:
+      - members
+      - total
+      - unfilteredTotal
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/region'
+      total:
+        type: integer
+        format: int64
+      unfilteredTotal:
+        type: integer
+        format: int64
+
+  region:
+    type: object
+    required:
+      - id
+      - name
+      - providerUri
+      - uri
+    properties:
+      id:
+        type: string
+      metrics:
+        type: array
+        items:
+          $ref: '#/definitions/metric'
+      created:
+        type: string
+        format: date-time
+      modified:
+        type: string
+        format: date-time
+      name:
+        type: string
+      location:
+         $ref: '#/definitions/regionLocation'
+      providerUri:
+        type: string
+      provider:
+        description: Base provider info returned when view=full
+        $ref: '#/definitions/provider'
+      zones:
+        type: array
+        items:
+          $ref: '#/definitions/zone'
+      status:
+        type: string
+        enum:
+          - OK
+          - Warning
+          - Critical
+          - Disabled
+          - Unknown
+      state:
+        type: string
+        enum:
+          - Enabling
+          - Enabled
+          - Disabling
+          - Disabled
+          - Unknown
+      uri:
+        type: string
+
+  createRegionConnection:
+    type: object
+    description: Properties required for creation of a new region connection.
+    required:
+      - endpointUuid
+      - name
+      - location
+      - state
+      - uri
+    properties:
+      endpointUuid:
+        description: UUID of connection endpoint.
+        type: string
+      name:
+        type: string
+      location:
+        $ref: '#/definitions/vcenterSettings'
+      state:
+        description: Initial state of this region connection.
+        type: string
+        enum:
+          - Enabling
+          - Enabled
+          - Disabling
+          - Disabled
+      uri:
+        description: |
+          The URI of this connection
+        type: string
+        readOnly: true
+
+  regionConnection:
+    description: |
+      A connection required to enable access to a region, e.g for an
+      on-premise/private region.
+      Note: Not all regions will have an associated connection.
+    type: object
+    required:
+      - endpointUuid
+      - name
+      - location
+      - state
+      - uri
+    properties:
+      endpointUuid:
+        description: UUID of connection endpoint.
+        type: string
+      name:
+        type: string
+      location:
+        $ref: '#/definitions/vcenterSettings'
+      state:
+        description: State of this region connection.
+        type: string
+        enum:
+          - Enabling
+          - Enabled
+          - Disabling
+          - Disabled
+      uri:
+        description: |
+          The URI of this connection
+        type: string
+        readOnly: true
+
+  createRegion:
+    type: object
+    required:
+      - name
+      - providerUri
+    properties:
+      name:
+        type: string
+      providerUri:
+        type: string
+      location:
+         $ref: '#/definitions/regionLocation'
+
+  regionLocation:
+    description: Provides detailed location for regions.
+    type: object
+    required:
+      - latitude
+      - longitude
+    properties:
+      latitude:
+        type: number
+      longitude:
+        type: number
+
+  zoneTypeList:
+    required:
+      - members
+      - total
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/zoneType'
+      total:
+        type: integer
+        format: int64
+
+  zoneType:
+    type: object
+    required:
+      - id
+      - name
+      - uri
+    properties:
+      created:
+        type: string
+        format: date-time
+      id:
+        type: string
+        enum:
+          - aws-az
+          - vcenter
+      modified:
+        type: string
+        format: date-time
+      name:
+        type: string
+      uri:
+        type: string
+        enum:
+          - /rest/zone-types/aws-az
+          - /rest/zone-types/vcenter
+
+  zoneList:
+    required:
+      - members
+      - total
+      - unfilteredTotal
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/zone'
+      total:
+        type: integer
+        format: int64
+      unfilteredTotal:
+        type: integer
+        format: int64
+
+  zone:
+    type: object
+    required:
+      - id
+      - name
+      - regionUri
+      - uri
+      - zoneTypeUri
+    properties:
+      created:
+        type: string
+        format: date-time
+      id:
+        type: string
+      metrics:
+        type: array
+        items:
+          $ref: '#/definitions/metric'
+      modified:
+        type: string
+        format: date-time
+      name:
+        type: string
+      providerUri:
+        type: string
+      regionUri:
+        type: string
+      error:
+        $ref: '#/definitions/error'
+      status:
+        type: string
+        enum:
+          - OK
+          - Warning
+          - Critical
+          - Disabled
+          - Unknown
+      state:
+        type: string
+        enum:
+          - Enabling
+          - Enabled
+          - Disabling
+          - Disabled
+          - Unknown
+          - AddingCapacity
+      clusters:
+        type: array
+        description: A List of esxCluster.
+        items:
+          $ref: '#/definitions/esxCluster'
+      inTransitClusters:
+        type: array
+        description: Represents a List of Clusters for which state trasnsition is in-progress.
+        items:
+          $ref: '#/definitions/esxCluster'
+      esxLcmTask:
+        $ref: '#/definitions/taskResource'
+      networkSettings:
+        $ref: '#/definitions/networkSettings'
+      vcenterSettings:
+        $ref: '#/definitions/vcenterSettings'
+      managed:
+        type: boolean
+      uri:
+        type: string
+      zoneTypeUri:
+        type: string
+        enum:
+          - /rest/zone-types/aws-az
+          - /rest/zone-types/vcenter
+      resourceProfile:
+        $ref: '#/definitions/resourceProfile'
+      default:
+        description: If true, this zone will be used for deployment.
+          In a region, for every zoneType there can be only one zone with default=true.
+        type: boolean
+      applianceUri:
+        description: |
+          The appliance where this zone is hosted, if any.
+        type: string
+
+  networkSettings:
+    description: >
+      Represents the networks which will be required to create server blue prints.
+    type: object
+    properties:
+      ncsManagementNetwork:
+        type: string
+      esxManagementNetwork:
+        type: string
+      storageNetwork:
+        type: string
+      vMotionNetwork:
+        type: string
+      productionNetwork:
+        type: array
+        items:
+          type: string
+
+  vcenterSettings:
+    description: >
+      Represents vcenter credentials which will be validated and stored as a part of zone create.
+    type: object
+    properties:
+      ipAddress:
+        type: string
+      username:
+        type: string
+      password:
+        type: string
+      port:
+        type: integer
+        format: int64
+        description: https port for vcenter server (default is 443)
+
+  createZone:
+    type: object
+    required:
+      - name
+      - providerUri
+      - regionUri
+      - zoneTypeUri
+    properties:
+      name:
+        type: string
+      providerUri:
+        type: string
+      regionUri:
+        type: string
+      zoneTypeUri:
+        type: string
+        enum:
+          - /rest/zone-types/aws-az
+          - /rest/zone-types/vcenter
+      applianceUri:
+        description: |
+          If zone is targetted at an appliance, the URI of the appliance.
+        type: string
+      networkSettings:
+        $ref: '#/definitions/networkSettings'
+      vcenterSettings:
+        $ref: '#/definitions/vcenterSettings'
+      resourceProfile:
+        $ref: '#/definitions/resourceProfile'
+      resourceCapacity:
+        $ref: '#/definitions/resourceCapacity'
+      rates:
+        type: array
+        items:
+          $ref: '#/definitions/rate'
+
+  updateZone:
+    type: array
+    items:
+      $ref: '#/definitions/updateZonePatch'
+    example:
+      - op: add
+        path: /inTransitClusters
+        value:
+          - id: domain-c51
+            state: Enabled
+      - op: add
+        path: /networkSettings
+        value:
+          ncsManagementNetwork: net1
+          esxManagementNetwork: net2
+          storageNetwork: net3
+          movementNetwork: net4
+          productionNetwork:
+            - net5
+            - net6
+
+  updateZonePatch:
+    required:
+      - op
+      - path
+    properties:
+      op:
+        type: string
+        description: >
+          The operation to take on the specified property.
+          See: https://tools.ietf.org/html/rfc6902#section-4
+        enum:
+          - add
+          - replace
+          - remove
+      path:
+        type: string
+        description: The path to the property to operate on.
+      value:
+        description: The new value (valid with op=replace)
+        type: object
+    example:
+      EnableCluster:
+        [
+          {
+            "op": "add",
+            "path": "/inTransitClusters",
+            "value": [
+              {
+                "id": "domain-c51",
+                "state": "Enabled"
+              }
+            ]
+          }
+        ]
+      UpdateResourceProfile:
+        [
+          {
+            "op": "replace",
+            "path": "/resourceProfile",
+            "value": {
+              "name": "SY480-Gen9-Low-Density"
+            }
+          }
+        ]
+
+  zoneAction:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - reset
+            - add-capacity
+            - reduce-capacity
+        resourceOps:
+          type: object
+          properties:
+            resourceType:
+              type: string
+              enum:
+                - compute
+                - storage
+            resourceCapacity:
+              $ref: '#/definitions/resourceCapacity'
+      example:
+        type: add-capacity
+        resourceOps:
+            resourceType: compute
+            resourceCapacity: 2
+
+  zoneConnection:
+    description: |
+      A connection required to enable access to a zone, e.g for an
+      on-premise/private region.
+      Note: All vcenter zone types will need an associated connection.
+    type: object
+    properties:
+      id:
+        type: string
+        description: >
+          ID of connection endpoint
+      uuid:
+        type: string
+        description: >
+          UUID of connection endpoint
+      name:
+        type: string
+      location:
+        $ref: '#/definitions/vcenterSettings'
+      state:
+        type: string
+        enum:
+          - Enabling
+          - Enabled
+          - Disabling
+          - Disabled
+      uri:
+        description: |
+          The URI of this connection
+        type: string
+        readOnly: true
+
+  createZoneConnection:
+    type: object
+    required:
+      - uuid
+      - name
+      - location
+      - state
+    properties:
+      uuid:
+        type: string
+        description: >
+          UUID of connection endpoint
+      name:
+        type: string
+      location:
+        $ref: '#/definitions/vcenterSettings'
+      state:
+        type: string
+        enum:
+          - Enabling
+          - Enabled
+          - Disabling
+          - Disabled
+
+  zoneConnectionList:
+    required:
+      - members
+      - total
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/zoneConnection'
+      total:
+        type: integer
+        format: int64
+
+  resourceCapacity:
+    type: integer
+    format: int64
+    description: Number of resources to be added to the zone
+
+  resourceProfileList:
+    required:
+      - members
+      - total
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/resourceProfile'
+      total:
+        type: integer
+        format: int64
+
+  resourceProfile:
+    type: object
+    description: >
+      Represents the allowed resource profiles for a zone.
+    properties:
+      id:
+        description: >
+          A unique identifier of the resource profile
+        type: string
+      name:
+        description: >
+          Name of the resource profile
+        type: string
+      description:
+        description: >
+          Describes the resource profile
+        type: string
+
+  esxCluster:
+    type: object
+    properties:
+      created:
+        type: string
+        format: date-time
+      id:
+        type: string
+      name:
+        type: string
+      modified:
+        type: string
+        format: date-time
+      status:
+        type: string
+        enum:
+          - OK
+          - Warning
+          - Critical
+          - Disabled
+          - Unknown
+      state:
+        type: string
+        enum:
+          - Enabling
+          - Enabled
+          - Disabling
+          - Disabled
+          - Unknown
+      error:
+        $ref: '#/definitions/error'
+      datastores:
+        type: array
+        description: A List of datastore.
+        items:
+          $ref: '#/definitions/datastore'
+
+  datastore:
+    type: object
+    properties:
+      created:
+        type: string
+        format: date-time
+      id:
+        type: string
+      name:
+        type: string
+      sizeGiB:
+        type: number
+        format: float
+      type:
+        type: string
+      modified:
+        type: string
+        format: date-time
+      status:
+        type: string
+        enum:
+          - OK
+          - Warning
+          - Critical
+          - Disabled
+          - Unknown
+      state:
+        type: string
+        enum:
+          - Enabling
+          - Enabled
+          - Disabling
+          - Disabled
+          - Unknown
+      error:
+        $ref: '#/definitions/error'
+
+  clusterList:
+    required:
+      - members
+      - total
+      - unfilteredTotal
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/cluster'
+      total:
+        type: integer
+        format: int64
+      unfilteredTotal:
+        type: integer
+        format: int64
+
+  cluster:
+    type: object
+    required:
+      - id
+      - regionUri
+      - uri
+      - projectUri
+    properties:
+      created:
+        type: string
+        format: date-time
+      id:
+        type: string
+      modified:
+        type: string
+        format: date-time
+      regionUri:
+        type: string
+      status:
+        type: string
+      uri:
+        type: string
+      projectUri:
+        type: string
+
+  taskResource:
+    description: >
+      Represents operation task resource that will be bootstrapped based on
+      resource type.
+    properties:
+      uri:
+        description: |
+          URI of the task resource
+        type: string
+      name:
+        description: |
+          Short name of the operation task
+        type: string
+      type:
+        description: |
+          name of the object type
+        type: string
+      uuid:
+        description: |
+          uuid of the of the task
+        type: string
+      parentId:
+        description: |
+          parent id of the task resource
+        type: string
+      childTasks:
+        description: |
+          list of all child task ids
+        type: array
+        items:
+          type: string
+      percentComplete:
+        description: |
+          task completion percentage
+        type: integer
+      associatedResourceInstanceUri:
+        description: |
+          uri of the associated resource
+        type: string
+      associatedResourceInstanceId:
+        description: |
+          uuid of the associated resource
+        type: string
+      associatedResourceInstanceType:
+        description: |
+          type of the associated resource
+        type: string
+      state:
+        description: |
+          state of the task resource
+        type: string
+        enum:
+          - created
+          - running
+          - completed
+      status:
+        description: |
+          status of the task resource
+        type: string
+        enum:
+          - Ok
+          - Warning
+          - Critical
+      error:
+        $ref: '#/definitions/error'
+      taskFailed:
+        description: |
+          boolean that depicts task is success/failure
+        type: boolean
+      created:
+        description: |
+          creation time of object
+        type: string
+      modified:
+        description: |
+          modified time of object
+        type: string
+
+  catalogList:
+    required:
+      - members
+      - total
+      - unfilteredTotal
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/catalog'
+      total:
+        type: integer
+        format: int64
+      unfilteredTotal:
+        type: integer
+        format: int64
+
+  catalogTypeList:
+    required:
+      - members
+      - total
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/catalogType'
+      total:
+        type: integer
+        format: int64
+
+  catalogType:
+    type: object
+    description: Identifies the type of the catalog source. This type
+      determines the API to be used to interact with the source
+    required:
+      - id
+      - name
+      - uri
+    properties:
+#      created:
+#        type: string
+#        format: date-time
+      id:
+        type: string
+        enum:
+        # VM catalog sources
+          - aws-az  # AMIs from EC2
+          - vcenter # Templates from vCenter
+          - os-kvm  # Glance images from OpenStack (KVM)
+        # Helm charts catalog sources
+          - helm-charts-repository
+        # Container catalog sources
+          - docker-hub
+          - docker-trusted-registry
+          - private-docker-registry
+          - amazon-ecr
+          - azure-container-registry
+        # Pre-built catalog items bundled with NCS like K8S cluster.
+        # These are automatically added and cannot be removed.
+          - hpe-managed
+        # TODO: Add a type for other HPE managed repos that host value added services like LBaaS etc.
+#      modified:
+#        type: string
+#        format: date-time
+      name:
+        type: string
+        enum:
+          - "AWS Private Images"
+          - "VMware Templates"
+          - "OpenStack Images"
+          - "Kubernetes Apps"
+          - "Docker Hub"
+          - "Docker Trusted Registry"
+          - "Private Docker Registry"
+          - "AWS ECR Containers"
+          - "Azure Container Registry"
+          - "HPE Catalog"
+      uri:
+        type: string
+        enum:
+          - /rest/catalog-types/aws-az
+          - /rest/catalog-types/vcenter
+          - /rest/catalog-types/os-kvm
+          - /rest/catalog-types/helm-charts-repository
+          - /rest/catalog-types/docker-hub
+          - /rest/catalog-types/docker-trusted-registry
+          - /rest/catalog-types/private-docker-registry
+          - /rest/catalog-types/amazon-ecr
+          - /rest/catalog-types/azure-container-registry
+          - /rest/catalog-types/hpe-managed
+
+  catalog:
+    type: object
+    required:
+      - id
+      - name
+      - uri
+      - url
+      - protected
+    properties:
+      created:
+        type: string
+        format: date-time
+      id:
+        type: string
+      modified:
+        type: string
+        format: date-time
+      name:
+        type: string
+      status:
+        type: string
+      uri:
+        type: string
+      url:
+        type: string
+      serviceTypeUri:
+        type: string
+      catalogTypeUri:
+        type: string
+      servicesCount:
+        type: integer
+      state:
+        type: string
+        enum: [Enabled, Disabled]
+      protected:
+        type: boolean
+      message:
+        type: string
+
+  createCatalog:
+    type: object
+    description: >
+      The source of services like Helm charts, docker images, VM images. Some
+       of the catalog sources are automatically added as part of the provider
+       onboarding process. These inclue VMware, AWS and KVM.
+    required:
+      - name
+      - url
+      - catalogTypeUri
+    properties:
+      name:
+        type: string
+      url:
+        type: string
+      catalogTypeUri:
+        type: string
+        enum:
+          - /rest/catalog-types/aws-az
+          - /rest/catalog-types/vcenter
+          - /rest/catalog-types/os-kvm
+          - /rest/catalog-types/helm-charts-repository
+          - /rest/catalog-types/docker-hub
+          - /rest/catalog-types/docker-trusted-registry
+          - /rest/catalog-types/private-docker-registry
+          - /rest/catalog-types/amazon-ecr
+          - /rest/catalog-types/azure-container-registry
+          - /rest/catalog-types/hpe-managed
+      username:
+        type: string
+        description: >
+          Applicable only for docker trusted registry and private docker registry
+      password:
+        type: string
+        description: >
+          Applicable only for docker trusted registry and private docker registry
+      accessKey:
+        type: string
+        description: Applicable only for Amazon EC2 Container Registry
+      secretKey:
+        type: string
+        description: Applicable only for Amazon EC2 Container Registry
+      regionName:
+        type: string
+        description: Applicable only for Amazon EC2 Container Registry
+
+  updateCatalog:
+    type: object
+    description: >
+      Update catalog name and credentials.
+    properties:
+      name:
+        type: string
+      password:
+        type: string
+        description: >
+          Applicable only for docker trusted registry and private docker registry
+      accessKey:
+        type: string
+        description: Applicable only for Amazon EC2 Container Registry
+      secretKey:
+        type: string
+        description: Applicable only for Amazon EC2 Container Registry
+      regionName:
+        type: string
+        description: Applicable only for Amazon EC2 Container Registry
+      state:
+        type: string
+        enum:
+         - Enabled
+         - Disabled
+
+  providerServiceTypeList:
+    required:
+      - members
+      - total
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/providerServiceType'
+      total:
+        type: integer
+        format: int64
+
+  providerServiceType:
+    type: object
+    required:
+      - id
+      - name
+      - uri
+    properties:
+      created:
+        type: string
+        format: date-time
+      id:
+        type: string
+      modified:
+        type: string
+        format: date-time
+      name:
+        type: string
+      uri:
+        type: string
+
+  providerServiceList:
+    required:
+      - members
+      - total
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/providerService'
+      total:
+        type: integer
+        format: int64
+
+  providerService:
+    type: object
+    required:
+      - id
+      - name
+      - providerServiceTypeUri
+      - providerUri
+      - uri
+    properties:
+      created:
+        type: string
+        format: date-time
+      id:
+        type: string
+      modified:
+        type: string
+        format: date-time
+      name:
+        type: string
+      providerServiceTypeUri:
+        type: string
+      providerUri:
+        type: string
+      uri:
+        type: string
+
+  serviceTypeList:
+    required:
+      - members
+      - total
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/serviceType'
+      total:
+        type: integer
+        format: int64
+
+  serviceType:
+    type: object
+    required:
+      - id
+      - name
+      - uri
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      uri:
+        type: string
+
+  serviceList:
+    required:
+      - members
+      - total
+      - unfilteredTotal
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/service'
+      total:
+        type: integer
+        format: int64
+      unfilteredTotal:
+        type: integer
+        format: int64
+
+  service:
+    type: object
+    required:
+      - catalogUri
+      - description
+      - id
+      - name
+      - serviceTypeUri
+      - uri
+    properties:
+      catalogUri:
+        type: string
+        description: Where the service comes from
+      created:
+        type: string
+        format: date-time
+      description:
+        type: string
+      icon:
+        type: string
+      id:
+        type: string
+      modified:
+        type: string
+        format: date-time
+      name:
+        type: string
+      sizeMB:
+        type: integer
+      versions:
+        type: array
+        items:
+          type: string
+      version:
+        description: Deprecated. use versions.
+        type: string
+      minMemSizeGB:
+        type: number
+        format: float
+      diskFormat:
+        type: string
+      minDiskSizeGB:
+        type: number
+        format: float
+      providerTypeUri:
+        type: string
+        description: >
+          When the service can only be deployed in regions associated with a
+          certain provider type, such as a service in the Azure marketplace
+      regionUri:
+        type: string
+        description: >
+          When the service can only be deployed in a particluar region,
+          such as a service from a AWS
+      zoneUri:
+        type: string
+        description: >
+          When the service can only be deployed in a particluar region,
+          such as a service from a vcenter
+      serviceTypeUri:
+        type: string
+      uri:
+        type: string
+      virtualSizeMB:
+        type: integer
+      osType:
+        type: string
+      deployment:
+        description: >
+          The valid zones where the service can be deployed. Included when view=deployment
+        properties:
+          zones:
+            type: array
+            items:
+              $ref: '#/definitions/zone'
+
+  virtualMachineProfileList:
+    required:
+      - members
+      - total
+      - unfilteredTotal
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/virtualMachineProfile'
+      total:
+        type: integer
+        format: int64
+      unfilteredTotal:
+        type: integer
+        format: int64
+
+  virtualMachineProfile:
+    type: object
+    required:
+      - cpuCount
+      - diskSizeGB
+      - id
+      - memorySizeGB
+      - name
+      - regionUri
+      - zoneUri
+      - uri
+    properties:
+      cpuCount:
+        type: integer
+        format: int64
+      created:
+        type: string
+        format: date-time
+      diskSizeGB:
+        type: integer
+        format: int64
+      id:
+        type: string
+      memorySizeGB:
+        type: number
+        format: float
+      modified:
+        type: string
+        format: date-time
+      name:
+        type: string
+      regionUri:
+        type: string
+      zoneUri:
+        type: string
+      uri:
+        type: string
+
+  networkList:
+    required:
+      - members
+      - total
+      - unfilteredTotal
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/network'
+      total:
+        type: integer
+        format: int64
+      unfilteredTotal:
+        type: integer
+        format: int64
+
+  network:
+    type: object
+    required:
+      - id
+      - name
+      - zoneUri
+      - uri
+      - vlan
+      - subnets
+      - projectUris
+    properties:
+      created:
+        type: string
+        format: date-time
+      id:
+        type: string
+      modified:
+        type: string
+        format: date-time
+      name:
+        type: string
+      zoneUri:
+        type: string
+      uri:
+        type: string
+      vlan:
+        type: integer
+        format: int64
+      subnets:
+        type: array
+        items:
+          $ref: '#/definitions/subnet'
+      projectUris:
+        type: array
+        items:
+          type: string
+
+  subnet:
+    type: object
+    required:
+      - cidr
+    properties:
+      cidr:
+        type: string
+      ipPools:
+        type: array
+        items:
+          $ref: '#/definitions/ipPool'
+      gateway:
+        type: string
+      dns1:
+        type: string
+      dns2:
+        type: string
+
+  ipPool:
+      type: object
+      required:
+        - startIP
+        - endIP
+        - purpose
+      properties:
+        startIP:
+          type: string
+        endIP:
+          type: string
+        purpose:
+          type: string
+          enum:
+             - vm-ipam
+             - k8s-loadbalancer-ipam
+
+  updateNetwork:
+    type: array
+    items:
+      $ref: '#/definitions/updateNetworkPatch'
+
+  updateNetworkPatch:
+    required:
+      - op
+      - path
+    properties:
+      op:
+        type: string
+        description: >
+          The operation to take on the specified property.
+          See: https://tools.ietf.org/html/rfc6902#section-4
+        enum:
+          - add
+          - replace
+          - remove
+      path:
+        type: string
+        description: The path to the property to operate on.
+      value:
+        description: The value for add, remove or replace operation
+        type: object
+    example:
+      op: add
+      path: "projectUris"
+      value: "projectUri1"
+
+  projectList:
+    required:
+      - members
+      - total
+      - unfilteredTotal
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/project'
+      total:
+        type: integer
+        format: int64
+      unfilteredTotal:
+        type: integer
+        format: int64
+
+  project:
+    type: object
+    required:
+      - id
+      - name
+      - uri
+    properties:
+      created:
+        type: string
+        format: date-time
+      deployments:
+        description: List of deployments in the project. Requires `view=full`
+        $ref: '#/definitions/deploymentList'
+      id:
+        type: string
+      modified:
+        type: string
+        format: date-time
+      name:
+        type: string
+      protected:
+        type: boolean
+        description: If true, this project cannot be deleted or updated.
+      uri:
+        type: string
+      tagUris:
+        type: array
+        description: >
+          view=full adds tags as an array with objects containing tag and tag-key uris and names.
+        items:
+          type: string
+
+  createProject:
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+      tagUris:
+        type: array
+        description: >
+          This pattern of tags only works for tags that already exist.
+          Something would need to be added to handle creating tags in conjunction
+          with creating a project.
+        items:
+          type: string
+
+  updateProject:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        tagUris:
+          type: array
+          items:
+            type: string
+
+  deploymentList:
+    required:
+      - members
+      - total
+      - unfilteredTotal
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/deployment'
+      total:
+        type: integer
+        format: int64
+      unfilteredTotal:
+        type: integer
+        format: int64
+
+  deployment:
+    type: object
+    required:
+      - id
+      - name
+      - zoneUri
+      - service
+      - status
+      - uri
+      - projectUri
+    properties:
+      activeUsers:
+        type: array
+        items:
+          $ref: '#/definitions/user'
+      clusterUri:
+        type: string
+        description: The Kubernetes cluster where this is deployed, if this is a container or chart
+      created:
+        type: string
+        format: date-time
+      endpoints:
+        type: array
+        items:
+          $ref: '#/definitions/endpoint'
+      events:
+        type: array
+        items:
+          $ref: '#/definitions/event'
+      hasConsole:
+        type: boolean
+        description: Whether or not a console (VNC, spice, k8s, rdp) is supported
+      id:
+        type: string
+      modified:
+        type: string
+        format: date-time
+      name:
+        type: string
+      zoneUri:
+        type: string
+      serviceUri:
+        type: string
+      regionUri:
+        type: string
+      virtualMachineProfileUri:
+        type: string
+      service:
+        type: object
+        required:
+          - name
+          - uri
+        properties:
+          id:
+            type: string
+          name:
+            type: string
+          uri:
+            type: string
+          version:
+            type: string
+      region:
+        type: object
+        required:
+          - name
+          - uri
+        properties:
+          id:
+            type: string
+          name:
+            type: string
+          uri:
+            type: string
+      status:
+        type: string
+        enum:
+          - OK
+          - Warning
+          - Critical
+          - Disabled
+          - Unknown
+      state:
+        type: string
+        enum:
+          - Adding
+          - Removing
+          - Starting
+          - Started
+          - Stopping
+          - Stopped
+          - Suspending
+          - Suspended
+          - Resuming
+          - Unknown
+      stateDetails:
+        type: string
+      keypairUri:
+        type: string
+      memorySizeGB:
+        type: integer
+        format: int64
+      cpuCount:
+        type: integer
+      cpuGhz:
+        type: integer
+      diskSizeGB:
+        type: integer
+        format: int64
+      uri:
+        type: string
+      projectUri:
+        type: string
+      volumeURIs:
+        type: array
+        items:
+          type: string
+      firewall:
+        type: array
+        items:
+          type: object
+          properties:
+            allowedIPs:
+              type: string
+              description: CIDR for allowed IPs
+            ports:
+              type: array
+              items:
+                type: integer
+      volumes:
+        type: array
+        items:
+          type: object
+          required:
+            - name
+            - uri
+            - status
+            - sizeGiB
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            uri:
+              type: string
+            status:
+              type: string
+            sizeGiB:
+              type: integer
+      errorMessage:
+        type: string
+
+  createDeployment:
+    type: object
+    required:
+      - name
+      - serviceUri
+      - projectUri
+    properties:
+      assignExternalIP:
+        type: boolean
+      firewall:
+        type: array
+        items:
+          type: object
+          properties:
+            allowedIPs:
+              type: string
+              description: CIDR for allowed IPs
+            ports:
+              type: array
+              items:
+                type: integer
+      publicKey:
+        type: string
+        description: public ssh-key
+      version:
+        type: string
+        description: >
+          version string for the container/chart that needs to be deployed. If not specified, picks up the first one
+          from the versions array of the service.
+      name:
+        type: string
+      networks:
+        type: array
+        items:
+          type: object
+          properties:
+            networkUri:
+              type: string
+      regionUri:
+        type: string
+      zoneUri:
+        type: string
+      serviceUri:
+        type: string
+      virtualMachineProfileUri:
+        type: string
+      projectUri:
+        type: string
+      userData:
+        type: string
+        description: base64 encoded userdata
+
+  updateDeployment:
+    type: object
+    properties:
+      assignExternalIP:
+        description: Updated external IP. **Not supported in Beta**
+        type: boolean
+      firewall:
+        description: Updated firewall details. ** Not supported in Beta**
+        type: array
+        items:
+          type: object
+          properties:
+            allowedIPs:
+              type: string
+              description: CIDR for allowed IPs
+            ports:
+              type: array
+              items:
+                type: integer
+      publicKey:
+        type: string
+        description: Updated public ssh-key. This property can be modified only when the virtualMachineProfileUri property is also changed. **Not supported in Beta**
+      name:
+        type: string
+        description: Updated name of the deployment
+      networks:
+        description: Updated network **Not supported in Beta**
+        type: array
+        items:
+          type: object
+          properties:
+            networkUri:
+              type: string
+      virtualMachineProfileUri:
+        type: string
+        description: Modifying this property will result in the rebuild of the VM. **Not supported in Beta**
+      userData:
+        type: string
+        description: base64 encoded userdata. This property can be modified only when the virtualMachineProfileUri property is also changed. **Not supported in Beta**
+      volumes:
+        type: array
+        items:
+          $ref: '#/definitions/updateDeploymentProperty'
+
+  updateDeploymentProperty:
+    required:
+      - op
+      - path
+    properties:
+      op:
+        type: string
+        description: >
+          The operation to take on the specified property.
+          See: https://tools.ietf.org/html/rfc6902#section-4
+        enum:
+          - add
+          - replace
+          - remove
+      path:
+        type: string
+        description: The path to the property to operate on. Supported only for volumeURIs property.
+      value:
+        description: The new value
+        type: object
+    example: >
+      Example 1. To remove all existing volumes and add new volumes, replace can be used as follows
+      op: replace
+      path: "/volumeURIs"
+      value: >
+        "[ "/rest/volumes/85609a9e-31f5-4c7b-bd54-1ba50136bdf7", "/rest/volumes/85609a9e-31f5-4c7b-bd54-1ba50136bdf8" ]"
+      Example 2. To add additional volumes to a deployment already having volumes can be done by using add as follows
+      op: add
+      path: "/volumeURIs"
+      value: >
+        "[ "/rest/volumes/85609a9e-31f5-4c7b-bd54-1ba50136bdf7", "/rest/volumes/85609a9e-31f5-4c7b-bd54-1ba50136bdf8" ]"
+      Example 3. To remove specific volumes from a deployment can be done by using remove as follows
+      op: remove
+      path: "/volumeURIs"
+      value: >
+        "[ "/rest/volumes/85609a9e-31f5-4c7b-bd54-1ba50136bdf7", "/rest/volumes/85609a9e-31f5-4c7b-bd54-1ba50136bdf8" ]"
+
+  deploymentAction:
+    type: object
+    required:
+      - type
+    properties:
+      force:
+        type: boolean
+        description: >
+          if true, a restart or stop doesn't gracefully shutdown the
+          operating system
+      type:
+        type: string
+        enum:
+          - restart
+          - resume
+          - start
+          - stop
+          - suspend
+
+  createVolume:
+    type: object
+    required:
+      - name
+      - sizeGiB
+      - projectUri
+      - zoneUri
+    properties:
+      name:
+        type: string
+      sizeGiB:
+        type: integer
+      zoneUri:
+        type: string
+      projectUri:
+        type: string
+
+  updateVolume:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Updated name of the volume
+      sizeGiB:
+        type: integer
+        description: "Updated size of the volume. Note: size can only be increased."
+
+  membershipList:
+    required:
+      - members
+      - total
+      - unfilteredTotal
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/membership'
+      total:
+        type: integer
+        format: int64
+      unfilteredTotal:
+        type: integer
+        format: int64
+
+  membership:
+    type: object
+    required:
+      - userUri
+      - membershipRoleUri
+      - projectUri
+    properties:
+      userUri:
+        type: string
+      membershipRoleUri:
+        type: string
+      projectUri:
+        type: string
+
+  metricList:
+    required:
+      - members
+      - start
+      - count
+      - total
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/metric'
+      total:
+        type: integer
+        format: int64
+      start:
+        type: integer
+        format: int64
+        description: Starting offset of this page of results, currently always 0
+      count:
+        type: integer
+        format: int64
+        description: Count of results in this page, currently always equal to total
+
+  metric:
+    type: object
+    required:
+      - name
+      - values
+    properties:
+      resourceUri:
+        type: string
+        example: /rest/providers/85609a9e-31f5-4c7b-bd54-1ba50136bdf6
+        description: >
+          The resource this metric is associated with. It could be a provider, a deployment, a region, a tag, etc.
+
+          resource and resourceUri are mutually exclusive.  One of these is required to be in the response.
+
+          resourceUri is only returned when view=full is *NOT* set, otherwise resource is returned.
+      resource:
+        description: >
+          The resource this metric is associated with. It could be a provider, a deployment, a region, a tag, etc.
+
+          resource and resourceUri are mutually exclusive.  One of these is required to be in the response.
+
+          resource is only returned when view=full is set, otherwise resourceUri is returned.
+        type: object
+        required:
+          - value
+        properties:
+          value:
+            type: string
+          name:
+            type: string
+            example: AWS Lambda Service
+          uri:
+            type: string
+          project:
+            type: object
+            required:
+            - name
+            properties:
+              name:
+                type: string
+                example: Employee Programs
+              uri:
+                type: string
+          zone:
+            type: object
+            required:
+            - name
+            properties:
+              name:
+                type: string
+              uri:
+                type: string
+              region:
+                type: object
+                required:
+                - name
+                properties:
+                  name:
+                    type: string
+                  uri:
+                    type: string
+                  provider:
+                    type: object
+                    required:
+                    - name
+                    properties:
+                      name:
+                        type: string
+                        example: Amazon Web Services
+                      uri:
+                        type: string
+                      providerType:
+                        type: object
+                        required:
+                        - name
+                        properties:
+                          name:
+                            type: string
+                            example: AWS
+                          uri:
+                            type: string
+      name:
+        type: string
+        example: score.availability
+      units:
+        type: string
+        example: '%'
+        description: >
+          Supported metrics:
+            - None
+            - GB
+            - Hz
+            - cores
+            - %
+            - USD
+      description:
+        type: string
+        example: Availability score
+      values:
+        type: array
+        items:
+          type: object
+          required:
+            - value
+          properties:
+            value:
+              type: number
+              format: float
+            start:
+              type: string
+              format: date-time
+            end:
+              type: string
+              format: date-time
+      total:
+        type: integer
+        format: int64
+        description: Not yet implemented
+      start:
+        type: integer
+        format: int64
+        description: Not yet implemented
+      count:
+        type: integer
+        format: int64
+        description: Not yet implemented
+      associations:
+        type: array
+        items:
+          type: object
+          required:
+            - category
+            - name
+            - uri
+          properties:
+            category:
+              type: string
+              example: providers
+            name:
+              type: string
+              example: Production AWS
+              description: A human readable name for the resource
+            uri:
+              type: string
+
+  eventList:
+    required:
+      - members
+      - total
+      - unfilteredTotal
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/event'
+      total:
+        type: integer
+        format: int64
+      unfilteredTotal:
+        type: integer
+        format: int64
+
+  event:
+    type: object
+    required:
+      - id
+      - name
+      - resourceUri
+      - uri
+    properties:
+      created:
+        type: string
+        format: date-time
+      id:
+        type: string
+      modified:
+        type: string
+        format: date-time
+      name:
+        type: string
+      resourceUri:
+        type: string
+        example: /rest/providers/85609a9e-31f5-4c7b-bd54-1ba50136bdf6
+        description: The resource this metric is associated with. It could be a provider, a deployment, a region, a tag, etc.
+      uri:
+        type: string
+      userId:
+        type: string
+  endpoint:
+    type: object
+    required:
+      - address
+    properties:
+      name:
+        type: string
+        description: name of the network endpoint if any
+        example: Dev-VM Network
+      address:
+        type: string
+        description: endpoint address value of the deployment
+        example: 34.236.43.211
+      addressType:
+        type: string
+        description: type of the deployment endpoint address
+        enum:
+         - floating
+         - fixed
+         - url
+
+  error:
+    type: object
+    required:
+      - message
+      - details
+    properties:
+      message:
+        type: string
+      details:
+        type: string
+      recommendedActions:
+        type: array
+        items:
+          type: string
+      nestedErrors:
+        type: string
+      errorSource:
+        type: string
+      errorCode:
+        type: string
+      data:
+        type: string
+      canForce:
+        type: boolean
+
+  createUser:
+    type: object
+    required:
+      - email
+      - name
+      - password
+      - role
+    properties:
+      email:
+        type: string
+        description: Must be email address
+      name:
+        type: string
+        description: User's display name
+      password:
+        type: string
+        description: Password must be at least 8 characters long.
+      role:
+        $ref: '#/definitions/systemRole'
+
+  updateUser:
+    type: object
+    properties:
+      email:
+        type: string
+        description: Updated email address
+      name:
+        type: string
+        description: Updated display name
+      password:
+        type: string
+        description: Password must be at least 8 characters long.
+      role:
+        $ref: '#/definitions/systemRole'
+
+  user:
+    type: object
+    required:
+      - email
+      - name
+      - role
+      - uri
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      role:
+        $ref: '#/definitions/systemRole'
+      uri:
+        type: string
+
+  userList:
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/user'
+      total:
+        type: integer
+        format: int64
+
+  systemRole:
+    type: string
+    description: >
+      A user's role across the system, outside of any role they may have within
+      a given project. For example, a system administrator can add and edit
+      other users. Administrators can see all data for all users and perform
+      any action. Analyst can see limited data from other users and perform
+      limited actions. Consumer can see and act only on their own data.
+    enum:
+      - administrator
+      - analyst
+      - consumer
+      - project-creator
+
+  membershipRole:
+    type: object
+    description: >
+      A role that applies to a project. A user may have multiple (potentially different)
+      membership roles on multiple project.
+    required:
+      - id
+      - name
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      uri:
+        type: string
+    enum:
+      - owner
+      - member
+
+  roleList:
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/systemRole'
+      total:
+        type: integer
+        format: int64
+
+  membershipRoleList:
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/membershipRole'
+      total:
+        type: integer
+        format: int64
+
+  volume:
+    type: object
+    required:
+      - id
+      - name
+      - sizeGiB
+      - uri
+      - zoneUri
+      - projectUri
+    properties:
+      created:
+        type: string
+        format: date-time
+      id:
+        type: string
+      modified:
+        type: string
+        format: date-time
+      attachments:
+        type: array
+        items:
+          $ref: '#/definitions/volumeAttachment'
+      attachedMode:
+        type: string
+      description:
+        type: string
+      name:
+        type: string
+      sizeGiB:
+        type: integer
+      zoneUri:
+        type: string
+      status:
+        type: string
+      uri:
+        type: string
+      projectUri:
+        type: string
+
+  volumeList:
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/volume'
+      total:
+        type: integer
+  volumeAttachment:
+    properties:
+      id:
+        type: string
+      deploymentUri:
+        type: string
+      device:
+        type: string
+
+  tagKeyList:
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/tagKey'
+      total:
+        type: integer
+        format: int64
+
+  tagKey:
+    type: object
+    required:
+      - name
+      - uri
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      uri:
+        type: string
+      tags:
+        type: array
+        items:
+          $ref: '#/definitions/tag'
+
+  createTagKey:
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        type: string
+
+  tagList:
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/tag'
+      total:
+        type: integer
+        format: int64
+
+  tag:
+    type: object
+    required:
+      - id
+      - tagKeyUri
+      - name
+      - uri
+    properties:
+      id:
+        type: string
+      tagKeyUri:
+        type: string
+      tagKey:
+        description: Related `tag-key`
+        type: object
+      name:
+        type: string
+      uri:
+        type: string
+
+  createTag:
+    type: object
+    required:
+      - tagKeyUri
+      - name
+    properties:
+      tagKeyUri:
+        type: string
+      name:
+        type: string
+
+  keypairList:
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/keypair'
+      total:
+        type: integer
+        format: int64
+
+  keypair:
+    type: object
+    properties:
+      id:
+        type: string
+      fingerprint:
+        type: string
+        description: Short sequence of identifying bytes
+      uri:
+        type: string
+  rate:
+    type: object
+    required:
+      - metricName
+      - resourceUri
+      - name
+      - effectiveDate
+      - value
+      - unit
+    properties:
+      rate:
+        type: string
+      resourceUri:
+        type: string
+      resourceTerminated:
+        type: string
+        format: date
+      metricName:
+        type: string
+      name:
+        type: string
+      effectiveDate:
+        type: string
+        format: date
+      value:
+        type: number
+      unit:
+        type: string
+      active:
+        type: boolean
+      created:
+        type: string
+        format: date-time
+      deleted:
+        type: string
+        format: date-time
+
+  rateList:
+    required:
+      - members
+      - total
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/rate'
+      total:
+        type: integer
+        format: int64
+      start:
+        type: integer
+        format: int64
+      count:
+        type: integer
+        format: int64
+
+  appliance:
+    type: object
+    description: The definition of an appliance.
+    required:
+      - name
+      - endpoint
+      - regionUri
+      - type
+      - uri
+      - l2networks
+    properties:
+      name:
+        description: |
+          Name of this appliance.
+          The name of this appliance must be unique among all appliances
+          registered via this API.
+        type: string
+      endpoint:
+          $ref: '#/definitions/applianceEndpoint'
+      regionUri:
+        description: |
+          The URI of the parent 'region' of this appliance.
+          The regionURI is limited to URI-safe characters.
+        type: string
+      type:
+        description: |
+          The type of appliance.
+        type: string
+        enum:
+          - Synergy
+      uri:
+        description: |
+          The URI of this appliance. The URI is automatically generated when the
+          appliance is created and cannot be modified.
+        type: string
+        readOnly: true
+      created:
+        description: |
+          Date and time when the resource was created.
+        type: string
+        format: date-time
+        readOnly: true
+      modified:
+        description: |
+          Date and time when the resource was last modified.
+        type: string
+        format: date-time
+        readOnly: true
+      status:
+        description: |
+          The current status of this appliance.
+        type: string
+        enum:
+          - OK
+          - Warning
+          - Critical
+          - Unknown
+        readOnly: true
+      state:
+        description: |
+          The current state of this appliance.
+        type: string
+        enum:
+          - Enabling
+          - Enabled
+          - Disabling
+          - Unknown
+        readOnly: true
+      l2networks:
+        description: |
+          The set of Layer 2 networks available on this appliance for use by zones
+        type: array
+        items:
+          $ref: '#/definitions/applianceL2Network'
+        readOnly: true
+
+  applianceL2Network:
+    type: object
+    description: |
+      A Layer 2 network available on this appliance for use by zones
+    properties:
+      ethernetNetworkType:
+        description: |
+          The type of the network
+        type: string
+        enum:
+          - Tagged
+          - Untagged
+      purpose:
+        description: |
+          The purpose of the network
+        type: string
+        enum:
+          - FaultTolerance
+          - General
+          - ISCSI
+          - Management
+          - VMMigration
+      vlanId:
+          description: |
+            For networks of type Tagged, the VLAN-id of the network
+          type: integer
+      name:
+        description: |
+          The name of the network
+        type: string
+      uri:
+        description: |
+          The URI of the network
+        type: string
+        readOnly: true
+
+  applianceList:
+    type: object
+    description: Result of a query to get appliances.
+    required:
+      - members
+      - total
+      - unfilteredTotal
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/appliance'
+      total:
+        type: integer
+        format: int64
+      unfilteredTotal:
+        type: integer
+        format: int64
+
+  createAppliance:
+    type: object
+    description: Properties required for creation of a new appliance.
+    required:
+      - name
+      - endpoint
+      - regionUri
+      - type
+    properties:
+      name:
+        description: |
+          Name of this appliance.
+          The name of this appliance must be unique among all appliances
+          registered via this API.
+        type: string
+      endpoint:
+        $ref: '#/definitions/applianceEndpoint'
+      regionUri:
+        description: |
+          The URI of the parent 'region' of this appliance.
+          The regionURI is limited to URI-safe characters.
+        type: string
+      type:
+        description: |
+          The type of appliance.
+        type: string
+        enum:
+          - Synergy
+
+  applianceEndpoint:
+    type: object
+    description: |
+      The set of endpoint used for communicating and managing this appliance.
+    required:
+      - address
+      - username
+      - password
+    properties:
+      address:
+        description: |
+          The hostname or IP address of this appliance endpoint.
+        type: string
+      username:
+        description: The username for this appliance endpoint.
+        type: string
+      password:
+        description: The password for this appliance endpoint.
+        type: string
+
+  updateAppliance:
+    type: array
+    items:
+      $ref: '#/definitions/updateAppliancePatch'
+
+  updateAppliancePatch:
+    type: object
+    required:
+      - op
+      - path
+    properties:
+      op:
+        type: string
+        description: |
+          The operation to take on the specified property.
+          See: https://tools.ietf.org/html/rfc6902#section-4
+        enum:
+          - replace
+          - remove
+      path:
+        type: string
+        description: The path to the property to operate on.
+      value:
+        description: The new value (valid with op=replace)
+        type: object
+    example:
+      op: replace
+      path: "/name"
+      value: "new name"
+
+  passwordResetRequestInput:
+    type: object
+    required:
+      - email
+    properties:
+      email:
+        type: string
+
+  passwordReset:
+    type: object
+    required:
+      - password
+      - token
+    properties:
+      password:
+        type: string
+        description: Password must be at least 8 characters long.
+      token:
+        type: string
