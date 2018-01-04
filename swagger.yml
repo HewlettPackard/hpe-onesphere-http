@@ -1,4 +1,4 @@
-#(C) Copyright 2017 Hewlett Packard Enterprise Development LP
+#(C) Copyright 2017-2018 Hewlett Packard Enterprise Development LP
 swagger: '2.0'
 info:
   version: '1.0.0'
@@ -104,6 +104,12 @@ paths:
           description: Invalid userName/Password.
           schema:
             $ref: '#/definitions/error'
+    delete:
+      description: Deletes cached data and tokens for the current session.
+      operationId: DeleteSession
+      responses:
+        '204':
+          description: Session deleted (or not found)
 
   /session/idp:
     get:
@@ -686,6 +692,7 @@ paths:
                     "canForce": false
                 },
                 "description": "Update inventory element",
+                "progressUpdates": [],
                 "associatedResourceType": "zone",
                 "associatedResourceInstanceName": "",
                 "associatedResourceInstanceId": "",
@@ -826,6 +833,7 @@ paths:
                     "canForce": false
                 },
                 "description": "Update inventory element",
+                "progressUpdates": [],
                 "associatedResourceType": "zone",
                 "associatedResourceInstanceName": "",
                 "associatedResourceInstanceId": "",
@@ -969,6 +977,7 @@ paths:
                     "canForce": false
                 },
                 "description": "Update inventory element",
+                "progressUpdates": [],
                 "associatedResourceType": "zone",
                 "associatedResourceInstanceName": "",
                 "associatedResourceInstanceId": "",
@@ -1125,6 +1134,7 @@ paths:
                     "canForce": false
                 },
                 "description": "Update inventory element",
+                "progressUpdates": [],
                 "associatedResourceType": "zone",
                 "associatedResourceInstanceName": "",
                 "associatedResourceInstanceId": "",
@@ -1213,6 +1223,78 @@ paths:
             format: url
         '404':
           description: Not Found.
+          schema:
+            $ref: '#/definitions/error'
+
+  /zones/{id}/task-status:
+    get:
+      description: Returns the status of the task for the zone
+      operationId: ZoneTaskStatus
+      parameters:
+        - name: id
+          in: path
+          description: ID of zone to fetch the task details
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Gets the task status for zone
+          schema:
+            $ref: '#/definitions/taskResource'
+          examples:
+              esxLcmTask: {
+                "operationState": "",
+                "uuid": "009fc27b-b7f1-11e7-bb3f-0242ac110003",
+                "uri": "/rest/infrastructure-system-tasks/009fc27b-b7f1-11e7-bb3f-0242ac110003",
+                "type": "infrastructure-system-task",
+                "created": "2017-10-23T12:52:18.356685887Z",
+                "modified": "2017-10-23T12:53:18.742575801Z",
+                "name": "HCOE_ISM_INVENTORY_UPDATE",
+                "parentId": "",
+                "childTasks": [
+                    "00ccc1fc-b7f1-11e7-bb3f-0242ac110003"
+                ],
+                "percentComplete": 100,
+                "error": {
+                    "message": "",
+                    "details": "",
+                    "recommendedActions": null,
+                    "nestedErrors": null,
+                    "errorSource": "",
+                    "errorCode": "",
+                    "data": null,
+                    "canForce": false
+                },
+                "description": "Update inventory element",
+                "progressUpdates": [
+                  {
+                    "statusUpdate": "Total capacity requested is 10 ",
+                    "timeStamp": "2017-12-07T03:53:02.127808703Z"
+                  },
+                  {
+                    "statusUpdate": "Total capacity successfully added is 5",
+                    "timeStamp": "2017-12-07T03:53:02.132827168Z"
+                  }
+                ],
+                "associatedResourceType": "zone",
+                "associatedResourceInstanceName": "",
+                "associatedResourceInstanceId": "",
+                "associatedResourceInstanceUri": "",
+                "taskType": "",
+                "state": "Completed",
+                "status": "OK",
+                "isPartialSuccess": false,
+                "terminalState": false,
+                "taskFailed": false,
+                "inUse": false,
+                "weight": 1,
+                "eTag": "",
+                "tag": ""
+            }
+        '400':
+          description: Bad request.
           schema:
             $ref: '#/definitions/error'
 
@@ -1499,7 +1581,7 @@ paths:
 
   /services:
     get:
-      description: Returns all services. **Requires 'consumer' global role**
+      description: Returns all services. **Requires any project role or non-'consumer' global role** 
       operationId: FindServices
       parameters:
         - name: query
@@ -1629,7 +1711,7 @@ paths:
 
   /services/{id}:
     get:
-      description: Returns a service based on its id. **Requires 'consumer' global role**
+      description: Returns a service based on its id. **Requires any project role or non-'consumer' global role**
       operationId: GetServiceById
       parameters:
         - name: id
@@ -1729,7 +1811,7 @@ paths:
 
   /virtual-machine-profiles:
     get:
-      description: Returns all virtual machine profiles. **Requires 'consumer' global role**
+      description: Returns all virtual machine profiles. **Requires any project role or non-'consumer' global role**
       operationId: FindVirtualMachineProfiles
       parameters:
         - name: userQuery
@@ -1773,7 +1855,7 @@ paths:
               modified: "2017-08-23T14:03:50Z"
   /virtual-machine-profiles/{id}:
     get:
-      description: Returns a virtual machine profile based on its id. **Requires 'consumer' global role**
+      description: Returns a virtual machine profile based on its id. **Requires any project role or non-'consumer' global role**
       operationId: GetVirtualMachineProfileById
       parameters:
         - name: id
@@ -1793,7 +1875,7 @@ paths:
 
   /networks:
     get:
-      description: Returns all networks visible to the user. **Requires 'consumer' global and/or project roles**
+      description: Returns all networks visible to the user. **Requires any project role or non-'consumer' global role**
       operationId: FindNetworks
       parameters:
         - name: userQuery
@@ -1814,7 +1896,7 @@ paths:
 
   /networks/{id}:
     get:
-      description: Returns a network based on its id. **Requires 'consumer' global role and/or project roles**
+      description: Returns a network based on its id. **Requires any project role or non-'consumer' global role**
       operationId: GetNetworkById
       parameters:
         - name: id
@@ -1833,7 +1915,7 @@ paths:
             $ref: '#/definitions/error'
 
     patch:
-      description: Updates a network
+      description: Updates a network. **Requires administrator global role**
       operationId: ModifyNetwork
       parameters:
         - name: id
@@ -1859,7 +1941,7 @@ paths:
 
   /projects:
     get:
-      description: Returns all projects. **Requires 'consumer' global role**
+      description: Returns all projects. **Requires any project role or non-'consumer' global role**
       operationId: FindProjects
       parameters:
         - name: userQuery
@@ -1881,7 +1963,7 @@ paths:
           schema:
             $ref: '#/definitions/projectList'
     post:
-      description: Creates a new project. **Requires 'consumer' global role**
+      description: Creates a new project. **Requires 'project-owner' project role, or 'administrator' or 'project creator' global role**
       operationId: CreateProject
       parameters:
         - name: project
@@ -1902,7 +1984,7 @@ paths:
 
   /projects/{id}:
     get:
-      description: Returns a project based on its id. **Requires 'consumer' role on project**
+      description: Returns a project based on its id. **Requires any project role or non-consumer global role**
       operationId: GetProjectById
       parameters:
         - name: id
@@ -1927,7 +2009,7 @@ paths:
           schema:
             $ref: '#/definitions/error'
     patch:
-      description: Updates a project. **Requires 'administrator' global role or 'administrator' role on project**
+      description: Updates a project. **Requires 'administrator' global role or 'project owner' role on project**
       operationId: UpdateProject
       parameters:
         - name: id
@@ -1979,7 +2061,7 @@ paths:
 
   /deployments:
     get:
-      description: Returns all deployments. **Requires 'consumer' role on project**
+      description: Returns all deployments. **Requires any project role or non-'consumer' global role**
       operationId: FindDeployments
       parameters:
         - name: query
@@ -2032,7 +2114,7 @@ paths:
               ]
               hasConsole: true
     post:
-      description: Creates a new deployment. **Requires 'consumer' role on project**
+      description: Creates a new deployment. **Requires any project role, or 'administrator' or 'project creator' global role**
       operationId: CreateDeployment
       parameters:
         - name: deployment
@@ -2084,7 +2166,7 @@ paths:
 
   /deployments/{id}:
     get:
-      description: Returns a deployment based on its id. **Requires 'consumer' role on project**
+      description: Returns a deployment based on its id. **Requires any project role or non-'consumer' global role**
       operationId: GetDeploymentById
       parameters:
         - name: id
@@ -2133,7 +2215,7 @@ paths:
             $ref: '#/definitions/error'
 
     patch:
-      description: Updates a deployment. **Requires 'consumer' role on project**
+      description: Updates a deployment. **Requires any project role, or 'administrator' or 'project creator' global role**
       operationId: UpdateDeployment
       parameters:
         - name: id
@@ -2171,7 +2253,7 @@ paths:
           schema:
             $ref: '#/definitions/error'
     delete:
-      description: Delete a deployment and associated resources. **Requires 'consumer' role on project**
+      description: Delete a deployment and associated resources. **Requires any project role, or 'administrator' or 'project creator' global role**
       operationId: DeleteDeployment
       parameters:
         - name: id
@@ -2192,7 +2274,7 @@ paths:
 
   /deployments/{id}/actions:
     post:
-      description: Peforms an action to change the state of a deployment. **Requires 'consumer' role on project**
+      description: Peforms an action to change the state of a deployment. **Requires any project role, or 'administrator' or 'project creator' global role**
       operationId: ActOnDeployment
       parameters:
         - name: id
@@ -2245,7 +2327,7 @@ paths:
           Returns all memberships. Supports filtering by projectURI, userURI, groupURI, roleURI (but only
           individual values, not multiple) in 'query'. </BR>If projectURI and userURI/groupURI are given a different
           backend path will be used that should be authorized to a project owner even if they wouldn't ordinarily
-          be able to see other users' roles. </BR>**Requires 'administrator' global role or 'administrator' role on project**
+          be able to see other users' roles. </BR>**Requires 'administrator' or 'project creator' global role or 'project owner' role on project**
       operationId: FindMembers
       parameters:
         - name: query
@@ -2259,7 +2341,7 @@ paths:
           schema:
             $ref: '#/definitions/membershipList'
     post:
-      description: Creates a new membership. **Requires 'administrator' global role or 'administrator' role on project**
+      description: Creates a new membership. **Requires 'administrator' or 'project creator' global role or 'project owner' role on project**
       operationId: CreateMember
       parameters:
         - name: membership
@@ -2278,7 +2360,7 @@ paths:
           schema:
             $ref: '#/definitions/error'
     delete:
-      description: Delete a membership. **Requires 'administrator' global role or 'administrator' role on project**
+      description: Delete a membership. **Requires 'administrator' or 'project creator' global role or 'project owner' role on project**
       operationId: DeleteMember
       parameters:
         - name: membership
@@ -2316,7 +2398,7 @@ paths:
             $ref: '#/definitions/membershipRoleList'
   /users:
     get:
-      description: Lists all users. **Requires 'administrator' global role**
+      description: Lists all users. **Requires 'adminstrator' or 'project creator' global role**
       operationId: ListUsers
       parameters:
         - name: userQuery
@@ -2339,7 +2421,9 @@ paths:
           schema:
             $ref: '#/definitions/error'
     post:
-      description: Create a user. **Requires 'administrator' global role**</BR>Password must contain minimum one number, one uppercase, one lowercase, one special character and should be minimum 8 characters long.
+      description: |
+          Create a user. **Requires 'administrator' or 'project creator' global role**
+          </BR>Password should be minimum 8 characters long.
       operationId: CreateUser
       parameters:
         - name: user
@@ -2372,7 +2456,7 @@ paths:
 
   /users/{id}:
     get:
-      description: Returns a user based on its id. **Requires 'administrator' global role, or matching user id**
+      description: Returns a user based on its id. **Requires 'administrator' or 'project creator' global role, or matching user id**
       operationId: GetUserById
       parameters:
         - name: id
@@ -2398,7 +2482,9 @@ paths:
           schema:
             $ref: '#/definitions/error'
     patch:
-      description: Update a user. **Requires 'administrator' global role or matching user ID**</BR>If Password is updated it must contain minimum one number, one uppercase, one lowercase, one special character and should be minimum 8 characters long.
+      description: |
+          Update a user. **Requires 'administrator' or 'project creator' global role or matching user ID**
+          </BR>If Password is updated it must be minimum 8 characters long.
       operationId: UpdateUser
       parameters:
         - name: id
@@ -2438,7 +2524,7 @@ paths:
           schema:
             $ref: '#/definitions/error'
     delete:
-      description: Delete a user. **Requires 'administrator' global role**
+      description: Delete a user. **Requires 'administrator' or 'project creator' global role**
       operationId: DeleteUser
       parameters:
         - name: id
@@ -3019,7 +3105,7 @@ paths:
 
   /volumes:
     get:
-      description: Returns all volumes. **Requires 'consumer' role on projects**
+      description: Returns all volumes. **Requires any project role or non-'consumer' global role**
       operationId: FindVolumes
       parameters:
         - name: query
@@ -3055,7 +3141,7 @@ paths:
               projectUri: "/rest/projects/930381ba921b47c39960371d4145e0d2"
 
     post:
-      description: Creates a new volume. **Requires 'consumer' role on project**
+      description: Creates a new volume. **Requires any project role or 'administrator' or 'project creator' global role**
       operationId: CreateVolume
       parameters:
         - name: volume
@@ -3076,7 +3162,7 @@ paths:
 
   /volumes/{id}:
     get:
-      description: Returns a volume based on its id. **Requires 'consumer' role on project**
+      description: Returns a volume based on its id. **Requires any project role or non-'consumer' global role**
       operationId: GetVolumeById
       parameters:
         - name: id
@@ -3094,7 +3180,7 @@ paths:
           schema:
             $ref: '#/definitions/error'
     patch:
-      description: Updates a volume. **Requires 'consumer' role on project**
+      description: Updates a volume. **Requires any project role or 'administrator' or 'project creator' global role**
       operationId: UpdateVolume
       parameters:
         - name: id
@@ -3118,7 +3204,7 @@ paths:
           schema:
             $ref: '#/definitions/error'
     delete:
-      description: Delete a volume. **Requires 'consumer' role on project**
+      description: Delete a volume. **Requires any project role or 'administrator' or 'project creator' global role**
       operationId: DeleteVolume
       parameters:
         - name: id
@@ -4093,6 +4179,11 @@ definitions:
           - Disabled
           - Unknown
           - AddingCapacity
+      currentTasks:
+        type: array
+        description: Shows the list of tasks
+        items:
+          $ref: '#/definitions/zoneTasks'
       clusters:
         type: array
         description: A List of esxCluster.
@@ -4397,6 +4488,19 @@ definitions:
           Describes the resource profile
         type: string
 
+  zoneTasks:
+    type: object
+    properties:
+      taskName:
+        type: string
+        enum:
+          - CreatingPalermoRegionTask
+          - AddingCapacityTask
+      taskState:
+        type: string
+      taskStatus:
+        type: string
+
   esxCluster:
     type: object
     properties:
@@ -4548,6 +4652,18 @@ definitions:
         description: |
           task completion percentage
         type: integer
+      ProgressUpdates:
+        description: |
+          list of progress of all child task
+        type: array
+        items:
+          type: object
+          properties:
+            StatusUpdate:
+              type: string
+            TimeStamp:
+              type: string
+              format: date-time
       associatedResourceInstanceUri:
         description: |
           uri of the associated resource
