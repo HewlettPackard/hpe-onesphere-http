@@ -2,8 +2,11 @@
 swagger: '2.0'
 info:
   version: '1.0.0'
-  title: HPE OneSphere REST API's
-  description: REST API's exposed by the HPE OneSphere through swagger-2.0 specification. </BR>For calls requiring authentication use /rest/session to get a token. </BR>Click Authorize and add the token(prefix with "Bearer {yourtoken}">)
+  title: HPE OneSphere API
+  description: |+
+    HPE OneSphere hybrid cloud management REST API.
+
+    For calls requiring authentication use /rest/session to get a token.
   #TODO Change this url to HPE's terms and condition url
   termsOfService: http://www.hpe.com/onesphere
   contact:
@@ -80,13 +83,23 @@ paths:
           description: Session response
           schema:
             $ref: '#/definitions/session'
+          examples:
+            basic:
+              $ref: '#/definitions/session'
+            view=full:
+              $ref: '#/definitions/sessionFull'
         '403':
           description: Forbidden
           schema:
             $ref: '#/definitions/error'
     post:
       security: []
-      description: Authenticates a local user and generates a token if authenticated. *Does not require auth*
+      description: |+
+        Authenticates a local user and generates an authorization token. This
+        token should be used in subsequent HTTP requests as part of
+        the "Authorization" header. For example:
+
+        `Authorization: "Bearer <token>"`
       operationId: CreateSession
       parameters:
         - name: credentials
@@ -97,7 +110,7 @@ paths:
             $ref: '#/definitions/createSession'
       responses:
         '200':
-          description: Returns JWT token, if authenticated.
+          description: Returns an authorization token.
           schema:
             $ref: '#/definitions/session'
         '400':
@@ -113,7 +126,10 @@ paths:
 
   /session/idp:
     get:
-      description: Gets the Identity Provider login URL for a userName. **Not implemented**
+      description: |+
+        **Not implemented**
+
+        Gets the Identity Provider login URL for a userName.
       operationId: ReadSessionIdp
       parameters:
         - name: userName
@@ -1581,7 +1597,7 @@ paths:
 
   /services:
     get:
-      description: Returns all services. **Requires any project role or non-'consumer' global role** 
+      description: Returns all services. **Requires any project role or non-'consumer' global role**
       operationId: FindServices
       parameters:
         - name: query
@@ -1886,7 +1902,7 @@ paths:
         - name: zoneUri
           in: query
           description: Zone to filter networks by.
-          required: false
+          required: true
           type: string
       responses:
         '200':
@@ -3598,6 +3614,21 @@ definitions:
     required:
       - token
       - userUri
+    properties:
+      token:
+        type: string
+        description: |
+          Use this for `Authorization: "Bearer <token>"` HTTP request header.
+      userUri:
+        type: string
+        description: URI for the logged in user
+
+  sessionFull:
+    type: object
+    required:
+      - token
+      - userUri
+      - user
     properties:
       token:
         type: string
