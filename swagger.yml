@@ -176,17 +176,27 @@ paths:
 
   /providers:
     get:
-      description: Returns all providers. **Requires 'consumer' global role**
+      description: Returns providers. **Requires 'consumer' global role**
       operationId: FindProviders
       parameters:
         - name: query
           in: query
-          description: Usage providerTypeUri EQ /rest/provider-types/aws masterUri EQ /rest/providers/mastersUri.
+          description: |
+            Filters the providers returned.
+
+            It supports equality
+            comparison against one or more properties using a
+            ``"name EQ value"`` syntax. Multiple comparisons can be combined
+            using a ``"name1 EQ value1 AND name2 EQ value2"`` syntax.
+
+            It supports comparison of **providerTypeUri** and **projectUri**.
+
+            For example: ``query="providerTypeUri EQ /rest/provider-types/aws"``
           required: false
           type: string
       responses:
         '200':
-          description: List of providers
+          description: List of providers. AWS credentials are not included when listing providers.
           schema:
             $ref: '#/definitions/providerList'
     post:
@@ -301,12 +311,22 @@ paths:
 
   /regions:
     get:
-      description: Returns all regions. **Requires 'consumer' global role**
+      description: Returns regions. **Requires 'consumer' global role**
       operationId: FindRegions
       parameters:
-        - name: providerUri
+        - name: query
           in: query
-          description: The provider URI to prune regions by.
+          description: |
+            Filters the regions returned.
+
+            It supports equality
+            comparison against one or more properties using a
+            ``"name EQ value"`` syntax. Multiple comparisons can be combined
+            using a ``"name1 EQ value1 AND name2 EQ value2"`` syntax.
+
+            It supports comparison of **providerUri**.
+
+            For example: ``query="providerUri EQ /rest/providers/xxxx"``
           required: false
           type: string
         - name: view
@@ -576,22 +596,32 @@ paths:
 
   /zones:
     get:
-      description: Returns all zones.
+      description: Returns zones.
       operationId: FindZones
       parameters:
+        - name: query
+          in: query
+          description: |
+            Filters the zones returned.
+
+            It supports equality
+            comparison against one or more properties using a
+            ``"name EQ value"`` syntax. Multiple comparisons can be combined
+            using a ``"name1 EQ value1 AND name2 EQ value2"`` syntax.
+
+            It supports comparison of **providerUri**.
+
+            For example: ``query="providerUri EQ /rest/providers/xxxx"``
+          required: false
+          type: string
         - name: regionUri
           in: query
           description: The region URI to prune zones by.
           required: false
           type: string
-        - name: userQuery
-          in: query
-          description: Query string to prune zones by.
-          required: false
-          type: string
         - name: applianceUri
           in: query
-          description: The appliance URI to prune zones by.
+          description: The appliance URI to prune zones by. **Not implemented**
           required: false
           type: string
       responses:
@@ -630,7 +660,7 @@ paths:
               "status": "OK",
               "clusters": [ {
                 "id": "domain-c51",
-                "name": "NCSCluster1",
+                "name": "Cluster1",
                 "status": "OK",
                 "state": "Enabled",
                 "error": "",
@@ -657,7 +687,7 @@ paths:
               },
               {
                 "id": "domain-c52",
-                "name": "NCSCluster2",
+                "name": "Cluster2",
                 "status": "Disabled",
                 "state": "Disabled",
                 "error": "",
@@ -767,7 +797,7 @@ paths:
               "status": "OK",
               "clusters": [ {
                 "id": "domain-c51",
-                "name": "NCSCluster1",
+                "name": "Cluster1",
                 "status": "OK",
                 "state": "Enabled",
                 "error": "",
@@ -796,7 +826,7 @@ paths:
               },
               {
                 "id": "domain-c52",
-                "name": "NCSCluster2",
+                "name": "Cluster2",
                 "status": "Disabled",
                 "state": "Disabled",
                 "error": "",
@@ -876,6 +906,60 @@ paths:
               "created": "2017-08-09T22:06:49.064958385+05:30",
               "modified": "2017-08-09T22:06:49.06495863+05:30",
               "metrics": [],
+              "rates": [
+                {
+                  "rateUri": "/rest/rates/28418b5c-05e3-4340-92b8-36713f0027e1",
+                  "resourceUri": "/rest/zones/2b5a8db7-e145-4ef9-b7f2-9b2d45976cd4",
+                  "resourceTerminated": "",
+                  "metricName": "resource.cores.allocation",
+                  "name": "VM CPU Count (default)",
+                  "effectiveDate": "2008-08-09T00:00:00Z",
+                  "rateValue": 0.002,
+                  "unit": "cores",
+                  "created": "2017-08-09T22:06:49Z",
+                  "deleted": "",
+                  "active": true
+                },
+                {
+                  "rateUri": "/rest/rates/32df9bfb-83d8-4663-9858-10db0517bbf0",
+                  "resourceUri": "/rest/zones/2b5a8db7-e145-4ef9-b7f2-9b2d45976cd4",
+                  "resourceTerminated": "",
+                  "metricName": "ncs.resource.annual.cost",
+                  "name": "NCS Resource Annual Cost (default)",
+                  "effectiveDate": "2018-08-09T00:00:00Z",
+                  "rateValue": 108989.833333325,
+                  "unit": "Year",
+                  "created": "2017-08-09T22:06:49Z",
+                  "deleted": "",
+                  "active": true
+                },
+                {
+                  "rateUri": "/rest/rates/82296ca1-0b75-43ae-8f84-a02526dbdcb7",
+                  "resourceUri": "/rest/zones/2b5a8db7-e145-4ef9-b7f2-9b2d45976cd4",
+                  "resourceTerminated": "",
+                  "metricName": "resource.memory.allocation",
+                  "name": "VM Memory GB (default)",
+                  "effectiveDate": "2018-08-09T00:00:00Z",
+                  "rateValue": 0.006,
+                  "unit": "GB",
+                  "created": "2017-08-09T22:06:49Z",
+                  "deleted": "",
+                  "active": true
+                },
+                {
+                  "rateUri": "/rest/rates/da47ece6-8c6e-4a63-a387-d74403cf8d3c",
+                  "resourceUri": "/rest/zones/2b5a8db7-e145-4ef9-b7f2-9b2d45976cd4",
+                  "resourceTerminated": "",
+                  "metricName": "resource.storage.allocation",
+                  "name": "VM Disk GB (default)",
+                  "effectiveDate": "2018-08-09T00:00:00Z",
+                  "rateValue": 9.722e-06,
+                  "unit": "GB",
+                  "created": "2017-08-09T22:06:49Z",
+                  "deleted": "",
+                  "active": true
+                }
+              ],
               "providerUri": "/rest/providers/2b5a8db7-e145-4ef9-b7f2-9b2d45976cd1",
               "provider": {
                 "id": "2b5a8db7-e145-4ef9-b7f2-9b2d45976cd1",
@@ -911,7 +995,7 @@ paths:
               "status": "OK",
               "clusters": [ {
                 "id": "domain-c51",
-                "name": "NCSCluster1",
+                "name": "Cluster1",
                 "status": "OK",
                 "state": "Enabled",
                 "error": "",
@@ -940,7 +1024,7 @@ paths:
               },
               {
                 "id": "domain-c52",
-                "name": "NCSCluster2",
+                "name": "Cluster2",
                 "status": "Disabled",
                 "state": "Disabled",
                 "error": "",
@@ -1072,7 +1156,7 @@ paths:
               "status": "OK",
               "clusters": [ {
                 "id": "domain-c51",
-                "name": "NCSCluster1",
+                "name": "Cluster1",
                 "status": "OK",
                 "state": "Enabled",
                 "error": "",
@@ -1099,7 +1183,7 @@ paths:
               },
               {
                 "id": "domain-c52",
-                "name": "NCSCluster2",
+                "name": "Cluster2",
                 "status": "Disabled",
                 "state": "Disabled",
                 "error": "",
@@ -2103,8 +2187,8 @@ paths:
           schema:
             $ref: '#/definitions/deploymentList'
           examples:
-            'Filter deployments by workSpaceUri':
-              '/rest/deployments?query=workSpaceUri+EQ+/rest/projects/930381ba921b47c39960371d4145e0d2'
+            'Filter deployments by projectUri':
+              '/rest/deployments?query=projectUri+EQ+/rest/projects/930381ba921b47c39960371d4145e0d2'
             'Filter deployments by regionUri':
               '/rest/deployments?query=regionUri+EQ+/rest/regions/v3d6e308-4b99-4b96-9b2c-835de6a5987c'
             'Filter deployments by deployment name':
@@ -2343,7 +2427,9 @@ paths:
           Returns all memberships. Supports filtering by projectURI, userURI, groupURI, roleURI (but only
           individual values, not multiple) in 'query'. </BR>If projectURI and userURI/groupURI are given a different
           backend path will be used that should be authorized to a project owner even if they wouldn't ordinarily
-          be able to see other users' roles. </BR>**Requires 'administrator' or 'project creator' global role or 'project owner' role on project**
+          be able to see other users' roles. </BR>
+          **Requires 'administrator' or 'project creator' global role or 'project owner' role on project
+          (project owner requires projectUri be supplied)**
       operationId: FindMembers
       parameters:
         - name: query
@@ -2414,7 +2500,7 @@ paths:
             $ref: '#/definitions/membershipRoleList'
   /users:
     get:
-      description: Lists all users. **Requires 'adminstrator' or 'project creator' global role**
+      description: Lists all users.
       operationId: ListUsers
       parameters:
         - name: userQuery
@@ -2801,8 +2887,6 @@ paths:
                 - uri
                 - providerTypeUri
                 - providerUri
-                - regionUris
-                - zoneUris
                 - tagUris
               - valid query params for ***provider-services***
                 - id
@@ -2812,8 +2896,6 @@ paths:
                 - providerTypeUri
                 - providerUri
                 - projectUri
-                - regionUris
-                - zoneUris
                 - tagUris
 
             **period:** Always **`month`** for Cost Metrics.
@@ -3002,6 +3084,7 @@ paths:
   /rates:
     get:
       summary: "Get a list of rates"
+      operationId: listRates
       description: |
         **Requires 'administrator' global role**
         Retrieve a list of rates.  Optionally this list may be filtered, or the default rates specified with a resourceUri of 'default'.
@@ -3061,24 +3144,10 @@ paths:
           schema:
             $ref: '#/definitions/rateList'
 
-    post:
-      summary: "Add a set of rates"
-      description: |
-        **Requires 'administrator' global role**
-        This will persist new rates
-      parameters:
-        - name: body
-          in: body
-          schema:
-            type: array
-            items:
-               $ref: '#/definitions/rate'
-      responses:
-        201:
-          description: Created. Request received and rates persisted.
   /rates/{id}:
     get:
       summary: "Retrieve a rate by id"
+      operationId: getRateById
       description: "**Requires 'administrator' global role**"
       parameters:
         - name: id
@@ -3091,18 +3160,6 @@ paths:
           description: Request received and rate retrieved.
           schema:
             $ref: '#/definitions/rate'
-    delete:
-      summary: "Delete a rate by id."
-      description: "**Requires 'administrator' global role**"
-      parameters:
-        - name: id
-          in: path
-          description: Id of the rate to be deleted
-          required: true
-          type: string
-      responses:
-        200:
-          description: Request received and rate deleted.
 
   /events:
     get:
@@ -3142,7 +3199,7 @@ paths:
           schema:
             $ref: '#/definitions/volumeList'
           examples:
-            'Filter deployments by workSpaceUri':
+            'Filter deployments by projectUri':
               '/rest/volumes?query=projectUri+EQ+/rest/projects/930381ba921b47c39960371d4145e0d2'
             '/rest/deployments':
               id: "c86f18f1-a611-470e-8a11-1645b70b63c7"
@@ -4795,7 +4852,7 @@ definitions:
           - private-docker-registry
           - amazon-ecr
           - azure-container-registry
-        # Pre-built catalog items bundled with NCS like K8S cluster.
+        # Pre-built catalog items bundled with HPE OneSphere like K8S cluster.
         # These are automatically added and cannot be removed.
           - hpe-managed
         # TODO: Add a type for other HPE managed repos that host value added services like LBaaS etc.
@@ -6294,28 +6351,36 @@ definitions:
       - resourceUri
       - name
       - effectiveDate
-      - value
+      - rateValue
       - unit
     properties:
-      rate:
+      rateUri:
         type: string
       resourceUri:
+        description: Uri for the resource for which this rate applies
         type: string
       resourceTerminated:
+        description: If terminated or deleted, the datetime at which this was done
         type: string
         format: date
       metricName:
+        description: Identifies the metric to which this rate is applied to determine cost
         type: string
       name:
+        description: Human readable name for the rate.  If suffixed with \'(default)\' this rate matches the default rate for the metric
         type: string
       effectiveDate:
+        description: Date at which this rate came/comes into force
         type: string
         format: date
-      value:
+      rateValue:
+        description: Numeric value of the rate, allows nine places of precision either side of the decimal point
         type: number
       unit:
+        description: Scale for rate application
         type: string
       active:
+        description: Indicates whether the rate is valid for use (i.e. not deleted or superceded)
         type: boolean
       created:
         type: string
@@ -6323,7 +6388,6 @@ definitions:
       deleted:
         type: string
         format: date-time
-
   rateList:
     required:
       - members
