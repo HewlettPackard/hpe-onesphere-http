@@ -34,7 +34,7 @@ paths:
 
   /status:
     get:
-      description: Checks the service is running. *Does not require auth*
+      description: Checks the service is running. It does not require authorization.
       operationId: ReadStatus
       responses:
         '200':
@@ -67,7 +67,7 @@ paths:
 
   /session:
     get:
-      description: Gets information for the currently authorized user.
+      description: Gets information for the current user.
       operationId: ReadSession
       parameters:
         - name: view
@@ -166,7 +166,7 @@ paths:
 
   /provider-types:
     get:
-      description: Returns all provider types.
+      description: Returns provider types.
       operationId: FindProviderTypes
       responses:
         '200':
@@ -176,7 +176,7 @@ paths:
 
   /providers:
     get:
-      description: Returns providers. **Requires 'consumer' global role**
+      description: Returns providers. It requires the **consumer** global role.
       operationId: FindProviders
       parameters:
         - name: query
@@ -225,7 +225,7 @@ paths:
 
   /providers/{id}:
     get:
-      description: Returns a provider based on its id. **Requires 'consumer' global role**
+      description: Returns a provider based on its id. It requires the **consumer** global role.
       operationId: GetProviderById
       parameters:
         - name: id
@@ -311,7 +311,7 @@ paths:
 
   /regions:
     get:
-      description: Returns regions. **Requires 'consumer' global role**
+      description: Returns regions. It requires the **consumer** global role.
       operationId: FindRegions
       parameters:
         - name: query
@@ -366,7 +366,7 @@ paths:
 
   /regions/{id}:
     get:
-      description: Returns a region based on its id. **Requires 'consumer' global role**
+      description: Returns a region based on its id. It requires the **consumer** global role.
       operationId: GetRegionById
       parameters:
         - name: id
@@ -539,7 +539,7 @@ paths:
 
   /regions/{id}/connector-image:
     get:
-      description: Generates connector-image url for the region. **Requires 'administrator' role**
+      description: Generates connector-image url for the region. It requires the **administrator** role.
       operationId: getConnectorImage
       parameters:
         - name: id
@@ -572,7 +572,7 @@ paths:
 
   /zone-types/{id}/resource-profiles:
     get:
-      description: Returns all available resourceProfile for **vcenter zone type**. **Requires 'administrator' role**
+      description: Returns all available resourceProfile for **vcenter zone type**. It requires the **administrator** role.
       operationId: FindResourceProfileName
       parameters:
         - name: id
@@ -1281,7 +1281,7 @@ paths:
 
   /zones/{id}/actions:
     post:
-      description: Peforms an action to the zone. **Requires 'administrator' role**
+      description: Peforms an action to the zone. It requires the **administrator** role.
       operationId: ActOnZone
       parameters:
         - name: id
@@ -1400,7 +1400,7 @@ paths:
 
   /zones/{id}/connections:
     get:
-      description: Gets the list of connection for the zone. **Requires 'administrator' role**
+      description: Gets the list of connection for the zone. It requires the **administrator** role.
       operationId: zoneConnectionInstances
       parameters:
         - name: id
@@ -1424,7 +1424,7 @@ paths:
             $ref: '#/definitions/error'
 
     post:
-      description: Peforms an action to the zone. **Requires 'administrator' role**
+      description: Peforms an action to the zone. It requires the **administrator** role.
       operationId: RegisterZoneConnection
       parameters:
         - name: id
@@ -1518,7 +1518,7 @@ paths:
 
   /catalog-types:
     get:
-      description: Returns all catalog types.
+      description: Returns catalog types.
       operationId: FindCatalogTypes
       responses:
         '200':
@@ -1528,12 +1528,18 @@ paths:
 
   /catalogs:
     get:
-      description: Returns all catalogs. **Requires 'consumer' global role**
+      description: Returns catalogs. It requires the **consumer** global role.
       operationId: FindCatalogs
       parameters:
         - name: userQuery
           in: query
-          description: Query string to prune catalogs by.
+          description: |
+            Filters the catalogs returned.
+
+            It performs a case insensitive comparison of the supplied string
+            value with the **name** property.
+
+            For example: ``userQuery="dock"``
           required: false
           type: string
         - name: view
@@ -1580,7 +1586,7 @@ paths:
 
   /catalogs/{id}:
     get:
-      description: Returns a catalog based on its id. **Requires 'consumer' global role**
+      description: Returns a catalog based on its id. It requires the **consumer** global role.
       operationId: GetCatalogById
       parameters:
         - name: id
@@ -1651,7 +1657,7 @@ paths:
 
   /service-types:
     get:
-      description: Returns all service types. **Requires 'consumer' global role**
+      description: Returns all service types. It requires the **consumer** global role.
       operationId: FindServiceTypes
       responses:
         '200':
@@ -1661,7 +1667,7 @@ paths:
 
   /service-types/{id}:
     get:
-      description: Return a service type based on its id. **Requires 'consumer' global role**
+      description: Return a service type based on its id. It requires the **consumer** global role.
       operationId: GetServiceTypeById
       parameters:
         - name: id
@@ -1681,37 +1687,33 @@ paths:
 
   /services:
     get:
-      description: Returns all services. **Requires any project role or non-'consumer' global role**
+      description: Returns services. It requires any project role or non-'consumer' global role.
       operationId: FindServices
       parameters:
         - name: query
           in: query
-          description: URI query string to prune services by.
+          description: |
+            Filters the services returned.
+
+            It supports equality
+            comparison against one or more properties using a
+            ``"name EQ value"`` syntax. Multiple comparisons can be combined
+            using a ``"name1 EQ value1 AND name2 EQ value2"`` syntax.
+
+            It supports comparison of **catalogUri** and **serviceTypeUri**.
+
+            For example: ``query="serviceTypeUri EQ /rest/service-types/zone"``
           required: false
           type: string
         - name: userQuery
           in: query
-          description: Userquery string to prune services by service name, version or description
-          required: false
-          type: string
-        - name: serviceTypeUri
-          in: query
-          description: Type to filter services by.
-          required: false
-          type: string
-        - name: zoneUri
-          in: query
-          description: Zone to filter services by.
-          required: false
-          type: string
-        - name: projectUri
-          in: query
-          description: Project to filter services by.
-          required: false
-          type: string
-        - name: catalogUri
-          in: query
-          description: catalog to filter services by.
+          description: |
+            Filters the services returned.
+
+            It performs a case insensitive comparison of the supplied string
+            value with the **name** and **description** properties.
+
+            For example: ``userQuery="kub"``
           required: false
           type: string
         - name: view
@@ -1811,7 +1813,7 @@ paths:
 
   /services/{id}:
     get:
-      description: Returns a service based on its id. **Requires any project role or non-'consumer' global role**
+      description: Returns a service based on its id. It requires any project role or non-'consumer' global role.
       operationId: GetServiceById
       parameters:
         - name: id
@@ -1911,14 +1913,9 @@ paths:
 
   /virtual-machine-profiles:
     get:
-      description: Returns all virtual machine profiles. **Requires any project role or non-'consumer' global role**
+      description: Returns all virtual machine profiles. It requires any project role or non-'consumer' global role.
       operationId: FindVirtualMachineProfiles
       parameters:
-        - name: userQuery
-          in: query
-          description: Query string to prune virtual machine profiles by.
-          required: false
-          type: string
         - name: zoneUri
           in: query
           description: Zone to filter virtual machine profiles by.
@@ -1955,7 +1952,7 @@ paths:
               modified: "2017-08-23T14:03:50Z"
   /virtual-machine-profiles/{id}:
     get:
-      description: Returns a virtual machine profile based on its id. **Requires any project role or non-'consumer' global role**
+      description: Returns a virtual machine profile based on its id. It equires any project role or non-'consumer' global role.
       operationId: GetVirtualMachineProfileById
       parameters:
         - name: id
@@ -1975,17 +1972,23 @@ paths:
 
   /networks:
     get:
-      description: Returns all networks visible to the user. **Requires any project role or non-'consumer' global role**
+      description: Returns networks. It requires any project role or non-'consumer' global role.
       operationId: FindNetworks
       parameters:
-        - name: userQuery
+        - name: query
           in: query
-          description: Query string to prune networks by.
-          required: false
-          type: string
-        - name: zoneUri
-          in: query
-          description: Zone to filter networks by.
+          description: |
+            Filters the networks returned.
+
+            It supports equality
+            comparison against one or more properties using a
+            ``"name EQ value"`` syntax. Multiple comparisons can be combined
+            using a ``"name1 EQ value1 AND name2 EQ value2"`` syntax.
+
+            It supports comparison of **zoneUri** and **projectUri**. zoneUri is
+            required to be specified.
+
+            For example: ``query="zoneUri EQ /rest/zones/xxxx"``
           required: true
           type: string
       responses:
@@ -1996,7 +1999,7 @@ paths:
 
   /networks/{id}:
     get:
-      description: Returns a network based on its id. **Requires any project role or non-'consumer' global role**
+      description: Returns a network based on its id. It requires any project role or non-'consumer' global role.
       operationId: GetNetworkById
       parameters:
         - name: id
@@ -2015,7 +2018,7 @@ paths:
             $ref: '#/definitions/error'
 
     patch:
-      description: Updates a network. **Requires administrator global role**
+      description: Updates a network. It requires the **administrator** global role.
       operationId: ModifyNetwork
       parameters:
         - name: id
@@ -2041,13 +2044,18 @@ paths:
 
   /projects:
     get:
-      description: Returns all projects. **Requires any project role or non-'consumer' global role**
+      description: Returns projects. It requires any project role or non-'consumer' global role.
       operationId: FindProjects
       parameters:
         - name: userQuery
           in: query
-          description: >
-            Query string to prune projects by. Any projects whose 'name' contains the userQuery will match.
+          description: |
+            Filters the projects returned.
+
+            It performs a case insensitive comparison of the supplied string
+            value with the **name** property.
+
+            For example: ``userQuery="exp"``
           required: false
           type: string
         - name: view
@@ -2063,7 +2071,7 @@ paths:
           schema:
             $ref: '#/definitions/projectList'
     post:
-      description: Creates a new project. **Requires 'project-owner' project role, or 'administrator' or 'project creator' global role**
+      description: Creates a new project. It requires the **project-owner** project role, or **administrator** or **project creator** global role.
       operationId: CreateProject
       parameters:
         - name: project
@@ -2084,7 +2092,7 @@ paths:
 
   /projects/{id}:
     get:
-      description: Returns a project based on its id. **Requires any project role or non-consumer global role**
+      description: Returns a project based on its id. It requires any project role or non-consumer global role.
       operationId: GetProjectById
       parameters:
         - name: id
@@ -2109,7 +2117,7 @@ paths:
           schema:
             $ref: '#/definitions/error'
     patch:
-      description: Updates a project. **Requires 'administrator' global role or 'project owner' role on project**
+      description: Updates a project. It requires the **administrator** global role or the **project owner** role on a project.
       operationId: UpdateProject
       parameters:
         - name: id
@@ -2137,7 +2145,7 @@ paths:
         Deletes a project. If resources (currently Deployments) exist within the project
         they must first be deleted. In this case, the response will be a 409 Conflict with
         the body listing the first ten offending items.
-        **Requires 'admin' global role or 'owner' project role (not implemented)**
+        It requires **administratpor** global role or **owner** project role. **not implemented**
       parameters:
         - name: id
           in: path
@@ -2161,18 +2169,35 @@ paths:
 
   /deployments:
     get:
-      description: Returns all deployments. **Requires any project role or non-'consumer' global role**
+      description: Returns deployments. It requires any project role or non-'consumer' global role.
       operationId: FindDeployments
       parameters:
         - name: query
           in: query
-          description: URI query string to prune deployments by.
-          required: true
+          description: |
+            Filters the deployments returned.
+
+            It supports equality
+            comparison against one or more properties using a
+            ``"name EQ value"`` syntax. Multiple comparisons can be combined
+            using a ``"name1 EQ value1 AND name2 EQ value2"`` syntax.
+
+            It supports comparison of **zoneUri** and **projectUri**.
+
+            For example: ``query="zoneUri EQ /rest/zones/xxxx"``
+          required: false
           type: string
         - name: userQuery
           in: query
+          description: |
+            Filters the deployments returned.
+
+            It performs a case insensitive comparison of the supplied string
+            value with the **name** property.
+
+            For example: ``userQuery="ubun"``
+          required: false
           type: string
-          description: Userquery string to prune deployments by deployment name.
         - name: view
           in: query
           description: >
@@ -2214,7 +2239,7 @@ paths:
               ]
               hasConsole: true
     post:
-      description: Creates a new deployment. **Requires any project role, or 'administrator' or 'project creator' global role**
+      description: Creates a new deployment. It requires any project role, or the **administrator** or **project creator** global role.
       operationId: CreateDeployment
       parameters:
         - name: deployment
@@ -2266,7 +2291,7 @@ paths:
 
   /deployments/{id}:
     get:
-      description: Returns a deployment based on its id. **Requires any project role or non-'consumer' global role**
+      description: Returns a deployment based on its id. It requires any project role or non-'consumer' global role.
       operationId: GetDeploymentById
       parameters:
         - name: id
@@ -2315,7 +2340,7 @@ paths:
             $ref: '#/definitions/error'
 
     patch:
-      description: Updates a deployment. **Requires any project role, or 'administrator' or 'project creator' global role**
+      description: Updates a deployment. It requires any project role, or the **administrator** or **project creator** global role.
       operationId: UpdateDeployment
       parameters:
         - name: id
@@ -2353,7 +2378,7 @@ paths:
           schema:
             $ref: '#/definitions/error'
     delete:
-      description: Delete a deployment and associated resources. **Requires any project role, or 'administrator' or 'project creator' global role**
+      description: Delete a deployment and associated resources. It requires any project role, or the **administrator** or **project creator** global role.
       operationId: DeleteDeployment
       parameters:
         - name: id
@@ -2374,7 +2399,7 @@ paths:
 
   /deployments/{id}/actions:
     post:
-      description: Peforms an action to change the state of a deployment. **Requires any project role, or 'administrator' or 'project creator' global role**
+      description: Peforms an action to change the state of a deployment. It requires any project role, or the **administrator** or **project creator** global role.
       operationId: ActOnDeployment
       parameters:
         - name: id
@@ -2423,13 +2448,16 @@ paths:
 
   /memberships:
     get:
-      description: >
-          Returns all memberships. Supports filtering by projectURI, userURI, groupURI, roleURI (but only
-          individual values, not multiple) in 'query'. </BR>If projectURI and userURI/groupURI are given a different
+      description: |
+          Returns memberships. Supports filtering by projectURI, userURI, groupURI, roleURI (but only
+          individual values, not multiple) in 'query'.
+
+          If projectURI and userURI/groupURI are given a different
           backend path will be used that should be authorized to a project owner even if they wouldn't ordinarily
-          be able to see other users' roles. </BR>
-          **Requires 'administrator' or 'project creator' global role or 'project owner' role on project
-          (project owner requires projectUri be supplied)**
+          be able to see other users' roles.
+
+          It requires the **administrator** or **project creator** global role or the **project owner** role on the project.
+          **project owner** requires **projectUri** to be supplied.
       operationId: FindMembers
       parameters:
         - name: query
@@ -2443,7 +2471,7 @@ paths:
           schema:
             $ref: '#/definitions/membershipList'
     post:
-      description: Creates a new membership. **Requires 'administrator' or 'project creator' global role or 'project owner' role on project**
+      description: Creates a new membership. It requires the **administrator** or **project creator** global role or **project owner** role on the project.
       operationId: CreateMember
       parameters:
         - name: membership
@@ -2453,6 +2481,10 @@ paths:
           schema:
             $ref: '#/definitions/membership'
       responses:
+        '200':
+          description: Membership existed already
+          schema:
+            $ref: '#/definitions/membership'
         '201':
           description: New membership sucessfully created.
           schema:
@@ -2461,8 +2493,9 @@ paths:
           description: Bad request.
           schema:
             $ref: '#/definitions/error'
+
     delete:
-      description: Delete a membership. **Requires 'administrator' or 'project creator' global role or 'project owner' role on project**
+      description: Delete a membership. It requires the **administrator** or **project creator** global role or the **project owner** role on the project.
       operationId: DeleteMember
       parameters:
         - name: membership
@@ -2481,7 +2514,7 @@ paths:
 
   /roles:
     get:
-      description: Lists all global roles
+      description: Returns global roles.
       operationId: ListRoles
       responses:
         '200':
@@ -2491,7 +2524,7 @@ paths:
 
   /membership-roles:
     get:
-      description: Lists all membership (project-specific) roles
+      description: Returns membership (project-specific) roles.
       operationId: ListMembershipRoles
       responses:
         '200':
@@ -2500,13 +2533,18 @@ paths:
             $ref: '#/definitions/membershipRoleList'
   /users:
     get:
-      description: Lists all users.
+      description: Returns users.
       operationId: ListUsers
       parameters:
         - name: userQuery
           in: query
-          description: >
-            Query string to prune names by. Any users whose 'name' or 'email' contains the userQuery will match.
+          description: |
+            Filters the users returned.
+
+            It performs a case insensitive comparison of the supplied string
+            value with the **name** and **email** properties.
+
+            For example: ``userQuery="chr"``
           required: false
           type: string
       responses:
@@ -2524,8 +2562,9 @@ paths:
             $ref: '#/definitions/error'
     post:
       description: |
-          Create a user. **Requires 'administrator' or 'project creator' global role**
-          </BR>Password should be minimum 8 characters long.
+          Create a user. It requires the **administrator** or **project creator** global role.
+
+          The password should be a minimum of 8 characters long.
       operationId: CreateUser
       parameters:
         - name: user
@@ -2558,7 +2597,7 @@ paths:
 
   /users/{id}:
     get:
-      description: Returns a user based on its id. **Requires 'administrator' or 'project creator' global role, or matching user id**
+      description: Returns a user based on its id. It requires the **administrator** or **project creator** global role, or matching user id.
       operationId: GetUserById
       parameters:
         - name: id
@@ -2585,8 +2624,9 @@ paths:
             $ref: '#/definitions/error'
     patch:
       description: |
-          Update a user. **Requires 'administrator' or 'project creator' global role or matching user ID**
-          </BR>If Password is updated it must be minimum 8 characters long.
+          Update a user. It requires the **administrator** or **project creator** global role or matching user ID.
+
+          If the password is updated it must be a minimum of 8 characters long.
       operationId: UpdateUser
       parameters:
         - name: id
@@ -2626,7 +2666,7 @@ paths:
           schema:
             $ref: '#/definitions/error'
     delete:
-      description: Delete a user. **Requires 'administrator' or 'project creator' global role**
+      description: Delete a user. It requires the **administrator** or **project creator** global role.
       operationId: DeleteUser
       parameters:
         - name: id
@@ -2696,8 +2736,9 @@ paths:
   /metrics:
     get:
       description: >
-        Returns all metrics based on the supplied criteria. **Requires 'analyst' role**
-        Requires one and only one of resourceUri or category to be specified
+        Returns all metrics based on the supplied criteria. It requires the **analyst** role.
+
+        It requires one and only one of resourceUri or category to be specified.
       operationId: FindMetrics
       parameters:
         - name: resourceUri
@@ -2907,50 +2948,35 @@ paths:
 
             </br>
 
-            **Resource Usage Metrics**
-
-            ----------------
-
-            **name:** (and units)
-              - resource.cores.allocation (cores)
-              - resource.memory.allocation (GB)
-              - resource.storage.allocation (GB)
-              - resource.cpu.utilization (%)
-              - resource.memory.utilization (%)
-              - resource.storage.utilization (%)
-
-            **category:** Either **`projects`** or **`deployments`** can be used for Resource Usage Metrics.
-
-            **resourceUri**
-             - /rest/projects/:id
-
-            **period:** Either **`day`** or **`hour`** can be used for Resource Usage Metrics.
-
-            **periodCount:** Always **non-zero integer** for Cost Metrics.
-
-            </br>
-
             **Resource Score Drill Down Metrics**
 
             ----------------
 
             **name:** (and units)
-              - resource.cpu.total (cores)
-              - resource.cpu.usage (cores)
-              - resource.memory.total (GB)
-              - resource.memory.usage (GB)
-              - resource.network.in_packets_rate (packets/second)
-              - resource.network.in_packets_error_rate (errors/second)
-              - resource.network.in_packets_drop_rate (drops/second)
-              - resource.network.out_packets_rate (packets/second)
-              - resource.network.out_packets_error_rate (errors/second)
-              - resource.network.out_packets_drop_rate (drops/second)
-              - resource.node.ready_status_count (None)
-              - resource.node.ready_failed_count (None)
+              - server.cpu.total (cores)
+              - vm.cpu.total (cores)
+              - server.cpu.usage (cores)
+              - vm.cpu.usage (cores)
+              - server.memory.total (GB)
+              - server.memory.usage (GB)
+              - storage.total (GB)
+              - storage.available (GB)
+              - server.network.in_packets (packets/second)
+              - server.network.in_packet_errors (errors/second)
+              - server.network.in_packet_drops (drops/second)
+              - server.network.out_packets (packets/second)
+              - server.network.out_packet_errors (errors/second)
+              - server.network.out_packet_drops (drops/second)
+              - server.status_checks (None)
+              - vm.status_checks (None)
+              - server.status_down (None)
+              - vm.status_down (None)
+              - vm.volume.queue_length (None)
 
             **category:** `N/A` ** Not currently implemented
 
             **resourceUri**
+             - /rest/provider-types/:id
              - /rest/providers/:id
              - /rest/regions/:id
              - /rest/zones/:id
@@ -2974,24 +3000,25 @@ paths:
               - cost.efficiency
               - cost.fixed
               - cost.usage
-              - resource.memory.allocation
-              - resource.memory.utilization
-              - resource.cores.allocation
-              - resource.cpu.utilization
-              - resource.storage.allocation
-              - resource.storage.utilization
-              - resource.cpu.total
-              - resource.cpu.usage
-              - resource.memory.total
-              - resource.memory.usage
-              - resource.network.in_packets_rate
-              - resource.network.in_packets_error_rate
-              - resource.network.in_packets_drop_rate
-              - resource.network.out_packets_rate
-              - resource.network.out_packets_error_rate
-              - resource.network.out_packets_drop_rate
-              - resource.node.ready_status_count
-              - resource.node.ready_failed_count
+              - server.cpu.total (cores)
+              - vm.cpu.total (cores)
+              - server.cpu.usage (cores)
+              - vm.cpu.usage (cores)
+              - server.memory.total (GB)
+              - server.memory.usage (GB)
+              - storage.total (GB)
+              - storage.available (GB)
+              - server.network.in_packets (packets/second)
+              - server.network.in_packet_errors (errors/second)
+              - server.network.in_packet_drops (drops/second)
+              - server.network.out_packets (packets/second)
+              - server.network.out_packet_errors (errors/second)
+              - server.network.out_packet_drops (drops/second)
+              - server.status_checks (None)
+              - vm.status_checks (None)
+              - server.status_down (None)
+              - vm.status_down (None)
+              - vm.volume.queue_length (None)
 
         - name: periodStart
           in: query
@@ -3002,7 +3029,7 @@ paths:
 
             If not specified, it will default to the latest time for which
             the data is expected to be valid, aligned to the period
-            boundary. For costs and resources, this will be the start of
+            boundary. For costs, this will be the start of
             the current UTC period. For scores (and score drill down metrics),
             this will be the previous hour, unless the current UTC time is
             less than 5 minutes into the current hour, in which case it will
@@ -3011,7 +3038,7 @@ paths:
             scores will be returned for 2017-06-01T19:00:00Z, however if current time is
             2017-06-01T21:05:00 UTC, scores will be returned for
             2017-06-01T20:00:00Z. If periodStart is not specified, period is hour,
-            resource or cost metrics are requested and the current time is
+            cost metrics are requested and the current time is
             2017-06-01T21:03:00 UTC, metrics will be returned for 2017-06-01T21:00:00Z
 
             **example:** 2017-06-01T00:00:00Z
@@ -3083,11 +3110,11 @@ paths:
 
   /rates:
     get:
-      summary: "Get a list of rates"
       operationId: listRates
       description: |
-        **Requires 'administrator' global role**
-        Retrieve a list of rates.  Optionally this list may be filtered, or the default rates specified with a resourceUri of 'default'.
+        Returns rates. It requires the **administrator** global role.
+
+        Optionally this list may be filtered, or the default rates specified with a resourceUri of 'default'.
       parameters:
         - name: resourceUri
           in: query
@@ -3146,9 +3173,8 @@ paths:
 
   /rates/{id}:
     get:
-      summary: "Retrieve a rate by id"
       operationId: getRateById
-      description: "**Requires 'administrator' global role**"
+      description: Retrieve a rate by id. It requires the **administrator** global role.
       parameters:
         - name: id
           in: path
@@ -3163,7 +3189,7 @@ paths:
 
   /events:
     get:
-      description: Returns all events based on the supplied criteria. **Not implemented**
+      description: Returns events based on the supplied criteria. **Not implemented**
       operationId: FindEvents
       parameters:
         - name: resourceUri
@@ -3178,7 +3204,7 @@ paths:
 
   /volumes:
     get:
-      description: Returns all volumes. **Requires any project role or non-'consumer' global role**
+      description: Returns volumes. It requires any project role or non-'consumer' global role.
       operationId: FindVolumes
       parameters:
         - name: query
@@ -3214,7 +3240,7 @@ paths:
               projectUri: "/rest/projects/930381ba921b47c39960371d4145e0d2"
 
     post:
-      description: Creates a new volume. **Requires any project role or 'administrator' or 'project creator' global role**
+      description: Creates a new volume. It requires any project role or the **administrator** or **project creator** global role.
       operationId: CreateVolume
       parameters:
         - name: volume
@@ -3235,7 +3261,7 @@ paths:
 
   /volumes/{id}:
     get:
-      description: Returns a volume based on its id. **Requires any project role or non-'consumer' global role**
+      description: Returns a volume based on its id. It requires any project role or non-'consumer' global role.
       operationId: GetVolumeById
       parameters:
         - name: id
@@ -3253,7 +3279,7 @@ paths:
           schema:
             $ref: '#/definitions/error'
     patch:
-      description: Updates a volume. **Requires any project role or 'administrator' or 'project creator' global role**
+      description: Updates a volume. It requires any project role or 'administrator' or 'project creator' global role.
       operationId: UpdateVolume
       parameters:
         - name: id
@@ -3277,7 +3303,7 @@ paths:
           schema:
             $ref: '#/definitions/error'
     delete:
-      description: Delete a volume. **Requires any project role or 'administrator' or 'project creator' global role**
+      description: Delete a volume. It requires any project role or the **administrator** or **project creator** global role.
       operationId: DeleteVolume
       parameters:
         - name: id
@@ -3298,7 +3324,7 @@ paths:
 
   /tag-keys:
     get:
-      description: Lists all tag keys.
+      description: Lists tag keys.
       operationId: ListTagKeys
       parameters:
         - name: view
@@ -3315,7 +3341,7 @@ paths:
           schema:
             $ref: '#/definitions/tagKeyList'
     post:
-      description: Create a tag key. **Requires 'analyst' global role**
+      description: Create a tag key. It requires the **analyst** global role.
       operationId: CreateTagKey
       parameters:
         - name: name
@@ -3370,7 +3396,7 @@ paths:
           schema:
             $ref: '#/definitions/error'
     delete:
-      description: Delete a tag key and associated tags. **Requires 'analyst' global role**
+      description: Delete a tag key and associated tags. It requires the **analyst** global role.
       operationId: DeleteTagKey
       parameters:
         - name: id
@@ -3388,7 +3414,7 @@ paths:
 
   /tags:
     get:
-      description: Lists all tags.
+      description: Lists tags.
       operationId: ListTags
       parameters:
         - name: view
@@ -3405,7 +3431,7 @@ paths:
           schema:
             $ref: '#/definitions/tagList'
     post:
-      description: Create a tag. **Requires 'analyst' global role**
+      description: Create a tag. It requires the **analyst** global role.
       operationId: CreateTag
       parameters:
         - name: tag
@@ -3434,7 +3460,7 @@ paths:
 
   /tags/{id}:
     get:
-      description: Returns a tag based on its id. **Requires 'consumer' global role**
+      description: Returns a tag based on its id. It requires the **consumer** global role.
       operationId: GetTagById
       parameters:
         - name: id
@@ -3460,7 +3486,7 @@ paths:
           schema:
             $ref: '#/definitions/error'
     delete:
-      description: Delete a tag. **Requires 'analyst' global role**
+      description: Delete a tag. It requires the **analyst** global role.
       operationId: DeleteTag
       parameters:
         - name: id
@@ -3502,7 +3528,7 @@ paths:
   /appliances:
     get:
       summary: NOT IMPLEMENTED
-      description: Get a list of appliances.
+      description: Returns appliances.
       operationId: GetAppliance
       parameters:
         - name: name
