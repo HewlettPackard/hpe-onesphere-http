@@ -1,46 +1,360 @@
 {
-	"info": {
-		"name": "HPE OneSphere (Public)",
-		"_postman_id": "e038fd33-aa26-476e-1079-77e680a7fee4",
-		"description": "Collection of calls to illustrate the use of the HPE OneSphere API",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-	},
-	"item": [
+	"id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+	"name": "HPE OneSphere (Public)",
+	"description": "Collection of calls to illustrate the use of the HPE OneSphere API",
+	"order": [
+		"b23b6a2b-5aea-4fbf-e568-b163a5facb88",
+		"3c2534d2-fbfc-bc63-61ed-f9a890045c70",
+		"6c95521b-fd22-409b-1ac0-cff48595685e",
+		"1e5354ea-e8b4-f439-3a74-d069e4593cc2",
+		"0b4789d8-9d93-c68d-3871-79bc9645b78e",
+		"d2c13b71-949e-a88d-d4de-0cb11be9c1f3",
+		"7946610b-efad-8dd4-5ea6-65097d2c6070",
+		"c0f6922b-aeab-6473-774a-5c0039361325",
+		"124e7948-bb84-8206-24be-51d0c0b379e0",
+		"78d53cfc-74c1-32cc-c12c-5980c7b7ff3f",
+		"92e84510-55f8-2375-1458-a58d05ac02bb",
+		"ff1c177c-d7ed-145b-68e1-9544bef15df5",
+		"4a4e6cf0-067d-8c0e-07ef-12722e54051c",
+		"bfea96bd-71c6-f2d2-ffcb-6beb3a886e61",
+		"c8a8bc1b-9c0f-943c-48dc-3b435efe1fd2",
+		"70272c08-6873-2517-0828-cfa6f5b4839c",
+		"fa6c51c8-9fca-acf5-753d-1e25841231a4",
+		"076c2cee-2c6d-e3b8-f433-08fb993afc07",
+		"669ca153-0fd2-ee5b-0950-813dfe842d69",
+		"6dfccbdd-0706-562c-675c-b0232d26804a",
+		"fd58399b-d8c4-134d-13ed-8a0a44769767",
+		"b1171e37-a20d-ed33-f17f-6c4351926558",
+		"5f4ab8ea-456a-31a1-a01c-670607786007",
+		"1756ad4f-05ed-8ed6-4bb7-ac7de37beb46",
+		"dfc3a8d2-7650-0999-bd7e-f358fb8571b4",
+		"8acebff6-93c8-cdb9-4014-6d7c24826e88",
+		"8322d784-9616-6700-60eb-041187e9eab0",
+		"475f9f03-1630-7568-ff61-b8127c404720",
+		"2bbd63eb-5f70-081e-1c51-b5a24bdc60e6",
+		"3e54349a-6f73-9f8f-77c2-554a4b72885b",
+		"b3c812f0-aa74-d0e1-2778-b62af3437c44",
+		"d652109d-dbe6-ac07-6ae5-b1675a28eb87",
+		"f1022bf2-7206-b0d7-c780-d48253849fdc",
+		"76983de1-6db3-8155-44d4-71d52c54c501",
+		"9bb1a053-8e40-1884-0270-25e73dce03d5",
+		"4017de22-d7c2-dc3a-7e37-57deeb323d5c",
+		"8e316d3d-17d5-32f9-9535-d913a2c0982d",
+		"ca412704-95a0-c4f1-29f4-174289a5fb8b",
+		"bb30d5be-c4d3-419d-d496-3ca0681e65ae",
+		"7cbb4d3c-3cc6-10cb-42fa-2bf6bced9fdd",
+		"410e51ad-98a2-562e-ba16-670c46d48286",
+		"1c323722-a4ce-b7e0-7c95-655c737d839a",
+		"0ae3e30b-419e-05a4-39e3-debe5c2e1b7f",
+		"858add3e-bb8d-157a-a413-b5c9b2bf7390",
+		"07062f9b-838e-b034-bbbd-acb3b334c8ea",
+		"b639285f-67be-a8d8-8607-49680d1cd775",
+		"a55d892d-34b2-1e0a-cce6-07322ecbcaf5",
+		"37613ec4-68b9-6038-b2ba-e9e93d759294",
+		"08333336-e523-3bce-151a-474db45156d5",
+		"4aea5bc3-d8b3-bf63-f9c3-a216b05add2b",
+		"fba2e018-7502-f07c-5f4e-132f9ffa063f",
+		"ba502690-8d34-90b3-523a-8b54e0297bf3",
+		"ddf170ad-5a39-ec7e-3af9-89ec73ad5065",
+		"ef13a051-a8f8-a17c-d452-ea09e1bc27b9",
+		"33a6e6a3-6892-240c-b516-0aa27489e10a",
+		"720abe61-b941-ef49-fae1-3267c6200cbb",
+		"c2ffa2dc-e536-00b8-d227-e5aff5142f4c",
+		"8a468610-85f5-da2a-bcd4-f1f5b3e53be9"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 0,
+	"owner": 0,
+	"public": false,
+	"events": [
 		{
-			"name": "/rest/status",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/status",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"status"
-					]
-				},
-				"description": "Get Status of HPE OneSphere. No authentication required."
-			},
-			"response": []
+			"listen": "prerequest",
+			"script": {
+				"id": "4eb880c8-46b1-42b9-b7d7-7f3d231b4520",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		},
 		{
-			"name": "/rest/session (Start here!)",
-			"event": [
+			"listen": "test",
+			"script": {
+				"id": "b781089f-6e74-46fc-9956-8cdb8f63ce1e",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variables": [],
+	"auth": null,
+	"requests": [
+		{
+			"id": "07062f9b-838e-b034-bbbd-acb3b334c8ea",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}\n",
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/metrics?name=cost.usage&category=projects&periodStart={{PeriodStart}}&period=month&periodCount=-12&view=full",
+			"queryParams": [
+				{
+					"key": "name",
+					"value": "cost.usage",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "category",
+					"value": "projects",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "periodStart",
+					"value": "{{PeriodStart}}",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "period",
+					"value": "month",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "periodCount",
+					"value": "-12",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "view",
+					"value": "full",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"events": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"auth": null,
+			"time": 1523347849819,
+			"name": "/rest/metrics (cost usage by project over last 12 months)",
+			"description": "",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"responses": [],
+			"currentHelper": null,
+			"helperAttributes": null,
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
+		},
+		{
+			"id": "076c2cee-2c6d-e3b8-f433-08fb993afc07",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}\n",
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/networks/83c75839-f419-4124-b31f-36090a8e353a",
+			"queryParams": [],
+			"events": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "PATCH",
+			"data": [],
+			"dataMode": "raw",
+			"auth": null,
+			"time": 1523018171707,
+			"name": "/rest/networks (to remove access by a project)",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"responses": [],
+			"currentHelper": null,
+			"helperAttributes": null,
+			"rawModeData": "[{\r\n\t\"op\":\"remove\",\r\n\t\"path\": \"projectUris\",\r\n\t\"value\": \"64bb73ea340b437baf898adcb589226f\"\r\n}]\r\n\r\n"
+		},
+		{
+			"id": "08333336-e523-3bce-151a-474db45156d5",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}\n",
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/metrics?name=score.availability&category=providers&period=day&periodCount=-30&view=full",
+			"queryParams": [
+				{
+					"key": "name",
+					"value": "score.availability",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "category",
+					"value": "providers",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "period",
+					"value": "day",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "periodCount",
+					"value": "-30",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "view",
+					"value": "full",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"events": [],
+			"auth": null,
+			"method": "GET",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"data": [],
+			"dataMode": "raw",
+			"name": "/rest/metrics (availability score of all providers over last 30 days)",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1523352316641,
+			"version": 2,
+			"responses": [],
+			"currentHelper": null,
+			"helperAttributes": null,
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
+		},
+		{
+			"id": "0ae3e30b-419e-05a4-39e3-debe5c2e1b7f",
+			"name": "/rest/appliances",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"method": "GET",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n",
+			"pathVariables": {},
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/appliances",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [],
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json"
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}"
+				}
+			],
+			"auth": null,
+			"collection_id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"currentHelper": null,
+			"helperAttributes": null
+		},
+		{
+			"id": "0b4789d8-9d93-c68d-3871-79bc9645b78e",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}\n",
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/users",
+			"queryParams": [],
+			"events": [
 				{
 					"listen": "test",
 					"script": {
@@ -73,1423 +387,2699 @@
 					}
 				}
 			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"userName\":\"{{Account}}\",\n\t\"password\":\"{{Password}}\"\n}"
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/session",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"session"
-					]
-				},
-				"description": "Start with this call to get a session Token. We have automatically written the instructions to set the retrieved token as an Authorization Header for subsequent calls."
-			},
-			"response": []
-		},
-		{
-			"name": "/rest/session (Finish here!)",
-			"request": {
-				"method": "DELETE",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/session",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"session"
-					]
-				},
-				"description": "It's always good practice to cleanup after yourself. So we recommend deleting session token when done"
-			},
-			"response": []
-		},
-		{
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"auth": null,
+			"time": 1523018194747,
 			"name": "/rest/users",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/users",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"users"
-					]
-				},
-				"description": ""
-			},
-			"response": []
+			"description": "Creates a user",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"responses": [],
+			"preRequestScript": "console.log(\"YourHPEOneSpherePortalURL:\", pm.variables.get(\"YourHPEOneSpherePortalURL\"));\nconsole.log(\"Account:\", pm.variables.get(\"Account\"));\nconsole.log(\"Password:\", pm.variables.get(\"Password\"));\n\n\n\n\n",
+			"tests": "var jsonData = JSON.parse(responseBody);\npm.environment.set(\"Token\",jsonData.token);\n\nconsole.log(\"Token:\", pm.variables.get(\"Token\"));\n",
+			"currentHelper": null,
+			"helperAttributes": null,
+			"rawModeData": "{\r\n  \"email\": \"foo.bar@hpe.com\",\r\n  \"name\": \"Mister Bar\",\r\n  \"password\": \"MisterFooB@r!\",\r\n  \"role\": \"administrator\"\r\n}\r\n"
 		},
 		{
-			"name": "/rest/projects",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/projects",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"projects"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/rest/projects with userQuery",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/projects?userQuery=didier",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"projects"
-					],
-					"query": [
-						{
-							"key": "userQuery",
-							"value": "didier",
-							"equals": true
-						}
-					]
-				},
-				"description": "Edit to replace with one of your existing username"
-			},
-			"response": []
-		},
-		{
+			"id": "124e7948-bb84-8206-24be-51d0c0b379e0",
 			"name": "/rest/providers",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"method": "GET",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n",
+			"pathVariables": {},
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/providers",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [],
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json"
 				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/providers",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"providers"
-					]
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}"
 				}
-			},
-			"response": []
+			],
+			"auth": null,
+			"collection_id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"currentHelper": null,
+			"helperAttributes": null
 		},
 		{
-			"name": "/rest/provider with type filter aws",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/providers?query=%22providerTypeUri%20EQ%20/rest/provider-types/aws%22",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"providers"
-					],
-					"query": [
-						{
-							"key": "query",
-							"value": "%22providerTypeUri%20EQ%20/rest/provider-types/aws%22",
-							"equals": true
-						}
-					]
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "/rest/provider with type filter ncs",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/providers?query=%22providerTypeUri%20EQ%20/rest/provider-types/ncs%22",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"providers"
-					],
-					"query": [
-						{
-							"key": "query",
-							"value": "%22providerTypeUri%20EQ%20/rest/provider-types/ncs%22",
-							"equals": true
-						}
-					]
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "/rest/zone-types",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/zone-types",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"zone-types"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/rest/zones",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/zones",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"zones"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/rest/zones",
-			"request": {
-				"method": "PATCH",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "[{\r\n\"op\":\"replace\",\r\n\"path\":\"/name\",\r\n\"value\": \"Mougins, France\"\r\n}]\r\n\r\n"
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/zones/e4de9a89-eeb9-4ae6-b120-fbfe87108fa4",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"zones",
-						"e4de9a89-eeb9-4ae6-b120-fbfe87108fa4"
-					]
-				},
-				"description": "atching a zone"
-			},
-			"response": []
-		},
-		{
-			"name": "/rest/networks by zoneUri",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/networks?query=%22zoneUri%20EQ%20/rest/zones/4731b1c5-93b0-4512-b64e-040052e2cbbe%22",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"networks"
-					],
-					"query": [
-						{
-							"key": "query",
-							"value": "%22zoneUri%20EQ%20/rest/zones/4731b1c5-93b0-4512-b64e-040052e2cbbe%22",
-							"equals": true
-						}
-					]
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "/rest/networks by Id",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/networks/83c75839-f419-4124-b31f-36090a8e353a",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"networks",
-						"83c75839-f419-4124-b31f-36090a8e353a"
-					]
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "/rest/networks (to allow access by a project)",
-			"request": {
-				"method": "PATCH",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "[{\r\n\t\"op\":\"remove\",\r\n\t\"path\": \"projectUris\",\r\n\t\"value\": \"64bb73ea340b437baf898adcb589226f\"\r\n}]\r\n\r\n"
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/networks/83c75839-f419-4124-b31f-36090a8e353a",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"networks",
-						"83c75839-f419-4124-b31f-36090a8e353a"
-					]
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "/rest/networks (to allow access by a project)",
-			"request": {
-				"method": "PATCH",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "[{\r\n\t\"op\":\"add\",\r\n\t\"path\": \"projectUris\",\r\n\t\"value\": \"64bb73ea340b437baf898adcb589226f\"\r\n}]\r\n\r\n"
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/networks/83c75839-f419-4124-b31f-36090a8e353a",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"networks",
-						"83c75839-f419-4124-b31f-36090a8e353a"
-					]
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "/rest/regions",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/regions",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"regions"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/rest/regions/02e4f2aa-58ae-4950-b8d8-64f35aaf8f1b?view=full&discover=true",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/regions/dfce7c79-b77a-46fd-89c2-8d4d6f938819?view=full&discover=true",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"regions",
-						"dfce7c79-b77a-46fd-89c2-8d4d6f938819"
-					],
-					"query": [
-						{
-							"key": "view",
-							"value": "full",
-							"equals": true
-						},
-						{
-							"key": "discover",
-							"value": "true",
-							"equals": true
-						}
-					]
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "/rest/regions by provider",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/regions?query=%22providerUri%20EQ%20/rest/providers/f2154e6d-df6b-11e7-bed0-06b7e5e8411c-pcp%22",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"regions"
-					],
-					"query": [
-						{
-							"key": "query",
-							"value": "%22providerUri%20EQ%20/rest/providers/f2154e6d-df6b-11e7-bed0-06b7e5e8411c-pcp%22",
-							"equals": true
-						}
-					]
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "/rest/zones by Region",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/zones?regionUri=/rest/regions/02e4f2aa-58ae-4950-b8d8-64f35aaf8f1b",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"zones"
-					],
-					"query": [
-						{
-							"key": "regionUri",
-							"value": "/rest/regions/02e4f2aa-58ae-4950-b8d8-64f35aaf8f1b",
-							"equals": true
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
+			"id": "1756ad4f-05ed-8ed6-4bb7-ac7de37beb46",
 			"name": "/rest/virtual-machine-profiles",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"method": "GET",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n",
+			"pathVariables": {},
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/virtual-machine-profiles",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [],
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json"
 				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/virtual-machine-profiles",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"virtual-machine-profiles"
-					]
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}"
 				}
-			},
-			"response": []
+			],
+			"auth": null,
+			"collection_id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"currentHelper": null,
+			"helperAttributes": null
 		},
 		{
-			"name": "/rest/virtual-machine-profiles by zone ",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/virtual-machine-profiles?query=%22zoneUri%20EQ%20/rest/zones/b2690c34-6906-4c71-8125-c0ddc6a6be5c%22",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"virtual-machine-profiles"
-					],
-					"query": [
-						{
-							"key": "query",
-							"value": "%22zoneUri%20EQ%20/rest/zones/b2690c34-6906-4c71-8125-c0ddc6a6be5c%22",
-							"equals": true
-						}
-					]
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "/rest/services",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/services",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"services"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/rest/services (next 50)",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/services?start=50",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"services"
-					],
-					"query": [
-						{
-							"key": "start",
-							"value": "50",
-							"equals": true
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/rest/deployments",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/deployments",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"deployments"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/rest/deployments with userQuery (freetext search on name)",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/deployments?userQuery=ubuntu&view=full",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"deployments"
-					],
-					"query": [
-						{
-							"key": "userQuery",
-							"value": "ubuntu",
-							"equals": true
-						},
-						{
-							"key": "view",
-							"value": "full",
-							"equals": true
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/rest/deployments by zone",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/deployments?query=%22zoneUri%20EQ%20/rest/zones/63ec4434-e8a7-41e7-acf7-2459822097bf%22",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"deployments"
-					],
-					"query": [
-						{
-							"key": "query",
-							"value": "%22zoneUri%20EQ%20/rest/zones/63ec4434-e8a7-41e7-acf7-2459822097bf%22",
-							"equals": true
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/rest/provider by providerType",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/providers?query=%22providerTypeUri%20EQ%20/rest/provider-types/aws%22",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"providers"
-					],
-					"query": [
-						{
-							"key": "query",
-							"value": "%22providerTypeUri%20EQ%20/rest/provider-types/aws%22",
-							"equals": true
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/rest/volumes",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/volumes",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"volumes"
-					]
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "/rest/volumes by zone",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/volumes?query=%22zoneUri%20EQ%20/rest/zones/b2690c34-6906-4c71-8125-c0ddc6a6be5c%22",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"volumes"
-					],
-					"query": [
-						{
-							"key": "query",
-							"value": "%22zoneUri%20EQ%20/rest/zones/b2690c34-6906-4c71-8125-c0ddc6a6be5c%22",
-							"equals": true
-						}
-					]
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "/rest/volumes by project",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/volumes?query=%22projectUri%20EQ%20/rest/projects/967e6689804d4615abb86e9555157c0b%22",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"volumes"
-					],
-					"query": [
-						{
-							"key": "query",
-							"value": "%22projectUri%20EQ%20/rest/projects/967e6689804d4615abb86e9555157c0b%22",
-							"equals": true
-						}
-					]
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "/rest/catalogs",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/catalogs",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"catalogs"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/rest/rates",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/rates",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"rates"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/rest/rates (default set)",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/rates?resourceUri=default",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"rates"
-					],
-					"query": [
-						{
-							"key": "resourceUri",
-							"value": "default",
-							"equals": true
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
+			"id": "1c323722-a4ce-b7e0-7c95-655c737d839a",
 			"name": "/rest/rates (actives)",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/rates?active=true",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"rates"
-					],
-					"query": [
-						{
-							"key": "active",
-							"value": "true",
-							"equals": true
-						}
-					]
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"method": "GET",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "",
+			"pathVariables": {},
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/rates?active=true",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [
+				{
+					"key": "active",
+					"value": "true",
+					"equals": true
 				}
-			},
-			"response": []
+			],
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json"
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}"
+				}
+			],
+			"auth": null,
+			"collection_id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"currentHelper": null,
+			"helperAttributes": null
 		},
 		{
-			"name": "/rest/appliances",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
+			"id": "1e5354ea-e8b4-f439-3a74-d069e4593cc2",
+			"name": "/rest/users",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"method": "GET",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n",
+			"pathVariables": {},
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/users",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [],
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json"
 				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/appliances",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"appliances"
-					]
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}"
 				}
-			},
-			"response": []
+			],
+			"auth": null,
+			"collection_id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"currentHelper": null,
+			"helperAttributes": null
 		},
 		{
+			"id": "2bbd63eb-5f70-081e-1c51-b5a24bdc60e6",
+			"name": "/rest/services (next 50)",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"method": "GET",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n",
+			"pathVariables": {},
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/services?start=50",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [
+				{
+					"key": "start",
+					"value": "50",
+					"equals": true
+				}
+			],
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json"
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}"
+				}
+			],
+			"auth": null,
+			"collection_id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"currentHelper": null,
+			"helperAttributes": null
+		},
+		{
+			"id": "33a6e6a3-6892-240c-b516-0aa27489e10a",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}\n",
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/metrics?name=storage.available&resourceUri=/rest/provider-types/ncs&period=day&periodCount=-30&view=full",
+			"queryParams": [
+				{
+					"key": "name",
+					"value": "storage.available",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "resourceUri",
+					"value": "/rest/provider-types/ncs",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "period",
+					"value": "day",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "periodCount",
+					"value": "-30",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "view",
+					"value": "full",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"events": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"auth": null,
+			"time": 1523537598517,
+			"name": "/rest/metrics (Storage available for Private Cloud over last 30 days)",
+			"description": "",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"responses": [],
+			"currentHelper": null,
+			"helperAttributes": null,
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
+		},
+		{
+			"id": "37613ec4-68b9-6038-b2ba-e9e93d759294",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}\n",
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/metrics?name=score.overall&resourceUri=/rest/zones/6b9eb19a-909d-440f-b0e6-34928ad306f8&period=day&periodCount=-30&view=full",
+			"queryParams": [
+				{
+					"key": "name",
+					"value": "score.overall",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "resourceUri",
+					"value": "/rest/zones/6b9eb19a-909d-440f-b0e6-34928ad306f8",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "period",
+					"value": "day",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "periodCount",
+					"value": "-30",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "view",
+					"value": "full",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"events": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": [],
+			"dataMode": "raw",
+			"auth": null,
+			"time": 1523352217772,
+			"name": "/rest/metrics (overall score of a zone over last 30 days)",
+			"description": "",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"responses": [],
+			"currentHelper": null,
+			"helperAttributes": null,
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
+		},
+		{
+			"id": "3c2534d2-fbfc-bc63-61ed-f9a890045c70",
+			"headers": "Accept: application/json\nContent-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/session",
+			"queryParams": [],
+			"events": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e52da5b0-c4b6-4f31-ba60-4f217d576fce",
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.environment.set(\"Token\",jsonData.token);",
+							"var today = new Date();",
+							"var m = today.getMonth() + 2;",
+							"if (m < 9)  pad = \"0\"; ",
+							"else pad = \"\";",
+							"var strdate=today.getFullYear() + \"-\" + pad + (today.getMonth() + 2).toString() + \"-01T00:00:00.000Z\";",
+							"pm.environment.set(\"PeriodStart\",strdate);",
+							"console.log(\"Token:\", pm.variables.get(\"Token\"));",
+							"console.log(\"pStart:\", pm.variables.get(\"PeriodStart\"));",
+							"",
+							"",
+							"",
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "0ece031e-077d-4753-a7c0-e12bee63f5c6",
+						"type": "text/javascript",
+						"exec": [
+							"console.log(\"YourHPEOneSpherePortalURL:\", pm.variables.get(\"YourHPEOneSpherePortalURL\"));",
+							"console.log(\"Account:\", pm.variables.get(\"Account\"));",
+							"console.log(\"Password:\", pm.variables.get(\"Password\"));",
+							"",
+							"",
+							"",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"auth": null,
+			"time": 1523611525707,
+			"name": "/rest/session (Start here!)",
+			"description": "Start with this call to get a session Token. We have automatically written the instructions to set the retrieved token as an Authorization Header for subsequent calls.",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"responses": [],
+			"preRequestScript": "console.log(\"YourHPEOneSpherePortalURL:\", pm.variables.get(\"YourHPEOneSpherePortalURL\"));\nconsole.log(\"Account:\", pm.variables.get(\"Account\"));\nconsole.log(\"Password:\", pm.variables.get(\"Password\"));\n\n\n\n\n",
+			"tests": "var jsonData = JSON.parse(responseBody);\npm.environment.set(\"Token\",jsonData.token);\nvar today = new Date();\nvar m = today.getMonth() + 2;\nif (m < 9)  pad = \"0\"; \nelse pad = \"\";\nvar strdate=today.getFullYear() + \"-\" + pad + (today.getMonth() + 2).toString() + \"-01T00:00:00.000Z\";\npm.environment.set(\"PeriodStart\",strdate);\nconsole.log(\"Token:\", pm.variables.get(\"Token\"));\nconsole.log(\"pStart:\", pm.variables.get(\"PeriodStart\"));\n\n\n\n",
+			"currentHelper": null,
+			"helperAttributes": null,
+			"rawModeData": "{\n\t\"userName\":\"{{Account}}\",\n\t\"password\":\"{{Password}}\"\n}"
+		},
+		{
+			"id": "3e54349a-6f73-9f8f-77c2-554a4b72885b",
+			"name": "/rest/deployments",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"method": "GET",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n",
+			"pathVariables": {},
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/deployments",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [],
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json"
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}"
+				}
+			],
+			"auth": null,
+			"collection_id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"currentHelper": null,
+			"helperAttributes": null
+		},
+		{
+			"id": "4017de22-d7c2-dc3a-7e37-57deeb323d5c",
+			"name": "/rest/volumes",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"method": "GET",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n",
+			"pathVariables": {},
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/volumes",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [],
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json"
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}"
+				}
+			],
+			"auth": null,
+			"collection_id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"currentHelper": null,
+			"helperAttributes": null
+		},
+		{
+			"id": "410e51ad-98a2-562e-ba16-670c46d48286",
+			"name": "/rest/rates (default set)",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"method": "GET",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "",
+			"pathVariables": {},
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/rates?resourceUri=default",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [
+				{
+					"key": "resourceUri",
+					"value": "default",
+					"equals": true
+				}
+			],
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json"
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}"
+				}
+			],
+			"auth": null,
+			"collection_id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"currentHelper": null,
+			"helperAttributes": null
+		},
+		{
+			"id": "475f9f03-1630-7568-ff61-b8127c404720",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}\n",
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/tag-keys",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"events": [],
+			"auth": null,
+			"method": "GET",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"data": [],
+			"dataMode": "raw",
+			"name": "/rest/tag-keys",
+			"description": "List all tags",
+			"descriptionFormat": "html",
+			"time": 1523023885564,
+			"version": 2,
+			"responses": [],
+			"currentHelper": null,
+			"helperAttributes": null,
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
+		},
+		{
+			"id": "4a4e6cf0-067d-8c0e-07ef-12722e54051c",
+			"name": "/rest/zones",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"method": "GET",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n",
+			"pathVariables": {},
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/zones",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [],
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json"
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}"
+				}
+			],
+			"auth": null,
+			"collection_id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"currentHelper": null,
+			"helperAttributes": null
+		},
+		{
+			"id": "4aea5bc3-d8b3-bf63-f9c3-a216b05add2b",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}\n",
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/metrics?name=score.utilization&category=providers&period=day&periodCount=-30&view=full",
+			"queryParams": [
+				{
+					"key": "name",
+					"value": "score.utilization",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "category",
+					"value": "providers",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "period",
+					"value": "day",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "periodCount",
+					"value": "-30",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "view",
+					"value": "full",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"events": [],
+			"auth": null,
+			"method": "GET",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"data": [],
+			"dataMode": "raw",
+			"name": "/rest/metrics (utilization score of all providers over last 30 days)",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1523352378215,
+			"version": 2,
+			"responses": [],
+			"currentHelper": null,
+			"helperAttributes": null,
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
+		},
+		{
+			"id": "5f4ab8ea-456a-31a1-a01c-670607786007",
+			"name": "/rest/zones by Region",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"method": "GET",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n",
+			"pathVariables": {},
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/zones?regionUri=/rest/regions/02e4f2aa-58ae-4950-b8d8-64f35aaf8f1b",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [
+				{
+					"key": "regionUri",
+					"value": "/rest/regions/02e4f2aa-58ae-4950-b8d8-64f35aaf8f1b",
+					"equals": true
+				}
+			],
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json"
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}"
+				}
+			],
+			"auth": null,
+			"collection_id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"currentHelper": null,
+			"helperAttributes": null
+		},
+		{
+			"id": "669ca153-0fd2-ee5b-0950-813dfe842d69",
+			"name": "/rest/networks (to allow access by a project)",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"method": "PATCH",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "[{\r\n\t\"op\":\"add\",\r\n\t\"path\": \"projectUris\",\r\n\t\"value\": \"64bb73ea340b437baf898adcb589226f\"\r\n}]\r\n\r\n",
+			"pathVariables": {},
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/networks/83c75839-f419-4124-b31f-36090a8e353a",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [],
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json"
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}"
+				}
+			],
+			"auth": null,
+			"collection_id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"currentHelper": null,
+			"helperAttributes": null
+		},
+		{
+			"id": "6c95521b-fd22-409b-1ac0-cff48595685e",
+			"name": "/rest/session (Finish here!)",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"method": "DELETE",
+			"description": "It's always good practice to cleanup after yourself. So we recommend deleting session token when done",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n",
+			"pathVariables": {},
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/session",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [],
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json"
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}"
+				}
+			],
+			"auth": null,
+			"collection_id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"currentHelper": null,
+			"helperAttributes": null
+		},
+		{
+			"id": "6dfccbdd-0706-562c-675c-b0232d26804a",
+			"name": "/rest/regions",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"method": "GET",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n",
+			"pathVariables": {},
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/regions",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [],
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json"
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}"
+				}
+			],
+			"auth": null,
+			"collection_id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"currentHelper": null,
+			"helperAttributes": null
+		},
+		{
+			"id": "70272c08-6873-2517-0828-cfa6f5b4839c",
+			"name": "/rest/networks by zoneUri",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"method": "GET",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n",
+			"pathVariables": {},
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/networks?query=%22zoneUri%20EQ%20/rest/zones/4731b1c5-93b0-4512-b64e-040052e2cbbe%22",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [
+				{
+					"key": "query",
+					"value": "%22zoneUri%20EQ%20/rest/zones/4731b1c5-93b0-4512-b64e-040052e2cbbe%22",
+					"equals": true
+				}
+			],
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json"
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}"
+				}
+			],
+			"auth": null,
+			"collection_id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"currentHelper": null,
+			"helperAttributes": null
+		},
+		{
+			"id": "720abe61-b941-ef49-fae1-3267c6200cbb",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}\n",
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/metrics?name=vm.cpu.usage&resourceUri=/rest/provider-types/aws&period=day&periodCount=-30&view=full",
+			"queryParams": [
+				{
+					"key": "name",
+					"value": "vm.cpu.usage",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "resourceUri",
+					"value": "/rest/provider-types/aws",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "period",
+					"value": "day",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "periodCount",
+					"value": "-30",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "view",
+					"value": "full",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"events": [],
+			"auth": null,
+			"method": "GET",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"data": [],
+			"dataMode": "raw",
+			"name": "/rest/metrics (VM CPU Usage for AWS Cloud over last 30 days)",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1523537718152,
+			"version": 2,
+			"responses": [],
+			"currentHelper": null,
+			"helperAttributes": null,
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
+		},
+		{
+			"id": "76983de1-6db3-8155-44d4-71d52c54c501",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}\n",
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/memberships",
+			"queryParams": [],
+			"events": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "eafb4e12-f5d2-4529-92cf-25c6472f9a80",
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.environment.set(\"Token\",jsonData.token);",
+							"",
+							"console.log(\"Token:\", pm.variables.get(\"Token\"));",
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "0ece031e-077d-4753-a7c0-e12bee63f5c6",
+						"type": "text/javascript",
+						"exec": [
+							"console.log(\"YourHPEOneSpherePortalURL:\", pm.variables.get(\"YourHPEOneSpherePortalURL\"));",
+							"console.log(\"Account:\", pm.variables.get(\"Account\"));",
+							"console.log(\"Password:\", pm.variables.get(\"Password\"));",
+							"",
+							"",
+							"",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"auth": null,
+			"time": 1523018537540,
 			"name": "/rest/memberships",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{Token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
-				},
-				"url": {
-					"raw": "{{YourHPEOneSpherePortalURL}}/rest/memberships",
-					"host": [
-						"{{YourHPEOneSpherePortalURL}}"
-					],
-					"path": [
-						"rest",
-						"memberships"
-					]
-				},
-				"description": ""
-			},
-			"response": []
-		}
-	],
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"id": "4eb880c8-46b1-42b9-b7d7-7f3d231b4520",
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
+			"description": "Adds a membership",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"responses": [],
+			"preRequestScript": "console.log(\"YourHPEOneSpherePortalURL:\", pm.variables.get(\"YourHPEOneSpherePortalURL\"));\nconsole.log(\"Account:\", pm.variables.get(\"Account\"));\nconsole.log(\"Password:\", pm.variables.get(\"Password\"));\n\n\n\n\n",
+			"tests": "var jsonData = JSON.parse(responseBody);\npm.environment.set(\"Token\",jsonData.token);\n\nconsole.log(\"Token:\", pm.variables.get(\"Token\"));\n",
+			"currentHelper": null,
+			"helperAttributes": null,
+			"rawModeData": "\r\n{\r\n  \"userUri\": \"/rest/users/a1d1ef06eef9457cb13495e99d34bcbb\",\r\n  \"membershipRoleUri\": \"/rest/membership-roles/1143fbdcc839470d9a53f29e30df17cc\",\r\n  \"projectUri\": \"/rest/projects/3573300567864b198a56bac3815d35a1\"\r\n}\r\n\r\n\r\n"
 		},
 		{
-			"listen": "test",
-			"script": {
-				"id": "b781089f-6e74-46fc-9956-8cdb8f63ce1e",
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
+			"id": "78d53cfc-74c1-32cc-c12c-5980c7b7ff3f",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}\n",
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/provider-types",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"events": [],
+			"auth": null,
+			"method": "GET",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"data": [],
+			"dataMode": "raw",
+			"name": "/rest/provider-types",
+			"description": "List all provider-types",
+			"descriptionFormat": "html",
+			"time": 1523536872409,
+			"version": 2,
+			"responses": [],
+			"currentHelper": null,
+			"helperAttributes": null,
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
+		},
+		{
+			"id": "7946610b-efad-8dd4-5ea6-65097d2c6070",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}\n",
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/projects",
+			"queryParams": [],
+			"events": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "eafb4e12-f5d2-4529-92cf-25c6472f9a80",
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.environment.set(\"Token\",jsonData.token);",
+							"",
+							"console.log(\"Token:\", pm.variables.get(\"Token\"));",
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "0ece031e-077d-4753-a7c0-e12bee63f5c6",
+						"type": "text/javascript",
+						"exec": [
+							"console.log(\"YourHPEOneSpherePortalURL:\", pm.variables.get(\"YourHPEOneSpherePortalURL\"));",
+							"console.log(\"Account:\", pm.variables.get(\"Account\"));",
+							"console.log(\"Password:\", pm.variables.get(\"Password\"));",
+							"",
+							"",
+							"",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"auth": null,
+			"time": 1523017653570,
+			"name": "/rest/projects",
+			"description": "Creates a project",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"responses": [],
+			"preRequestScript": "console.log(\"YourHPEOneSpherePortalURL:\", pm.variables.get(\"YourHPEOneSpherePortalURL\"));\nconsole.log(\"Account:\", pm.variables.get(\"Account\"));\nconsole.log(\"Password:\", pm.variables.get(\"Password\"));\n\n\n\n\n",
+			"tests": "var jsonData = JSON.parse(responseBody);\npm.environment.set(\"Token\",jsonData.token);\n\nconsole.log(\"Token:\", pm.variables.get(\"Token\"));\n",
+			"currentHelper": null,
+			"helperAttributes": null,
+			"rawModeData": "{\r\n  \"name\": \"Rush2112\",\r\n  \"description\": \"New Project for Didier\",\r\n  \"tagUris\": [\r\n    \"string\"\r\n  ]\r\n}\r\n\r\n"
+		},
+		{
+			"id": "7cbb4d3c-3cc6-10cb-42fa-2bf6bced9fdd",
+			"name": "/rest/rates",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"method": "GET",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n",
+			"pathVariables": {},
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/rates",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [],
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json"
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}"
+				}
+			],
+			"auth": null,
+			"collection_id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"currentHelper": null,
+			"helperAttributes": null
+		},
+		{
+			"id": "8322d784-9616-6700-60eb-041187e9eab0",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}\n",
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/tags",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"events": [],
+			"auth": null,
+			"method": "GET",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"data": [],
+			"dataMode": "raw",
+			"name": "/rest/tags",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1523537183327,
+			"version": 2,
+			"responses": [],
+			"currentHelper": null,
+			"helperAttributes": null,
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
+		},
+		{
+			"id": "858add3e-bb8d-157a-a413-b5c9b2bf7390",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}\n",
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/metrics?name=cost.usage&category=providers&periodStart={{PeriodStart}}&period=month&periodCount=-3&view=full",
+			"queryParams": [
+				{
+					"key": "name",
+					"value": "cost.usage",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "category",
+					"value": "providers",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "periodStart",
+					"value": "{{PeriodStart}}",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "period",
+					"value": "month",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "periodCount",
+					"value": "-3",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "view",
+					"value": "full",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"events": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": [],
+			"dataMode": "raw",
+			"auth": null,
+			"time": 1523347831587,
+			"name": "/rest/metrics (cost usage by provider over last 12 months)",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"responses": [],
+			"currentHelper": null,
+			"helperAttributes": null,
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
+		},
+		{
+			"id": "8a468610-85f5-da2a-bcd4-f1f5b3e53be9",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}\n",
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/metrics?name=vm.status_checks&name=vm.status_down&resourceUri=/rest/provider-types/aws&period=day&periodCount=-30&view=full",
+			"queryParams": [
+				{
+					"key": "name",
+					"value": "vm.status_checks",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "name",
+					"value": "vm.status_down",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "resourceUri",
+					"value": "/rest/provider-types/aws",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "period",
+					"value": "day",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "periodCount",
+					"value": "-30",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "view",
+					"value": "full",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"events": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"auth": null,
+			"time": 1523536791177,
+			"name": "/rest/metrics (VM status down and number of checks for AWS accounts over last 30 days)",
+			"description": "",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"responses": [],
+			"currentHelper": null,
+			"helperAttributes": null,
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
+		},
+		{
+			"id": "8acebff6-93c8-cdb9-4014-6d7c24826e88",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}\n",
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/services",
+			"queryParams": [],
+			"events": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": [],
+			"dataMode": "raw",
+			"auth": null,
+			"time": 1523537165770,
+			"name": "/rest/services",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"responses": [],
+			"currentHelper": null,
+			"helperAttributes": null,
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
+		},
+		{
+			"id": "8e316d3d-17d5-32f9-9535-d913a2c0982d",
+			"name": "/rest/volumes by zone",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"method": "GET",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n",
+			"pathVariables": {},
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/volumes?query=%22zoneUri%20EQ%20/rest/zones/b2690c34-6906-4c71-8125-c0ddc6a6be5c%22",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [
+				{
+					"key": "query",
+					"value": "%22zoneUri%20EQ%20/rest/zones/b2690c34-6906-4c71-8125-c0ddc6a6be5c%22",
+					"equals": true
+				}
+			],
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json"
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}"
+				}
+			],
+			"auth": null,
+			"collection_id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"currentHelper": null,
+			"helperAttributes": null
+		},
+		{
+			"id": "92e84510-55f8-2375-1458-a58d05ac02bb",
+			"name": "/rest/provider with type filter aws",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"method": "GET",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n",
+			"pathVariables": {},
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/providers?query=%22providerTypeUri%20EQ%20/rest/provider-types/aws%22",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [
+				{
+					"key": "query",
+					"value": "%22providerTypeUri%20EQ%20/rest/provider-types/aws%22",
+					"equals": true
+				}
+			],
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json"
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}"
+				}
+			],
+			"auth": null,
+			"collection_id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"currentHelper": null,
+			"helperAttributes": null
+		},
+		{
+			"id": "9bb1a053-8e40-1884-0270-25e73dce03d5",
+			"name": "/rest/provider by providerType",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"method": "GET",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n",
+			"pathVariables": {},
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/providers?query=%22providerTypeUri%20EQ%20/rest/provider-types/aws%22",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [
+				{
+					"key": "query",
+					"value": "%22providerTypeUri%20EQ%20/rest/provider-types/aws%22",
+					"equals": true
+				}
+			],
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json"
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}"
+				}
+			],
+			"auth": null,
+			"collection_id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"currentHelper": null,
+			"helperAttributes": null
+		},
+		{
+			"id": "a55d892d-34b2-1e0a-cce6-07322ecbcaf5",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}\n",
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/metrics?name=cost.total&category=providers&groupBy=providerTypeUri&periodStart={{PeriodStart}}&period=month&periodCount=-3&view=full",
+			"queryParams": [
+				{
+					"key": "name",
+					"value": "cost.total",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "category",
+					"value": "providers",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "groupBy",
+					"value": "providerTypeUri",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "periodStart",
+					"value": "{{PeriodStart}}",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "period",
+					"value": "month",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "periodCount",
+					"value": "-3",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "view",
+					"value": "full",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"events": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": [],
+			"dataMode": "raw",
+			"auth": null,
+			"time": 1523347810005,
+			"name": "/rest/metrics (total cost by provider type over last 12 months)",
+			"description": "",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"responses": [],
+			"currentHelper": null,
+			"helperAttributes": null,
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
+		},
+		{
+			"id": "b1171e37-a20d-ed33-f17f-6c4351926558",
+			"name": "/rest/regions by provider",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"method": "GET",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n",
+			"pathVariables": {},
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/regions?query=%22providerUri%20EQ%20/rest/providers/f2154e6d-df6b-11e7-bed0-06b7e5e8411c-pcp%22",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [
+				{
+					"key": "query",
+					"value": "%22providerUri%20EQ%20/rest/providers/f2154e6d-df6b-11e7-bed0-06b7e5e8411c-pcp%22",
+					"equals": true
+				}
+			],
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json"
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}"
+				}
+			],
+			"auth": null,
+			"collection_id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"currentHelper": null,
+			"helperAttributes": null
+		},
+		{
+			"id": "b23b6a2b-5aea-4fbf-e568-b163a5facb88",
+			"name": "/rest/status",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"method": "GET",
+			"description": "Get Status of HPE OneSphere. No authentication required.",
+			"headers": "Accept: application/json\nContent-Type: application/json",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n",
+			"pathVariables": {},
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/status",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [],
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json"
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"auth": null,
+			"collection_id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"currentHelper": null,
+			"helperAttributes": null
+		},
+		{
+			"id": "b3c812f0-aa74-d0e1-2778-b62af3437c44",
+			"name": "/rest/deployments with userQuery (freetext search on name)",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"method": "GET",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n",
+			"pathVariables": {},
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/deployments?userQuery=ubuntu&view=full",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [
+				{
+					"key": "userQuery",
+					"value": "ubuntu",
+					"equals": true
+				},
+				{
+					"key": "view",
+					"value": "full",
+					"equals": true
+				}
+			],
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json"
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}"
+				}
+			],
+			"auth": null,
+			"collection_id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"currentHelper": null,
+			"helperAttributes": null
+		},
+		{
+			"id": "b639285f-67be-a8d8-8607-49680d1cd775",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}\n",
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/metrics?name=cost.usage&category=projects&periodStart={{PeriodStart}}&groupBy=tagKeyUri&query=tagKeyUri+EQ+%2Frest%2Ftag-keys%2Fenvironment&period=month&periodCount=-12&view=full",
+			"queryParams": [
+				{
+					"key": "name",
+					"value": "cost.usage",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "category",
+					"value": "projects",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "periodStart",
+					"value": "{{PeriodStart}}",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "groupBy",
+					"value": "tagKeyUri",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "query",
+					"value": "tagKeyUri+EQ+%2Frest%2Ftag-keys%2Fenvironment",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "period",
+					"value": "month",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "periodCount",
+					"value": "-12",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "view",
+					"value": "full",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"events": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": [],
+			"dataMode": "raw",
+			"auth": null,
+			"time": 1523347867523,
+			"name": "/rest/metrics (cost usage by environments over last 12 months)",
+			"description": "",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"responses": [],
+			"currentHelper": null,
+			"helperAttributes": null,
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
+		},
+		{
+			"id": "ba502690-8d34-90b3-523a-8b54e0297bf3",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}\n",
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/metrics?name=server.cpu.total&resourceUri=/rest/provider-types/ncs&period=day&periodCount=-30&view=full",
+			"queryParams": [
+				{
+					"key": "name",
+					"value": "server.cpu.total",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "resourceUri",
+					"value": "/rest/provider-types/ncs",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "period",
+					"value": "day",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "periodCount",
+					"value": "-30",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "view",
+					"value": "full",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"events": [],
+			"auth": null,
+			"method": "GET",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"data": [],
+			"dataMode": "raw",
+			"name": "/rest/metrics (Server Total CPU for Private Cloud over last 30 days)",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1523537538733,
+			"version": 2,
+			"responses": [],
+			"currentHelper": null,
+			"helperAttributes": null,
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
+		},
+		{
+			"id": "bb30d5be-c4d3-419d-d496-3ca0681e65ae",
+			"name": "/rest/catalogs",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"method": "GET",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n",
+			"pathVariables": {},
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/catalogs",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [],
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json"
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}"
+				}
+			],
+			"auth": null,
+			"collection_id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"currentHelper": null,
+			"helperAttributes": null
+		},
+		{
+			"id": "bfea96bd-71c6-f2d2-ffcb-6beb3a886e61",
+			"name": "/rest/zone-types",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"method": "GET",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n",
+			"pathVariables": {},
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/zone-types",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [],
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json"
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}"
+				}
+			],
+			"auth": null,
+			"collection_id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"currentHelper": null,
+			"helperAttributes": null
+		},
+		{
+			"id": "c0f6922b-aeab-6473-774a-5c0039361325",
+			"name": "/rest/projects with userQuery",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"method": "GET",
+			"description": "Edit to replace with one of your existing username",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n",
+			"pathVariables": {},
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/projects?userQuery=didier",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [
+				{
+					"key": "userQuery",
+					"value": "didier",
+					"equals": true
+				}
+			],
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json"
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}"
+				}
+			],
+			"auth": null,
+			"collection_id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"currentHelper": null,
+			"helperAttributes": null
+		},
+		{
+			"id": "c2ffa2dc-e536-00b8-d227-e5aff5142f4c",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}\n",
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/metrics?name=server.status_down&name=server.status_checks&resourceUri=/rest/provider-types/ncs&period=day&periodCount=-30&view=full",
+			"queryParams": [
+				{
+					"key": "name",
+					"value": "server.status_down",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "name",
+					"value": "server.status_checks",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "resourceUri",
+					"value": "/rest/provider-types/ncs",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "period",
+					"value": "day",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "periodCount",
+					"value": "-30",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "view",
+					"value": "full",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"events": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"auth": null,
+			"time": 1523537619694,
+			"name": "/rest/metrics (Server status down and number of checks for Private Cloud over last 30 days)",
+			"description": "",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"responses": [],
+			"currentHelper": null,
+			"helperAttributes": null,
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
+		},
+		{
+			"id": "c8a8bc1b-9c0f-943c-48dc-3b435efe1fd2",
+			"name": "/rest/zones",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"method": "PATCH",
+			"description": "atching a zone",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "[{\r\n\"op\":\"replace\",\r\n\"path\":\"/name\",\r\n\"value\": \"Mougins, France\"\r\n}]\r\n\r\n",
+			"pathVariables": {},
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/zones/e4de9a89-eeb9-4ae6-b120-fbfe87108fa4",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [],
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json"
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}"
+				}
+			],
+			"auth": null,
+			"collection_id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"currentHelper": null,
+			"helperAttributes": null
+		},
+		{
+			"id": "ca412704-95a0-c4f1-29f4-174289a5fb8b",
+			"name": "/rest/volumes by project",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"method": "GET",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n",
+			"pathVariables": {},
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/volumes?query=%22projectUri%20EQ%20/rest/projects/967e6689804d4615abb86e9555157c0b%22",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [
+				{
+					"key": "query",
+					"value": "%22projectUri%20EQ%20/rest/projects/967e6689804d4615abb86e9555157c0b%22",
+					"equals": true
+				}
+			],
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json"
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}"
+				}
+			],
+			"auth": null,
+			"collection_id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"currentHelper": null,
+			"helperAttributes": null
+		},
+		{
+			"id": "d2c13b71-949e-a88d-d4de-0cb11be9c1f3",
+			"name": "/rest/projects",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"method": "GET",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n",
+			"pathVariables": {},
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/projects",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [],
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json"
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}"
+				}
+			],
+			"auth": null,
+			"collection_id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"currentHelper": null,
+			"helperAttributes": null
+		},
+		{
+			"id": "d652109d-dbe6-ac07-6ae5-b1675a28eb87",
+			"name": "/rest/deployments by zone",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"method": "GET",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n",
+			"pathVariables": {},
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/deployments?query=%22zoneUri%20EQ%20/rest/zones/63ec4434-e8a7-41e7-acf7-2459822097bf%22",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [
+				{
+					"key": "query",
+					"value": "%22zoneUri%20EQ%20/rest/zones/63ec4434-e8a7-41e7-acf7-2459822097bf%22",
+					"equals": true
+				}
+			],
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json"
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}"
+				}
+			],
+			"auth": null,
+			"collection_id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"currentHelper": null,
+			"helperAttributes": null
+		},
+		{
+			"id": "ddf170ad-5a39-ec7e-3af9-89ec73ad5065",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}\n",
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/metrics?name=server.memory.total&resourceUri=/rest/provider-types/ncs&period=day&periodCount=-30&view=full",
+			"queryParams": [
+				{
+					"key": "name",
+					"value": "server.memory.total",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "resourceUri",
+					"value": "/rest/provider-types/ncs",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "period",
+					"value": "day",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "periodCount",
+					"value": "-30",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "view",
+					"value": "full",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"events": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"auth": null,
+			"time": 1523537467894,
+			"name": "/rest/metrics (Server Total Memory for Private Cloud over last 30 days)",
+			"description": "",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"responses": [],
+			"currentHelper": null,
+			"helperAttributes": null,
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
+		},
+		{
+			"id": "dfc3a8d2-7650-0999-bd7e-f358fb8571b4",
+			"name": "/rest/virtual-machine-profiles by zone ",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"method": "GET",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n",
+			"pathVariables": {},
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/virtual-machine-profiles?query=%22zoneUri%20EQ%20/rest/zones/b2690c34-6906-4c71-8125-c0ddc6a6be5c%22",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [
+				{
+					"key": "query",
+					"value": "%22zoneUri%20EQ%20/rest/zones/b2690c34-6906-4c71-8125-c0ddc6a6be5c%22",
+					"equals": true
+				}
+			],
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json"
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}"
+				}
+			],
+			"auth": null,
+			"collection_id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"currentHelper": null,
+			"helperAttributes": null
+		},
+		{
+			"id": "ef13a051-a8f8-a17c-d452-ea09e1bc27b9",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}\n",
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/metrics?name=server.cpu.usage&resourceUri=/rest/provider-types/ncs&period=day&periodCount=-30&view=full",
+			"queryParams": [
+				{
+					"key": "name",
+					"value": "server.cpu.usage",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "resourceUri",
+					"value": "/rest/provider-types/ncs",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "period",
+					"value": "day",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "periodCount",
+					"value": "-30",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "view",
+					"value": "full",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"events": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"auth": null,
+			"time": 1523537577469,
+			"name": "/rest/metrics (Server CPU Usage for Private Cloud over last 30 days)",
+			"description": "",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"responses": [],
+			"currentHelper": null,
+			"helperAttributes": null,
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
+		},
+		{
+			"id": "f1022bf2-7206-b0d7-c780-d48253849fdc",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}\n",
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/memberships",
+			"queryParams": [],
+			"events": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"auth": null,
+			"time": 1523536978626,
+			"name": "/rest/membership",
+			"description": "",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"responses": [],
+			"currentHelper": null,
+			"helperAttributes": null,
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n"
+		},
+		{
+			"id": "fa6c51c8-9fca-acf5-753d-1e25841231a4",
+			"name": "/rest/networks by Id",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"method": "GET",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n",
+			"pathVariables": {},
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/networks/83c75839-f419-4124-b31f-36090a8e353a",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [],
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json"
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}"
+				}
+			],
+			"auth": null,
+			"collection_id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"currentHelper": null,
+			"helperAttributes": null
+		},
+		{
+			"id": "fba2e018-7502-f07c-5f4e-132f9ffa063f",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}\n",
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/metrics?name=score.performance&category=providers&period=day&periodCount=-30&view=full\n",
+			"queryParams": [
+				{
+					"key": "name",
+					"value": "score.performance",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "category",
+					"value": "providers",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "period",
+					"value": "day",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "periodCount",
+					"value": "-30",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "view",
+					"value": "full\n",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"events": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"auth": null,
+			"time": 1523536537419,
+			"name": "/rest/metrics (performance score of all providers over last 30 days)",
+			"description": "",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"responses": [],
+			"currentHelper": null,
+			"helperAttributes": null
+		},
+		{
+			"id": "fd58399b-d8c4-134d-13ed-8a0a44769767",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}\n",
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/regions/dfce7c79-b77a-46fd-89c2-8d4d6f938819?view=full&discover=true",
+			"queryParams": [
+				{
+					"key": "view",
+					"value": "full",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "discover",
+					"value": "true",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"events": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"auth": null,
+			"time": 1523537135286,
+			"name": "/rest/regions by id",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"responses": [],
+			"currentHelper": null,
+			"helperAttributes": null
+		},
+		{
+			"id": "ff1c177c-d7ed-145b-68e1-9544bef15df5",
+			"name": "/rest/provider with type filter ncs",
+			"collectionId": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"method": "GET",
+			"headers": "Accept: application/json\nContent-Type: application/json\nAuthorization: Bearer {{Token}}",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n    \"zoneUri\":  \"/rest/zones/69c5c26a-b750-4232-8187-4cc6b5c1efc9\",\r\n    \"workspaceUri\":  \"/rest/workspaces/cd96b000764d44579f198703565eb87c\",\r\n    \"networks\":  [{\r\n                     \"networkUri\":  \"/rest/networks/ef047e54-8722-480f-863d-0e53e0fa01c5\"\r\n                 }],\r\n    \"name\":  \"DidierAPITesting\",\r\n    \"virtualMachineProfileUri\":  \"/rest/virtual-machine-profiles/2\",\r\n    \"serviceUri\":  \"/rest/services/5c87ecc4-8bd8-49bd-872f-b172abd2c4c9\"\r\n}\r\n\r\n",
+			"pathVariables": {},
+			"url": "{{YourHPEOneSpherePortalURL}}/rest/providers?query=%22providerTypeUri%20EQ%20/rest/provider-types/ncs%22",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [
+				{
+					"key": "query",
+					"value": "%22providerTypeUri%20EQ%20/rest/provider-types/ncs%22",
+					"equals": true
+				}
+			],
+			"headerData": [
+				{
+					"key": "Accept",
+					"value": "application/json"
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				},
+				{
+					"key": "Authorization",
+					"value": "Bearer {{Token}}"
+				}
+			],
+			"auth": null,
+			"collection_id": "ce17b568-03a0-c0fb-255a-bfbcd53e6c40",
+			"currentHelper": null,
+			"helperAttributes": null
 		}
 	]
 }
