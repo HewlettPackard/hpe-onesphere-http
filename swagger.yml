@@ -124,6 +124,29 @@ paths:
         '204':
           description: Session deleted (or not found)
 
+  /session/sso:
+    get:
+      description: Get the redirect URL for a configured SSO provider
+      operationId: GetSSOLogin
+      responses:
+        '302':
+          description: Login URL (which will itself return more redirects)
+        '404':
+          description: SSO is not enabled or configured
+
+    post:
+      description: Callback for SSO login
+      parameters:
+        - name: token
+          in: query
+          description: The unscoped token
+          type: string
+      responses:
+        '302':
+          description: |
+            Redirects back to the OneSphere UI. Location will include token and userUri
+            as query parameters
+
   /session/idp:
     get:
       description: |+
@@ -173,6 +196,162 @@ paths:
           description: List of provider types
           schema:
             $ref: '#/definitions/providerTypeList'
+
+  /billing-accounts:
+    get:
+      description: Returns billing accounts. It requires the **administrator** or **project creator** global role.
+      operationId: FindBillingAccounts
+      parameters:
+        - name: query
+          in: query
+          description: |
+            Filters the billing accounts returned.
+
+            It supports equality
+            comparison against one or more properties using a
+            ``"name EQ value"`` syntax. Multiple comparisons can be combined
+            using a ``"name1 EQ value1 AND name2 EQ value2"`` syntax.
+
+            It supports comparison of **providerTypeUri** and **name**.
+
+            For example: ``query="providerTypeUri EQ /rest/provider-types/aws"``
+          required: false
+          type: string
+        - name: view
+          in: query
+          description: Whether to return related content.
+          type: string
+          enum:
+          - full
+      responses:
+        '200':
+          description: List of billing accounts. Credentials are not included when listing billing accounts.
+          schema:
+            $ref: '#/definitions/billingAccountList'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/error'
+    post:
+      description: Creates a new billing account. It requires the **administrator** role.
+      operationId: CreateBillingAccount
+      parameters:
+        - name: billing-account
+          in: body
+          description: Add new billing account
+          required: true
+          schema:
+            $ref: '#/definitions/createBillingAccount'
+      responses:
+        '201':
+          description: New billing account sucessfully created and enabled.
+          schema:
+            $ref: '#/definitions/billing-account'
+        '400':
+          description: Bad Request</BR> Error Codes</BR>InvalidProviderTypeURI Invalid provider type URI</BR>MissingRequiredFields Required fields must not be empty</BR>MissingCredentials Correct credential fields must be given based on providerTypeUri
+          schema:
+            $ref: '#/definitions/error'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/error'
+
+  /billing-accounts/{id}:
+    get:
+      description: Returns a billing account based on its id. It requires the **administrator** or **project creator** global role. Credentials are not included.
+      operationId: GetBillingAccountById
+      parameters:
+        - name: id
+          in: path
+          description: ID of billing account to fetch
+          required: true
+          type: string
+        - name: view
+          in: query
+          description: Whether to return related content.
+          type: string
+          enum:
+            - full
+      responses:
+        '200':
+          description: Billing account found
+          schema:
+            $ref: '#/definitions/billing-account'
+        '404':
+          description: Not Found.
+          schema:
+            $ref: '#/definitions/error'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/error'
+        '400':
+          description: Bad Request</BR> Error Codes</BR>InvalidProviderTypeURI Invalid provider type URI</BR>MissingRequiredFields Required fields must not be empty</BR>MissingCredentials Correct credential fields must be given based on providerTypeUri
+          schema:
+            $ref: '#/definitions/error'
+
+    delete:
+      description: Deletes a billing account. It requires the **administrator** role.
+      operationId: DeleteBillingAccountById
+      parameters:
+        - name: id
+          in: path
+          description: ID of billing account to delete
+          required: true
+          type: string
+      responses:
+        '204':
+          description: Billing account deleted
+        '404':
+          description: Not Found.
+        '403':
+          description: Forbidden
+        '401':
+          description: Not Authorized.
+
+    patch:
+      description: Updates a billing account. It requires the **administrator** role.
+      operationId: UpdateBillingAccount
+      consumes: ["application/json-patch+json"]
+      parameters:
+        - name: id
+          in: path
+          description: ID of billing account to update
+          required: true
+          type: string
+        - name: body
+          in: body
+          description: |
+            The JSON patch to apply to the billing account.
+
+            Note that secrets must be updated together, i.e. the AWS accessKeyID must be updated with the
+            secretAccessKey and the Azure enrollmentNumber must be updated with the apiAccessKey (and vice versa).
+            HTTP 400 will be returned if these secret fields are not updated in tandem. 
+
+            Additionally, certain fields may not be modified, namely id and providerTypeUri.
+
+            If the patch is found to be invalid for any reason, HTTP 400 will be returned.
+            If a server-side error occurs when adding the billing account, HTTP 500 is returned.
+          required: true
+          schema:
+            $ref: '#/definitions/updateBillingAccount'
+      responses:
+        '200':
+          description: Billing account sucessfully updated.
+          schema:
+            $ref: '#/definitions/billing-account'
+        '400':
+          description: Bad Request</BR> Error Codes</BR>InvalidQuery Invalid Query Parameter</BR>MissingRequiredFields Required fields must not be empty</BR>MissingCredentials Correct credential fields must be given based on providerTypeUri
+          schema:
+            $ref: '#/definitions/error'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/error'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/error'
 
   /providers:
     get:
@@ -241,7 +420,7 @@ paths:
             - full
         - name: discover
           in: query
-          description: will return child providers from aws.
+          description: Will return the merged set of regions from AWS and existing regions in Onesphere.
           type: boolean
           enum:
             - true
@@ -253,6 +432,10 @@ paths:
             $ref: '#/definitions/provider'
         '404':
           description: Not Found.
+          schema:
+            $ref: '#/definitions/error'
+        '403':
+          description: Forbidden
           schema:
             $ref: '#/definitions/error'
         '400':
@@ -619,11 +802,24 @@ paths:
           description: The region URI to prune zones by.
           required: false
           type: string
+        - name: providerUri
+          in: query
+          description: The provider URI to prune zones by.
+          required: false
+          type: string
         - name: applianceUri
           in: query
           description: The appliance URI to prune zones by. **Not implemented**
           required: false
           type: string
+        - name: view
+          in: query
+          description: >
+            Return related resources:
+              * `full` - Include all the details of the zones
+          type: string
+          enum:
+            - full
       responses:
         '200':
           description: List of zones
@@ -652,7 +848,12 @@ paths:
               "created": "2017-08-09T22:06:49.064958385+05:30",
               "modified": "2017-08-09T22:06:49.06495863+05:30",
               "metrics": [],
-              "rates": [],
+              "rates": [
+                {"metricName": "ncs.resource.annual.cost", "rateValue": 108989.833333325},
+                {"metricName": "resource.cores.allocation", "rateValue": 0.002},
+                {"metricName": "resource.memory.allocation", "rateValue": 0.006},
+                {"metricName": "resource.storage.allocation", "rateValue": 0.000009722},
+                ],
               "providerUri": "/rest/providers/2b5a8db7-e145-4ef9-b7f2-9b2d45976cd1",
               "regionUri": "/rest/regions/3caa8db7-e145-4ef9-b7f2-9b2d45976cd1",
               "zoneTypeUri": "/rest/zone-types/vcenter",
@@ -755,7 +956,23 @@ paths:
                 "tag": ""
               },
             }
-
+            zone-kvm: {
+              "id": "2b5a8db7-e145-4ef9-b7f2-9b2d45976cd5",
+              "name": "Zone-KVM-1",
+              "uri": "/rest/zones/2b5a8db7-e145-4ef9-b7f2-9b2d45976cd5",
+              "created": "2017-08-09T22:06:49.064958385+05:30",
+              "modified": "2017-08-09T22:06:49.06495863+05:30",
+              "metrics": [],
+              "rates": [],
+              "providerUri": "/rest/providers/2b5a8db7-e145-4ef9-b7f2-9b2d45976cd2",
+              "regionUri": "/rest/regions/3caa8db7-e145-4ef9-b7f2-9b2d45976cd2",
+              "zoneTypeUri": "/rest/zone-types/kvm",
+              "state": "Enabled",
+              "status": "OK",
+              "managed": false,
+              "kvmServers": [],
+              "inTransitKvmServers": []
+            }
         '400':
           description: Bad request.
           schema:
@@ -1097,7 +1314,37 @@ paths:
                 "name": "SY480-Gen9-Low-Density"
                 }
             }
-
+            zone-kvm: {
+              "id": "2b5a8db7-e145-4ef9-b7f2-9b2d45976cd5",
+              "name": "Zone-KVM-1",
+              "uri": "/rest/zones/2b5a8db7-e145-4ef9-b7f2-9b2d45976cd5",
+              "created": "2017-08-09T22:06:49.064958385+05:30",
+              "modified": "2017-08-09T22:06:49.06495863+05:30",
+              "metrics": [],
+              "rates": [],
+              "providerUri": "/rest/providers/2b5a8db7-e145-4ef9-b7f2-9b2d45976cd2",
+              "regionUri": "/rest/regions/3caa8db7-e145-4ef9-b7f2-9b2d45976cd2",
+              "zoneTypeUri": "/rest/zone-types/kvm",
+              "state": "Enabled",
+              "status": "OK",
+              "managed": false,
+              "kvmServers": [
+                {
+                  serverUri: "/rest/servers/2b5a8db7-e145-4ef9-b7f2-9b2d45976cd3",
+                  state: "Enabled",
+                  roles: [
+                    "ImageLibrary",
+                    "BlockStorage"
+                    ]
+                },
+                {
+                  serverUri: "/rest/servers/3caa8db7-e145-4ef9-b7f2-9b2d45976cd1",
+                  state: "Enabled",
+                  roles: []
+                }
+              ],
+              "inTransitKvmServers": []
+            }
         '404':
           description: Not Found.
           schema:
@@ -1117,23 +1364,7 @@ paths:
           description: Update zone
           required: true
           schema:
-            type: object
-            properties:
-              op:
-                type: string
-                description: >
-                  The operation to take on the specified property.
-                  See: https://tools.ietf.org/html/rfc6902#section-4
-                enum:
-                  - add
-                  - replace
-                  - remove
-              path:
-                type: string
-                description: The path to the property to operate on.
-              value:
-                description: The new value (valid with op=replace)
-                type: object
+            $ref: '#/definitions/updateZone'
 
       responses:
         '200':
@@ -1251,7 +1482,37 @@ paths:
                 "tag": ""
             },
             }
-
+            zone-kvm: {
+              "id": "2b5a8db7-e145-4ef9-b7f2-9b2d45976cd5",
+              "name": "Zone-KVM-1",
+              "uri": "/rest/zones/2b5a8db7-e145-4ef9-b7f2-9b2d45976cd5",
+              "created": "2017-08-09T22:06:49.064958385+05:30",
+              "modified": "2017-08-09T22:06:49.06495863+05:30",
+              "metrics": [],
+              "rates": [],
+              "providerUri": "/rest/providers/2b5a8db7-e145-4ef9-b7f2-9b2d45976cd2",
+              "regionUri": "/rest/regions/3caa8db7-e145-4ef9-b7f2-9b2d45976cd2",
+              "zoneTypeUri": "/rest/zone-types/kvm",
+              "state": "Enabled",
+              "status": "OK",
+              "managed": false,
+              "kvmServers": [
+                {
+                  serverUri: "/rest/servers/2b5a8db7-e145-4ef9-b7f2-9b2d45976cd3",
+                  state: "Enabled",
+                  roles: [
+                    "ImageLibrary",
+                    "BlockStorage"
+                  ],
+                },
+                {
+                  serverUri: "/rest/servers/3caa8db7-e145-4ef9-b7f2-9b2d45976cd1",
+                  state: "Enabled",
+                  roles: []
+                }
+              ],
+              "inTransitKvmServers": []
+            }
         '400':
           description: Bad request.
           schema:
@@ -1575,12 +1836,13 @@ paths:
           schema:
             $ref: '#/definitions/error'
           examples:
-            id: "vsphere"
-            name: "VMware Templates"
-            uri: "/rest/catalogs/vsphere"
-            serviceTypeUri: "/rest/service-types/vm"
-            url: ""
-            status: ""
+            id: "helm"
+            name: "Kubernetes Charts"
+            uri: "/rest/catalogs/helm"
+            serviceTypeUri: "/rest/service-types/helm-charts-repository"
+            url: "https://kubernetes-charts-incubator.storage.googleapis.com"
+            status: "Unknown"
+            protected: "false"
             created: "2017-07-31T09:26:54Z"
             modified: "2017-07-31T09:27:01Z"
 
@@ -1612,8 +1874,9 @@ paths:
           schema:
             $ref: '#/definitions/error'
     patch:
-      description: Updates a catalog.
+      description: Patches a catalog. Allowed fields for PATCH of catalogs are name(add,replace), password(add), accessKey(add), secretKey(add), state(add,replace)
       operationId: UpdateCatalog
+      consumes: ["application/json-patch+json"]
       parameters:
         - name: id
           in: path
@@ -1625,7 +1888,7 @@ paths:
           description: Update catalog
           required: true
           schema:
-            $ref: '#/definitions/updateCatalog'
+            $ref: '#/definitions/patchCatalog'
       responses:
         '200':
           description: Catalog sucessfully updated.
@@ -2340,8 +2603,9 @@ paths:
             $ref: '#/definitions/error'
 
     patch:
-      description: Updates a deployment. It requires any project role, or the **administrator** or **project creator** global role.
+      description: Updates a deployment. **Requires any project role, or 'administrator' or 'project creator' global role**. Allowed fields for PATCH of deployments are name(add,replace), volumes(add), k8snumWorkers(add), userData(add), serviceInput(add), version(add).
       operationId: UpdateDeployment
+      consumes: ["application/json-patch+json"]
       parameters:
         - name: id
           in: path
@@ -2353,7 +2617,7 @@ paths:
           description: Update deployment
           required: true
           schema:
-            $ref: '#/definitions/updateDeployment'
+            $ref: '#/definitions/patchDeployment'
       responses:
         '200':
           description: Deployment sucessfully updated.
@@ -2362,10 +2626,14 @@ paths:
           examples:
             'Update name of deployment: /rest/deployments/825039a0-f2eb-4cd3-8112-6e91375bcebf':
               'Request Body':
-                name: 'test'
+                [{
+                    "op": "replace",
+                    "path": "/name",
+                    "value": "new_name_for_deployment"
+                }]
               'Response Body':
                 id: '825039a0-f2eb-4cd3-8112-6e91375bcebf'
-                name: 'test'
+                name: 'testnew_name_for_deployment'
                 regionUri: '/rest/regions/v3d6e308-4b99-4b96-9b2c-835de6a5987c'
                 created: "2017-09-14T19:53:33Z"
                 modified: "2017-09-14T19:58:33Z"
@@ -2415,7 +2683,7 @@ paths:
             $ref: '#/definitions/deploymentAction'
       responses:
         '200':
-          description: Deployment action sucessfully initiated. No content.
+          description: Deployment action sucessfully initiated.
         '400':
           description: Bad request.
           schema:
@@ -2446,13 +2714,56 @@ paths:
           schema:
             $ref: '#/definitions/error'
 
+  /deployments/{id}/kubeconfig:
+    get:
+      description: Returns the kubeconfig. Applicable only to deployments of Kubernetes cluster. **Requires 'consumer' role on workspace**
+      operationId: GetDeploymentKubeConfig
+      parameters:
+       - name: id
+         in: path
+         description: ID of deployment for which kubeconfig is required
+         required: true
+         type: string
+      responses:
+        '200':
+          description: Successfully got the kubeconfig.
+          examples:
+            'Get KubeConfig:/rest/deployments/917b0738-351a-4a9e-b8c9-f1d1fdc804f4/kubeconfig':
+                "apiVersion: v1
+                  clusters:
+                  - cluster:
+                      certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUKYRENDQWtTZ0F3SUJBZ0lKQVA3ckt3VjRWeUUiTUEwR0NTcUdTSWIzRFFFQkN3VUFNQ014SVRBZkJnTlYKQkFNTUddDFZbVZ5Ym1WMFpYTXRZMkZBTVRVd09EazFOelUxTWpBZUZ3MHhOekV3TWpVeE9EVXlNekphRncweQpOekV3TWpNeE9EVXlNekphTUNNeElUQWZCZ05WQkINTUdHdDFZbVZ5Ym1WMFpYTXRZMkZBTVRVd09EazFOelUxCk1qQ0NBU0l3RFFZSktvWklodmNOQVFFQkJRQURnZ0VQQURDQ0FRb0NnZ0VCQVBTaTBrTzJNQkQyZDF2ci9ZT2oKbDlZYm9MNm5FYm1NekVPNW5PT3RSdGg2UnBRNmMwRXhuOVkwUGcxYVY3bnFYWDhTaUFVVk9KS2tvTGcybkpBcAorWStVQ2NWYUI0NlBSS1JvZGQ2U29nWmREaEEvUWFMcUdJaE1jaXF0eVZNbE5oVmZaYkdUaWc5LGtWRjJrRzJqeHpFM2pRdXVEdVlWd0MKeTgyNkc1NUlhU2FCZXB4bG43QWtwZTJkalpGTnBZMThOamxyWGpwRjZCeTZaOFhxUXZQbkFlMHUxbW5JQTPISKwpyc2ZvMVk0dWRGVUJrS0xveHFCeTN6aXl1U0cwcmxiSUhRVFNpTXRHd0ZsRkUzZlNNSDVQM0IzaEFNY2Juem9hCnNlMENBd0VBQWFPQmtqQ0JqekFkQmdOVkhRNEVGZ1FVVnIrc01JdlZPUDNET2NkWVRkdURFN2ZicYhNd1V3WUQKVlIwakJFd3dTb0FVVnIrc01JdlZPUDNET2NkWVRkdURFN2ZiazFOelUxTW9JSkFQN3JLd1Y0VnlFME1Bd0dBMVVkRXdRRk1BTUJBZjh3CkN3WURWUjBQmdzRMUFYKUTJNcm83S3h6Z0FOQlNlMldQQkZqblRFQ2M0SjY2M1lGWGZCSTBzRXEwWFc0MzhFS1hORFV6emNxZVJmZVc0OQp6SlFaQVlONkZSaTh2bG9jVUZrd1ZjVEN2ckRQVUx1MVFtc0UwL1h5dGRKZ1FKMEpYRE10NG5TWE9OTVFyTDZMCm5CSXVkbzRYWmNDbW1DVUp0UXBwZEZ3dEV1SGJoRm80NW4yUVUrbHZQdTVVdmFrL3RrOFRRL29iQ0pYSXA1YlQKaDg4eFZsMkZOOWpxMVhLWEtSbSsvWkpFbGpTaTE0eVVoZE0xZFVkTWEvaHRUUjhTU0x7dEhjWiszdVYxaE5GVQp8OWNhS2ZvdW1DcDBvRElQRC6EeThwMjlNVmxRMEu5RXNKcnhzTU5sU1BvZEZCL0kvb0tvTVdUbUIxdXhLcTVwCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+                      server: https://demoapi.dev.hpedevops.net
+                    name: demo
+                  contexts:
+                  - context:
+                      cluster: demo
+                      namespace: default
+                      user: email@hpe.com
+                    name: default
+                  current-context: default
+                  kind: Config
+                  preferences: {}
+                  users:
+                  - name: email@hpe.com
+                    user:
+                      token: eyJ1c2VybmFtZSI7IrtpvmFuLKt1bWZS5j0iLCJqYXNzd29yZCI6Ik4zd3S0OHNrISJ8"
+        '400':
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/error'
+        '404':
+          description: Not Found.
+          schema:
+            $ref: '#/definitions/error'
+
   /memberships:
     get:
       description: |
-          Returns memberships. Supports filtering by projectURI, userURI, groupURI, roleURI (but only
+          Returns memberships. Supports filtering by projectUri, userUri, userGroupUri, roleUri (but only
           individual values, not multiple) in 'query'.
 
-          If projectURI and userURI/groupURI are given a different
+          If projectURI and userUri/userGroupUri are given a different
           backend path will be used that should be authorized to a project owner even if they wouldn't ordinarily
           be able to see other users' roles.
 
@@ -2687,6 +2998,32 @@ paths:
             $ref: '#/definitions/error'
         '404':
           description: Not Found.
+          schema:
+            $ref: '#/definitions/error'
+
+  /user-groups:
+    get:
+      description: List all OneSphere groups that have been mapped via SSO. **Not implemented**
+      operationId: ListUserGroups
+      parameters:
+        - name: userQuery
+          in: query
+          description: |
+            Filter the list of groups by name. Returns any groups whose name
+            contains the query string (case insensitive)
+          required: false
+          type: string
+      responses:
+        '200':
+          description: List of groups
+          schema:
+            $ref: '#/definitions/userGroupList'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/error'
+        '403':
+          description: Forbidden
           schema:
             $ref: '#/definitions/error'
 
@@ -3225,19 +3562,26 @@ paths:
           schema:
             $ref: '#/definitions/volumeList'
           examples:
+            'Filter volumes by status':
+                          '/rest/volumes?query=state+EQ+Available'
+            'Filter volumes by status and zoneUri':
+                          '/rest/volumes?query=state+EQ+Available AND zoneUri+EQ+/rest/zones/c2b6e308-4b99-4b96-9b2c-835de6a56a8c'
             'Filter deployments by projectUri':
               '/rest/volumes?query=projectUri+EQ+/rest/projects/930381ba921b47c39960371d4145e0d2'
-            '/rest/deployments':
+            '/rest/volumes':
               id: "c86f18f1-a611-470e-8a11-1645b70b63c7"
               name: "volume-A"
               regionUri: "/rest/regions/v3d6e308-4b99-4b96-9b2c-835de6a5987c"
               zoneUri: "/rest/zones/c2b6e308-4b99-4b96-9b2c-835de6a56a8c"
-              created: "2017-08-07T09:15:10Z"
-              modified: "2017-08-07T09:20:48Z"
+              uri: "/rest/volumes/83bd00ca-e46d-4be8-9841-ac315d0229d1"
+              state: "Available"
               status: "Ok"
-              sizeGiB: 20
-              uri: "/rest/volumes/c86f18f1-a611-470e-8a11-1645b70b63c7"
-              projectUri: "/rest/projects/930381ba921b47c39960371d4145e0d2"
+              sizeGiB: 1
+              projectUri: "/rest/projects/bb20b2d5750642f4a76161ca4580604b"
+              attachments: []
+              attachedMode: ""
+              created: "2018-03-12T10:30:30.000000"
+              modified: "2018-03-12T10:30:36.000000"
 
     post:
       description: Creates a new volume. It requires any project role or the **administrator** or **project creator** global role.
@@ -3279,8 +3623,9 @@ paths:
           schema:
             $ref: '#/definitions/error'
     patch:
-      description: Updates a volume. It requires any project role or 'administrator' or 'project creator' global role.
+      description: Updates a volume. **Requires any project role or 'administrator' or 'project creator' global role**. Allowed fields for PATCH of volumes are name(add,replace), size(add,replace)
       operationId: UpdateVolume
+      consumes: ["application/json-patch+json"]
       parameters:
         - name: id
           in: path
@@ -3292,7 +3637,7 @@ paths:
           description: Update volume
           required: true
           schema:
-            $ref: '#/definitions/updateVolume'
+            $ref: '#/definitions/patchVolume'
       responses:
         '200':
           description: Volume sucessfully updated.
@@ -3312,8 +3657,8 @@ paths:
           required: true
           type: string
       responses:
-        '202':
-          description: Volume delete accepted; no content
+        '204':
+          description: Volume deleted; no content
           examples:
             'DELETE /rest/volumes/c86f18f1-a611-470e-8a11-1645b70b63c7':
               no content
@@ -3683,6 +4028,82 @@ paths:
           schema:
             $ref: '#/definitions/error'
 
+  /onboarding/azure/subscriptions:
+    get:
+      description: Returns a list of Azure subscriptions and their display names
+      operationId: ListAzureSubscriptions
+      parameters:
+        - name: directoryUri
+          in: query
+          description: The Azure Directory URI associated with the Billing Account
+          required: true
+          type: string
+        - name: location
+          in: query
+          description: |
+            The full response Azure sends to the redirectURI including valid Azure authentication code
+            For Example:
+            https://customername.hpeonesphere.net/rest/azureauth/?code=1234ABCD&state=5678&session_state=90EF
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Subscription list
+          schema:
+            $ref: '#/definitions/azureSubscriptionList'
+        '400':
+          description: Bad Request</BR> Error Codes</BR>InvalidAzureResponseURI azure response uri must be a valid uri</BR>InvalidTenantID invalid tenant ID
+          schema:
+            $ref: '#/definitions/error'
+        '403':
+          description: Unauthorized</BR> Error Codes</BR>NoAuthCodeProvided getAuthCodeResponse did not contain auth code</BR>InvalidAuthCode the provided code is invalid</BR>InvalidGrant The auth code has expired
+          schema:
+            $ref: '#/definitions/error'
+
+  /onboarding/azure/subscriptions/{subscriptionId}:
+    patch:
+      description: Updates a subscription
+      operationId: UpdateSubscription
+      consumes: ["application/json-patch+json"]
+      parameters:
+        - name: subscriptionId
+          in: path
+          description: The Azure subscriptionId
+          required: true
+          type: string
+        - name: directoryUri
+          in: query
+          description: The Azure Directory URI associated with the Billing Account
+          required: true
+          type: string
+        - name: location
+          in: query
+          description: |
+            The full response Azure sends to the redirectURI including valid Azure authentication code
+            For Example:
+            https://customername.hpeonesphere.net/rest/azureauth/?code=1234ABCD&state=5678&session_state=90EF
+          required: true
+          type: string
+        - name: body
+          in: body
+          description: Update subscription
+          required: true
+          schema:
+            $ref: '#/definitions/updateSubscription'
+      responses:
+        '201':
+          description: Subscription
+          schema:
+            $ref: '#/definitions/azureSubscription'
+        '400':
+          description: Bad Request</BR> Error Codes</BR>InvalidAzureResponseURI azure response uri must be a valid uri</BR>InvalidTenantID invalid tenant ID</BR>InvalidSubscriptionID invalid subscription ID</BR>FailedRoleApply Azure failed to add OneSphere role to subscription</BR>UnsupportedRemoveRole Removing the OneSphere role is unimplemented
+          schema:
+            $ref: '#/definitions/error'
+        '403':
+          description: Unauthorized</BR> Error Codes</BR>NoAuthCodeProvided getAuthCodeResponse did not contain auth code</BR>InvalidAuthCode the provided code is invalid</BR>InvalidGrant The auth code has expired
+          schema:
+            $ref: '#/definitions/error'
+
 definitions:
   status:
     type: object
@@ -3810,6 +4231,146 @@ definitions:
         type: string
       uri:
         type: string
+
+  billingAccountList:
+    required:
+      - members
+      - start
+      - count
+      - total
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/billing-account'
+      start:
+        type: integer
+        format: int64
+      count:
+        type: integer
+        format: int64
+      total:
+        type: integer
+        format: int64
+
+  billing-account:
+    type: object
+    required:
+      - id
+      - name
+      - uri
+      - providerTypeUri
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      uri:
+        type: string
+      providerTypeUri:
+        type: string
+        description: /rest/provider-types/azure and /rest/provider-types/aws are the only valid values for providerTypeUri
+      description:
+        type: string
+        description: description of the billing account
+      enrollmentNumber:
+        type: string
+        description: The Azure Enterprise Enrollment Number, only for providerTypeUri of /rest/provider-types/azure. Not returned on GET
+      apiAccessKey:
+        type: string
+        description: The Azure API Access Key for the Enterprise Enrollment Number, only for providerTypeUri of /rest/provider-types/azure. Not returned on GET
+      directoryUri:
+        type: string
+        description: The Azure Directory URI for the Enterprise Enrollment Number, only for providerTypeUri of /rest/provider-types/azure
+      accessKeyId:
+        type: string
+        description: AWS Access Key Id, only for providerTypeUri of /rest/provider-types/aws. Not returned on GET
+      secretAccessKey:
+        type: string
+        description: AWS Secret Access Key, only for providerTypeUri of /rest/provider-types/aws. Not returned on GET
+      s3CostBucket:
+        type: string
+        description: only for providerTypeUri of /rest/provider-types/aws
+      providerUris:
+        type: array
+        description: providers that use this billing account. Requires `view=full`
+        items:
+          type: string
+      created:
+        description: |
+          Date and time when the billing account was created.
+        type: string
+        format: date-time
+        readOnly: true
+      modified:
+        description: |
+          Date and time when the billing account was last modified.
+        type: string
+        format: date-time
+        readOnly: true
+
+  createBillingAccount:
+    type: object
+    required:
+      - name
+      - providerTypeUri
+    properties:
+      name:
+        type: string
+      providerTypeUri:
+        type: string
+        description: /rest/provider-types/azure and /rest/provider-types/aws are the only valid values for providerTypeUri
+      description:
+        type: string
+        description: description of the billing account
+      enrollmentNumber:
+        type: string
+        description: The Azure Enterprise Enrollment Number, required for providerTypeUri of /rest/provider-types/azure
+      apiAccessKey:
+        type: string
+        description: The Azure API Access Key for the Enterprise Enrollment Number, required for providerTypeUri of /rest/provider-types/azure
+      directoryUri:
+        type: string
+        description: The Azure Directory URI for the Enterprise Enrollment Number, only for providerTypeUri of /rest/provider-types/azure
+      accessKeyId:
+        type: string
+        description: AWS Access Key Id, required for providerTypeUri of /rest/provider-types/aws
+      secretAccessKey:
+        type: string
+        description: AWS Secret Access Key, required for providerTypeUri of /rest/provider-types/aws
+      s3CostBucket:
+        type: string
+        description: only for providerTypeUri of /rest/provider-types/aws
+
+  updateBillingAccount:
+    type: array
+    items:
+      $ref: '#/definitions/updateBillingAccountPatch'
+
+  updateBillingAccountPatch:
+    required:
+      - op
+      - path
+    properties:
+      op:
+        type: string
+        description: >
+          The operation to take on the specified property.
+          See: https://tools.ietf.org/html/rfc6902#section-4
+        enum:
+          - add
+          - replace
+          - remove
+      path:
+        type: string
+        description: The path to the property to operate on.
+      value:
+        description: The new value (valid with op=replace)
+        type: object
+    example:
+      op: replace
+      path: "/name"
+      value: "new name"
 
   providerList:
     required:
@@ -3944,7 +4505,7 @@ definitions:
     properties:
       id:
         type: string
-        description: id is mandatory only for Member provider's which are Disabled
+        description: id is mandatory only for Member provider's which are Disabled and creds are empty
       providerTypeUri:
         type: string
       accessKey:
@@ -3955,13 +4516,13 @@ definitions:
         description: only for /rest/provider-types/aws
       paymentProvider:
         type: boolean
-        description: only for /rest/provider-types/aws
+        description: This is deprecated. Use only for /rest/provider-types/aws  when state is Disabled and creds are empty.
       s3CostBucket:
         type: string
         description: only for /rest/provider-types/aws when paymentProvider = true
       masterUri:
         type: string
-        description: only for /rest/provider-types/aws when paymentProvider = false
+        description: This is deprecated. Use only for /rest/provider-types/aws when paymentProvider = false when state is Disabled and creds are empty.
       state:
         type: string
         enum:
@@ -4109,7 +4670,6 @@ definitions:
       - name
       - location
       - state
-      - uri
     properties:
       endpointUuid:
         description: UUID of connection endpoint.
@@ -4143,7 +4703,6 @@ definitions:
       - name
       - location
       - state
-      - uri
     properties:
       endpointUuid:
         description: UUID of connection endpoint.
@@ -4219,6 +4778,7 @@ definitions:
         enum:
           - aws-az
           - vcenter
+          - kvm
       modified:
         type: string
         format: date-time
@@ -4229,6 +4789,7 @@ definitions:
         enum:
           - /rest/zone-types/aws-az
           - /rest/zone-types/vcenter
+          - /rest/zone-types/kvm
 
   zoneList:
     required:
@@ -4287,6 +4848,7 @@ definitions:
       state:
         type: string
         enum:
+          - Initializing
           - Enabling
           - Enabled
           - Disabling
@@ -4323,6 +4885,7 @@ definitions:
         enum:
           - /rest/zone-types/aws-az
           - /rest/zone-types/vcenter
+          - /rest/zone-types/kvm
       resourceProfile:
         $ref: '#/definitions/resourceProfile'
       default:
@@ -4333,6 +4896,16 @@ definitions:
         description: |
           The appliance where this zone is hosted, if any.
         type: string
+      kvmServers:
+        type: array
+        description: only for /rest/zone-types/kvm
+        items:
+          $ref: '#/definitions/kvmServer'
+      inTransitKvmServers:
+        type: array
+        description: only for /rest/zone-types/kvm
+        items:
+          $ref: '#/definitions/kvmServer'
 
   networkSettings:
     description: >
@@ -4385,8 +4958,8 @@ definitions:
       zoneTypeUri:
         type: string
         enum:
-          - /rest/zone-types/aws-az
           - /rest/zone-types/vcenter
+          - /rest/zone-types/kvm
       applianceUri:
         description: |
           If zone is targetted at an appliance, the URI of the appliance.
@@ -4402,7 +4975,7 @@ definitions:
       rates:
         type: array
         items:
-          $ref: '#/definitions/rate'
+          $ref: '#/definitions/zone_rate'
 
   updateZone:
     type: array
@@ -4424,6 +4997,13 @@ definitions:
           productionNetwork:
             - net5
             - net6
+      - op: add
+        path: /inTransitKvmServers
+        value:
+          - serverUri: /rest/servers/2b5a8db7-e145-4ef9-b7f2-9b2d45976cd3
+            state: Enabled
+            roles:
+              - ImageLibrary
 
   updateZonePatch:
     required:
@@ -4467,6 +5047,22 @@ definitions:
             "value": {
               "name": "SY480-Gen9-Low-Density"
             }
+          }
+        ]
+      EnableKVMServer:
+        [
+          {
+            "op": "add",
+            "path": "/inTransitKvmServers",
+            "value": [
+              {
+                "serverUri": "/rest/servers/2b5a8db7-e145-4ef9-b7f2-9b2d45976cd3",
+                "state": "Enabled",
+                "roles": [
+                    "ImageLibrary"
+                ]
+              }
+            ]
           }
         ]
 
@@ -4651,6 +5247,61 @@ definitions:
         description: A List of datastore.
         items:
           $ref: '#/definitions/datastore'
+
+  kvmServer:
+    type: object
+    description: A server that is being managed and/or monitored by HPE OneSphere as kvm server
+    properties:
+      serverUri:
+        description: |
+          The URI of 'server' in which this kvm server is located.
+          The serverURI is limited to URI-safe characters.
+        type: string
+      name:
+        description: |
+          The name of kvm-server
+        type: string
+      created:
+        type: string
+        format: date-time
+      modified:
+        type: string
+        format: date-time
+      status:
+        type: string
+        enum:
+          - OK
+          - Warning
+          - Critical
+          - Unknown
+      state:
+        type: string
+        description:  |
+          The state represents operational state within HPEOneSphere
+        enum:
+          - Enabling
+          - Enabled
+          - Disabling
+          - Disabled
+          - Unknown
+      datastores:
+        type: array
+        description: A List of volumes.
+        items:
+          $ref: '#/definitions/datastore'
+      roles:
+        type: array
+        description: |
+          Roles represent the roles applied on the KVM server
+        items:
+          type: string
+          description: |
+            Represents allowed Role names
+          enum:
+            - ImageLibrary
+            - BlockStorage
+      error:
+        $ref: '#/definitions/error'
 
   datastore:
     type: object
@@ -4869,11 +5520,12 @@ definitions:
         # VM catalog sources
           - aws-az  # AMIs from EC2
           - vcenter # Templates from vCenter
-          - os-kvm  # Glance images from OpenStack (KVM)
+          - kvm  # Glance images from OpenStack (KVM)
         # Helm charts catalog sources
           - helm-charts-repository
         # Container catalog sources
           - docker-hub
+          - docker-registry
           - docker-trusted-registry
           - private-docker-registry
           - amazon-ecr
@@ -4893,7 +5545,8 @@ definitions:
           - "OpenStack Images"
           - "Kubernetes Apps"
           - "Docker Hub"
-          - "Docker Trusted Registry"
+          - "Docker Hub Trusted Registry"
+          - "Docker Registry"
           - "Private Docker Registry"
           - "AWS ECR Containers"
           - "Azure Container Registry"
@@ -4903,9 +5556,10 @@ definitions:
         enum:
           - /rest/catalog-types/aws-az
           - /rest/catalog-types/vcenter
-          - /rest/catalog-types/os-kvm
+          - /rest/catalog-types/kvm
           - /rest/catalog-types/helm-charts-repository
           - /rest/catalog-types/docker-hub
+          - /rest/catalog-types/docker-registry
           - /rest/catalog-types/docker-trusted-registry
           - /rest/catalog-types/private-docker-registry
           - /rest/catalog-types/amazon-ecr
@@ -4964,21 +5618,25 @@ definitions:
     properties:
       name:
         type: string
+        example: "Kubernetes Charts"
       url:
         type: string
+        example: "https://kubernetes-charts-incubator.storage.googleapis.com"
       catalogTypeUri:
         type: string
         enum:
           - /rest/catalog-types/aws-az
           - /rest/catalog-types/vcenter
-          - /rest/catalog-types/os-kvm
+          - /rest/catalog-types/kvm
           - /rest/catalog-types/helm-charts-repository
           - /rest/catalog-types/docker-hub
+          - /rest/catalog-types/docker-registry
           - /rest/catalog-types/docker-trusted-registry
           - /rest/catalog-types/private-docker-registry
           - /rest/catalog-types/amazon-ecr
           - /rest/catalog-types/azure-container-registry
           - /rest/catalog-types/hpe-managed
+        example: "/rest/service-types/helm-charts-repository"
       username:
         type: string
         description: >
@@ -4993,35 +5651,45 @@ definitions:
       secretKey:
         type: string
         description: Applicable only for Amazon EC2 Container Registry
-      regionName:
+      zoneUri:
         type: string
-        description: Applicable only for Amazon EC2 Container Registry
+        description: K8s Zone to which services from this catalog can be deployed.
+        example: "/rest/zones/923b3fdf-c043-44ca-9b07-dd6ce14c0f0b"
 
-  updateCatalog:
-    type: object
-    description: >
-      Update catalog name and credentials.
+  patchCatalog:
+    type: array
+    items:
+      $ref: '#/definitions/patchCatalogPatch'
+
+  patchCatalogPatch:
+    required:
+      - op
+      - path
     properties:
-      name:
-        type: string
-      password:
+      op:
         type: string
         description: >
-          Applicable only for docker trusted registry and private docker registry
-      accessKey:
-        type: string
-        description: Applicable only for Amazon EC2 Container Registry
-      secretKey:
-        type: string
-        description: Applicable only for Amazon EC2 Container Registry
-      regionName:
-        type: string
-        description: Applicable only for Amazon EC2 Container Registry
-      state:
-        type: string
+          The operation to take on the specified property.
+          See: https://tools.ietf.org/html/rfc6902#section-4
         enum:
-         - Enabled
-         - Disabled
+          - add
+          - replace
+      path:
+        type: string
+        description: The path to the property to operate on.
+        enum:
+          - /name
+          - /password
+          - /accessKey
+          - /secretKey
+          - /state
+      value:
+        description: The new value (valid with op=replace)
+        type: object
+    example:
+      op: add
+      path: "/state"
+      value: "Enabled"
 
   providerServiceTypeList:
     required:
@@ -5508,6 +6176,7 @@ definitions:
         format: date-time
       endpoints:
         type: array
+        description: For containers it will have the endpoints of the applications in the container. For VM, it will be IP addresses.
         items:
           $ref: '#/definitions/endpoint'
       events:
@@ -5579,8 +6248,6 @@ definitions:
           - Suspended
           - Resuming
           - Unknown
-      stateDetails:
-        type: string
       keypairUri:
         type: string
       memorySizeGB:
@@ -5684,53 +6351,84 @@ definitions:
         type: string
       projectUri:
         type: string
+      k8sDomainUri:
+        type: string
+        description: Indicates the domain to be used for the  Kubernetes cluster. Supported only for Kubernetes cluster.
+      k8sMasterFlavor:
+        type: string
+        description: Flavor for creating master nodes of K8S cluster.
+      k8sWorkerFlavor:
+        type: string
+        description: Flavor for creating worker nodes of K8S cluster.
+      k8snumWorkers:
+        type: string
+        description: The total number of workers for creating K8S cluster.
+      k8sNumMasters:
+        type: string
+        description: The total number of master for creating K8S cluster.
+      k8sDeploymentRegion:
+        type: string
+        description: The region to which K8S cluster will be deployed.
       userData:
         type: string
         description: base64 encoded userdata
 
-  updateDeployment:
-    type: object
+  patchDeployment:
+    type: array
+    items:
+      $ref: '#/definitions/patchDeploymentPatch'
+
+  patchDeploymentPatch:
+    required:
+      - op
+      - path
     properties:
-      assignExternalIP:
-        description: Updated external IP. **Not supported in Beta**
-        type: boolean
-      firewall:
-        description: Updated firewall details. ** Not supported in Beta**
-        type: array
-        items:
-          type: object
-          properties:
-            allowedIPs:
-              type: string
-              description: CIDR for allowed IPs
-            ports:
-              type: array
-              items:
-                type: integer
-      publicKey:
+      op:
         type: string
-        description: Updated public ssh-key. This property can be modified only when the virtualMachineProfileUri property is also changed. **Not supported in Beta**
-      name:
+        description: >
+          The operation to take on the specified property.
+          See: https://tools.ietf.org/html/rfc6902#section-4
+        enum:
+          - add
+          - replace
+      path:
         type: string
-        description: Updated name of the deployment
-      networks:
-        description: Updated network **Not supported in Beta**
-        type: array
-        items:
-          type: object
-          properties:
-            networkUri:
-              type: string
-      virtualMachineProfileUri:
-        type: string
-        description: Modifying this property will result in the rebuild of the VM. **Not supported in Beta**
-      userData:
-        type: string
-        description: base64 encoded userdata. This property can be modified only when the virtualMachineProfileUri property is also changed. **Not supported in Beta**
-      volumes:
-        type: array
-        items:
-          $ref: '#/definitions/updateDeploymentProperty'
+        description: The path to the property to operate on.
+        enum:
+        - value: /name
+          type: string
+          example: "test"
+        - value: /volumes
+          type: array
+          items:
+            $ref: '#/definitions/updateDeploymentProperty'
+        - value: /userData
+          type: string
+          example: "--replicas=20"
+        - value: /version
+          type: string
+          example: "latest"
+        - value: /k8snumWorkers
+          type: integer
+          example: 3
+        - value: /serviceInput
+          type: string
+          example: "--port=80 --targetPort=80"
+      value:
+        description: The new value (valid with op=replace)
+        type: object
+    example:
+      op: add
+      path: "/volumes"
+      value:
+        - op: add
+          path: /volumeURIs
+          value:
+            - /rest/volumes/90292352-34e6-4cd6-b3f5-ea85ab68f9cb
+        - op: remove
+          path: /volumeURIs
+          value:
+            - /rest/volumes/b6a14fbf-5d9d-4254-87a5-944a7675fc9d
 
   updateDeploymentProperty:
     required:
@@ -5815,6 +6513,38 @@ definitions:
         type: integer
         description: "Updated size of the volume. Note: size can only be increased."
 
+  patchVolume:
+    type: array
+    items:
+      $ref: '#/definitions/patchVolumePatch'
+
+  patchVolumePatch:
+    required:
+      - op
+      - path
+    properties:
+      op:
+        type: string
+        description: >
+          The operation to take on the specified property.
+          See: https://tools.ietf.org/html/rfc6902#section-4
+        enum:
+          - add
+          - replace
+      path:
+        type: string
+        description: The path to the property to operate on.
+        enum:
+          - /name
+          - /sizeGiB
+      value:
+        description: The new value (valid with op=replace)
+        type: object
+    example:
+      op: replace
+      path: "/size"
+      value: 10
+
   membershipList:
     required:
       - members
@@ -5834,12 +6564,14 @@ definitions:
 
   membership:
     type: object
+    description: Either userUri or groupUri is required, not both.
     required:
-      - userUri
       - membershipRoleUri
       - projectUri
     properties:
       userUri:
+        type: string
+      groupUri:
         type: string
       membershipRoleUri:
         type: string
@@ -6123,7 +6855,30 @@ definitions:
       role:
         $ref: '#/definitions/systemRole'
 
+  userGroup:
+    description: A group of users (used when SSO is enabled)
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+      uri:
+        type: string
+
+  userGroupList:
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/userGroup'
+      total:
+        type: integer
+        format: int64
+
   updateUser:
+    description: >
+      Update a user. Note that updating a user's role will invalidate existing
+      sessions and they will need to log in again.
     type: object
     properties:
       email:
@@ -6432,6 +7187,26 @@ definitions:
       count:
         type: integer
         format: int64
+  zone_rate:
+    type: object
+    description: |
+      The enclosing zone describes the resource to which submitted rates should apply.
+      The default set of rates for an ncs zone includes rates for metricNames
+      'resource.memory.allocation', 'ncs.resource.annual.cost', 'resource.storage.allocation' and 'resource.cores.allocation'
+      EffectiveDate defaults to today and all other values are generated to match
+      the default rate for the metric.
+    required:
+      - metricName
+      - rateValue
+    properties:
+      metricName:
+        description: |
+          Identifies the metric to which this rate is applied to determine cost
+        type: string
+      rateValue:
+        description: |
+          Numeric value of the rate, allows nine places of precision either side of the decimal point
+        type: number
 
   appliance:
     type: object
@@ -6441,8 +7216,6 @@ definitions:
       - endpoint
       - regionUri
       - type
-      - uri
-      - l2networks
     properties:
       name:
         description: |
@@ -6662,3 +7435,69 @@ definitions:
         description: Password must be at least 8 characters long.
       token:
         type: string
+
+  azureSubscriptionList:
+    properties:
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/azureSubscription'
+      total:
+        type: integer
+        format: int64
+
+  azureSubscription:
+    type: object
+    required:
+      - id
+      - name
+      - roles
+      - uri
+    properties:
+      id:
+        type: string
+        description: Azure Subscription ID
+        readOnly: true
+      name:
+        type: string
+        description: Azure display name
+        readOnly: true
+      roles:
+        type: array
+        items:
+          type: string
+        description: |
+          An array of strings that map the the name of the role definition the app has on a subscription.
+          NOTE: The only accepted role definition at this time is Reader
+      uri:
+        type: string
+        readOnly: true
+
+  updateSubscription:
+    type: array
+    items:
+      $ref: '#/definitions/updateSubscriptionPatch'
+
+  updateSubscriptionPatch:
+    required:
+      - op
+      - path
+    properties:
+      op:
+        type: string
+        description: >
+          The operation to take on the specified property.
+          See: https://tools.ietf.org/html/rfc6902#section-4
+        enum:
+          - add
+          - replace
+      path:
+        type: string
+        description: The path to the property to operate on.
+      value:
+        description: The new value (valid with op=replace)
+        type: object
+    example:
+      op: add
+      path: "/roles"
+      value: ["Reader"]
