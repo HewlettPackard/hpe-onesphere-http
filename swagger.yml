@@ -1,27 +1,5 @@
 #(C) Copyright 2017-2018 Hewlett Packard Enterprise Development LP
-swagger: '2.0'
-info:
-  version: '1.0.0'
-  title: HPE OneSphere API
-  description: |+
-    HPE OneSphere hybrid cloud management REST API.
-    For calls requiring authentication use /rest/session to get a token.
-  #TODO Change this url to HPE's terms and condition url
-  termsOfService: http://www.hpe.com/onesphere
-  contact:
-    name: HPE OneSphere API team
-    url: http://www.hpe.com/onesphere
-host: localhost:5556
 basePath: /rest
-schemes:
-  - https
-securityDefinitions:
-  Bearer:
-    type: apiKey
-    name: Authorization
-    in: header
-security:
-  - Bearer: []
 consumes:
 - application/json
 - application/vnd.hpe+json
@@ -7715,4 +7693,3 @@ securityDefinitions:
     name: Authorization
     type: apiKey
 swagger: "2.0"
-
