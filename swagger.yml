@@ -1,3 +1,4 @@
+#(C) Copyright 2017-2018 Hewlett Packard Enterprise Development LP
 basePath: /rest
 consumes:
 - application/json
