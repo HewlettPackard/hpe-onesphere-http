@@ -5,33 +5,6 @@ consumes:
 - application/vnd.hpe+json
 - application/vnd.hpe.v1+json
 definitions:
-  account:
-    properties:
-      created:
-        format: date-time
-        type: string
-      events:
-        items:
-          $ref: '#/definitions/event'
-        type: array
-      id:
-        type: string
-      metrics:
-        items:
-          $ref: '#/definitions/metric'
-        type: array
-      modified:
-        format: date-time
-        type: string
-      name:
-        type: string
-      uri:
-        type: string
-    required:
-    - id
-    - name
-    - uri
-    type: object
   appliance:
     description: The definition of an appliance.
     properties:
@@ -398,6 +371,10 @@ definitions:
     description: Identifies the type of the catalog source. This type determines the
       API to be used to interact with the source
     properties:
+      canUseZones:
+        description: Specifies whether this catalog type can use private zone to fetch
+          the services. For now only kubernetes zones are allowed
+        type: boolean
       id:
         enum:
         - aws-az
@@ -686,6 +663,7 @@ definitions:
         type: string
       userData:
         description: base64 encoded userdata
+        format: byte
         type: string
       version:
         description: |
@@ -1080,10 +1058,6 @@ definitions:
         type: array
       errorMessage:
         type: string
-      events:
-        items:
-          $ref: '#/definitions/event'
-        type: array
       firewall:
         items:
           properties:
@@ -1100,8 +1074,6 @@ definitions:
         description: Whether or not a console (VNC, spice, k8s, rdp) is supported
         type: boolean
       id:
-        type: string
-      keypairUri:
         type: string
       memorySizeGB:
         format: int64
@@ -1129,6 +1101,8 @@ definitions:
         type: string
       service:
         properties:
+          icon:
+            type: string
           id:
             type: string
           name:
@@ -1288,6 +1262,11 @@ definitions:
         type: array
       error:
         $ref: '#/definitions/error'
+      hosts:
+        description: A list of ESX hosts
+        items:
+          $ref: '#/definitions/physicalHost'
+        type: array
       id:
         type: string
       modified:
@@ -1312,45 +1291,6 @@ definitions:
         - Unknown
         type: string
     type: object
-  event:
-    properties:
-      created:
-        format: date-time
-        type: string
-      id:
-        type: string
-      modified:
-        format: date-time
-        type: string
-      name:
-        type: string
-      resourceUri:
-        description: The resource this metric is associated with. It could be a provider,
-          a deployment, a region, a tag, etc.
-        example: /rest/providers/85609a9e-31f5-4c7b-bd54-1ba50136bdf6
-        type: string
-      uri:
-        type: string
-      userId:
-        type: string
-    required:
-    - id
-    - name
-    - resourceUri
-    - uri
-    type: object
-  eventList:
-    properties:
-      members:
-        items:
-          $ref: '#/definitions/event'
-        type: array
-      total:
-        format: int64
-        type: integer
-    required:
-    - members
-    - total
   ipPool:
     properties:
       endIP:
@@ -1367,25 +1307,6 @@ definitions:
     - endIP
     - purpose
     type: object
-  keypair:
-    properties:
-      fingerprint:
-        description: Short sequence of identifying bytes
-        type: string
-      id:
-        type: string
-      uri:
-        type: string
-    type: object
-  keypairList:
-    properties:
-      members:
-        items:
-          $ref: '#/definitions/keypair'
-        type: array
-      total:
-        format: int64
-        type: integer
   kvmServer:
     description: A server that is being managed and/or monitored by HPE OneSphere
       as kvm server
@@ -1400,6 +1321,10 @@ definitions:
         type: array
       error:
         $ref: '#/definitions/error'
+      host:
+        $ref: '#/definitions/physicalHost'
+        description: |
+          Physical host attributes of the KVM Sever
       modified:
         format: date-time
         type: string
@@ -1899,6 +1824,52 @@ definitions:
     required:
     - op
     - path
+  physicalHost:
+    description: A physical host that is being managed and/or monitored by HPE OneSphere
+    properties:
+      datastores:
+        description: |
+          A List of datastore ids associated with the host.
+        items:
+          type: string
+        type: array
+      freeCpuGhz:
+        description: |
+          The free available CPU frequency of the physical host in GHz
+        format: float
+        type: number
+      freeMemoryGb:
+        description: |
+          The free available memory of the physical host in Gb
+        format: float
+        type: number
+      id:
+        description: |
+          The unique id of the physical host
+        type: string
+      name:
+        description: |
+          The name of the physical host
+        type: string
+      osName:
+        description: |
+          The Operating System name of the physical host
+        type: string
+      osVersion:
+        description: |
+          The Operating System version of the physical host
+        type: string
+      totalCpuGhz:
+        description: |
+          The total CPU frequency of the physical host in GHz
+        format: float
+        type: number
+      totalMemoryGb:
+        description: |
+          The total memory of the physical host in Gb
+        format: float
+        type: number
+    type: object
   physicalNetwork:
     description: Represents physical separate networks. Logical networks are created
       on physical networks. For e.g. a DVS in vCenter environment with dvUplink portgroup,
@@ -3380,6 +3351,18 @@ definitions:
         type: string
       networkSettings:
         $ref: '#/definitions/networkSettings'
+      projectUris:
+        description: |
+          List of projectUris that are accesible to a zone.
+        items:
+          type: string
+        type: array
+      projects:
+        description: |
+          List of projects that are accesible to a zone and returned when view=full.
+        items:
+          $ref: '#/definitions/project'
+        type: array
       providerUri:
         type: string
       regionUri:
@@ -3573,7 +3556,7 @@ definitions:
     required:
     - members
     - total
-host: deic01-hpe.hpeonesphere.com
+host: deic04-hpe.hpeonesphere.com
 info:
   contact:
     name: HPE OneSphere API team
@@ -3595,22 +3578,6 @@ paths:
           description: Version response
           schema:
             $ref: '#/definitions/versions'
-  /account:
-    get:
-      description: Returns the global account information. **Not implemented**
-      operationId: GetAccount
-      parameters:
-      - description: Whether to return related content.
-        enum:
-        - full
-        in: query
-        name: view
-        type: string
-      responses:
-        "200":
-          description: Account response
-          schema:
-            $ref: '#/definitions/account'
   /appliances:
     get:
       description: Returns appliances.
@@ -4411,43 +4378,6 @@ paths:
             $ref: '#/definitions/error'
         "404":
           description: Not Found.
-          schema:
-            $ref: '#/definitions/error'
-  /events:
-    get:
-      description: Returns events based on the supplied criteria. **Not implemented**
-      operationId: FindEvents
-      parameters:
-      - description: Resource to prune events by.
-        in: query
-        name: resourceUri
-        type: string
-      responses:
-        "200":
-          description: List of events
-          schema:
-            $ref: '#/definitions/eventList'
-  /keypairs:
-    get:
-      description: Get keypairs (per region, per user). Currently a projectUri is
-        required
-      operationId: ListKeypairs
-      parameters:
-      - in: query
-        name: regionUri
-        required: true
-        type: string
-      - in: query
-        name: projectUri
-        required: true
-        type: string
-      responses:
-        "200":
-          description: List of keypairs
-          schema:
-            $ref: '#/definitions/keypairList'
-        "401":
-          description: Unauthorized
           schema:
             $ref: '#/definitions/error'
   /membership-roles:
@@ -6849,20 +6779,50 @@ paths:
               - created: "2017-08-09T22:06:49.064958385+05:30"
                 datastores:
                 - created: "2017-08-09T22:06:49.064958385+05:30"
-                  id: datastore-d1
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d2
                   modified: "2017-08-09T22:06:49.06495863+05:30"
                   name: vn-datastore1
                   sizeGiB: "100"
                   state: Enabled
                   status: OK
                 - created: "2017-08-09T22:06:49.064958385+05:30"
-                  id: datastore-d2
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d3
                   modified: "2017-08-09T22:06:49.06495863+05:30"
                   name: vn-datastore2
                   sizeGiB: "200"
                   state: Enabled
                   status: OK
+                - created: "2017-08-09T22:06:49.064958385+05:30"
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d1
+                  modified: "2017-08-09T22:06:49.06495863+05:30"
+                  name: shared-datastore1
+                  sizeGiB: "200"
+                  state: Enabled
+                  status: OK
                 error: ""
+                hosts:
+                - datastores:
+                  - 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d1
+                  - 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d2
+                  freeCpuGhz: 38.62
+                  freeMemoryGb: 225.26
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_host-h11
+                  name: 10.10.10.11
+                  osName: VMware ESXi
+                  osVersion: 6.0.0
+                  totalCpuGhz: 41.55
+                  totalMemoryGb: 262.26
+                - datastores:
+                  - 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d1
+                  - 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d3
+                  freeCpuGhz: 38.62
+                  freeMemoryGb: 225.26
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_host-h12
+                  name: 10.10.10.12
+                  osName: VMware ESXi
+                  osVersion: 6.0.0
+                  totalCpuGhz: 41.55
+                  totalMemoryGb: 262.26
                 id: domain-c51
                 modified: "2017-08-09T22:06:49.06495863+05:30"
                 name: Cluster1
@@ -6871,20 +6831,50 @@ paths:
               - created: "2017-08-09T22:06:49.064958385+05:30"
                 datastores:
                 - created: "2017-08-09T22:06:49.064958385+05:30"
-                  id: datastore-d3
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d5
                   modified: "2017-08-09T22:06:49.06495863+05:30"
                   name: vn-datastore3
                   sizeGiB: "100"
                   state: Enabled
                   status: OK
                 - created: "2017-08-09T22:06:49.064958385+05:30"
-                  id: datastore-d4
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d6
                   modified: "2017-08-09T22:06:49.06495863+05:30"
                   name: vn-datastore4
                   sizeGiB: "200"
                   state: Enabled
                   status: OK
+                - created: "2017-08-09T22:06:49.064958385+05:30"
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d4
+                  modified: "2017-08-09T22:06:49.06495863+05:30"
+                  name: shared-datastore2
+                  sizeGiB: "200"
+                  state: Enabled
+                  status: OK
                 error: ""
+                hosts:
+                - datastores:
+                  - 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d4
+                  - 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d5
+                  freeCpuGhz: 38.62
+                  freeMemoryGb: 225.26
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_host-h13
+                  name: 10.10.10.13
+                  osName: VMware ESXi
+                  osVersion: 6.0.0
+                  totalCpuGhz: 41.55
+                  totalMemoryGb: 262.26
+                - datastores:
+                  - 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d4
+                  - 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d6
+                  freeCpuGhz: 38.62
+                  freeMemoryGb: 225.26
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_host-h14
+                  name: 10.10.10.14
+                  osName: VMware ESXi
+                  osVersion: 6.0.0
+                  totalCpuGhz: 41.55
+                  totalMemoryGb: 262.26
                 id: domain-c52
                 modified: "2017-08-09T22:06:49.06495863+05:30"
                 name: Cluster2
@@ -6953,7 +6943,51 @@ paths:
               created: "2017-08-09T22:06:49.064958385+05:30"
               id: 2b5a8db7-e145-4ef9-b7f2-9b2d45976cd5
               inTransitKvmServers: []
-              kvmServers: []
+              kvmServers:
+              - datastores:
+                - id: ftc-centos-001-volume-1
+                  name: vol1
+                  sizeGiB: "900"
+                  state: Enabled
+                  status: OK
+                  type: lvm
+                host:
+                  datastores:
+                  - ftc-centos-001-volume-1
+                  freeCpuGhz: 38.62
+                  freeMemoryGb: 225.26
+                  id: 2b5a8db7-e145-4ef9-b7f2-9b2d45976cd3
+                  name: ftc-centos-001
+                  osName: centos
+                  osVersion: 7.3.0
+                  totalCpuGhz: 41.55
+                  totalMemoryGb: 262.26
+                roles:
+                - ImageLibrary
+                - BlockStorage
+                serverUri: /rest/servers/2b5a8db7-e145-4ef9-b7f2-9b2d45976cd3
+                state: Enabled
+              - datastores:
+                - id: ftc-centos-002-volume-1
+                  name: vol1
+                  sizeGiB: "900"
+                  state: Enabled
+                  status: OK
+                  type: lvm
+                host:
+                  datastores:
+                  - ftc-centos-001-volume-1
+                  freeCpuGhz: 38.62
+                  freeMemoryGb: 225.26
+                  id: 3caa8db7-e145-4ef9-b7f2-9b2d45976cd1
+                  name: ftc-centos-002
+                  osName: centos
+                  osVersion: 7.3.0
+                  totalCpuGhz: 41.55
+                  totalMemoryGb: 262.26
+                roles: []
+                serverUri: /rest/servers/3caa8db7-e145-4ef9-b7f2-9b2d45976cd1
+                state: Enabled
               managed: false
               metrics: []
               modified: "2017-08-09T22:06:49.06495863+05:30"
@@ -7018,7 +7052,7 @@ paths:
               - created: "2017-08-09T22:06:49.064958385+05:30"
                 datastores:
                 - created: "2017-08-09T22:06:49.064958385+05:30"
-                  id: datastore-d1
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d2
                   modified: "2017-08-09T22:06:49.06495863+05:30"
                   name: vn-datastore1
                   sizeGiB: "100"
@@ -7026,14 +7060,45 @@ paths:
                   status: OK
                   type: vsan
                 - created: "2017-08-09T22:06:49.064958385+05:30"
-                  id: datastore-d2
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d3
                   modified: "2017-08-09T22:06:49.06495863+05:30"
                   name: vn-datastore2
                   sizeGiB: "200"
                   state: Enabled
                   status: OK
                   type: vsan
+                - created: "2017-08-09T22:06:49.064958385+05:30"
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d1
+                  modified: "2017-08-09T22:06:49.06495863+05:30"
+                  name: shared-datastore1
+                  sizeGiB: "200"
+                  state: Enabled
+                  status: OK
+                  type: vsan
                 error: ""
+                hosts:
+                - datastores:
+                  - 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d1
+                  - 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d2
+                  freeCpuGhz: 38.62
+                  freeMemoryGb: 225.26
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_host-h11
+                  name: 10.10.10.11
+                  osName: VMware ESXi
+                  osVersion: 6.0.0
+                  totalCpuGhz: 41.55
+                  totalMemoryGb: 262.26
+                - datastores:
+                  - 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d1
+                  - 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d3
+                  freeCpuGhz: 38.62
+                  freeMemoryGb: 225.26
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_host-h12
+                  name: 10.10.10.12
+                  osName: VMware ESXi
+                  osVersion: 6.0.0
+                  totalCpuGhz: 41.55
+                  totalMemoryGb: 262.26
                 id: domain-c51
                 modified: "2017-08-09T22:06:49.06495863+05:30"
                 name: Cluster1
@@ -7042,7 +7107,7 @@ paths:
               - created: "2017-08-09T22:06:49.064958385+05:30"
                 datastores:
                 - created: "2017-08-09T22:06:49.064958385+05:30"
-                  id: datastore-d3
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d5
                   modified: "2017-08-09T22:06:49.06495863+05:30"
                   name: vn-datastore3
                   sizeGiB: "100"
@@ -7050,14 +7115,45 @@ paths:
                   status: OK
                   type: vsan
                 - created: "2017-08-09T22:06:49.064958385+05:30"
-                  id: datastore-d4
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d6
                   modified: "2017-08-09T22:06:49.06495863+05:30"
                   name: vn-datastore4
                   sizeGiB: "200"
                   state: Enabled
                   status: OK
                   type: vsan
+                - created: "2017-08-09T22:06:49.064958385+05:30"
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d4
+                  modified: "2017-08-09T22:06:49.06495863+05:30"
+                  name: shared-datastore2
+                  sizeGiB: "200"
+                  state: Enabled
+                  status: OK
+                  type: vsan
                 error: ""
+                hosts:
+                - datastores:
+                  - 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d4
+                  - 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d5
+                  freeCpuGhz: 38.62
+                  freeMemoryGb: 225.26
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_host-h13
+                  name: 10.10.10.13
+                  osName: VMware ESXi
+                  osVersion: 6.0.0
+                  totalCpuGhz: 41.55
+                  totalMemoryGb: 262.26
+                - datastores:
+                  - 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d4
+                  - 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d6
+                  freeCpuGhz: 38.62
+                  freeMemoryGb: 225.26
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_host-h14
+                  name: 10.10.10.14
+                  osName: VMware ESXi
+                  osVersion: 6.0.0
+                  totalCpuGhz: 41.55
+                  totalMemoryGb: 262.26
                 id: domain-c52
                 modified: "2017-08-09T22:06:49.06495863+05:30"
                 name: Cluster2
@@ -7107,6 +7203,9 @@ paths:
               metrics: []
               modified: "2017-08-09T22:06:49.06495863+05:30"
               name: Zone-VMware-1
+              projectUris:
+              - /rest/projects/01de1d0ccb554f7ca89cf49d15688f95
+              - /rest/projects/19479d6835c34e1d8beba8452a6b5ecd
               providerUri: /rest/providers/2b5a8db7-e145-4ef9-b7f2-9b2d45976cd1
               regionUri: /rest/regions/3caa8db7-e145-4ef9-b7f2-9b2d45976cd1
               resourceProfile:
@@ -7120,7 +7219,7 @@ paths:
               - created: "2017-08-09T22:06:49.064958385+05:30"
                 datastores:
                 - created: "2017-08-09T22:06:49.064958385+05:30"
-                  id: datastore-d1
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d2
                   modified: "2017-08-09T22:06:49.06495863+05:30"
                   name: vn-datastore1
                   sizeGiB: "100"
@@ -7128,14 +7227,45 @@ paths:
                   status: OK
                   type: vsan
                 - created: "2017-08-09T22:06:49.064958385+05:30"
-                  id: datastore-d2
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d3
                   modified: "2017-08-09T22:06:49.06495863+05:30"
                   name: vn-datastore2
                   sizeGiB: "200"
                   state: Enabled
                   status: OK
                   type: vsan
+                - created: "2017-08-09T22:06:49.064958385+05:30"
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d1
+                  modified: "2017-08-09T22:06:49.06495863+05:30"
+                  name: shared-datastore1
+                  sizeGiB: "200"
+                  state: Enabled
+                  status: OK
+                  type: vsan
                 error: ""
+                hosts:
+                - datastores:
+                  - 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d1
+                  - 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d2
+                  freeCpuGhz: 38.62
+                  freeMemoryGb: 225.26
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_host-h11
+                  name: 10.10.10.11
+                  osName: VMware ESXi
+                  osVersion: 6.0.0
+                  totalCpuGhz: 41.55
+                  totalMemoryGb: 262.26
+                - datastores:
+                  - 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d1
+                  - 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d3
+                  freeCpuGhz: 38.62
+                  freeMemoryGb: 225.26
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_host-h12
+                  name: 10.10.10.12
+                  osName: VMware ESXi
+                  osVersion: 6.0.0
+                  totalCpuGhz: 41.55
+                  totalMemoryGb: 262.26
                 id: domain-c51
                 modified: "2017-08-09T22:06:49.06495863+05:30"
                 name: Cluster1
@@ -7144,7 +7274,7 @@ paths:
               - created: "2017-08-09T22:06:49.064958385+05:30"
                 datastores:
                 - created: "2017-08-09T22:06:49.064958385+05:30"
-                  id: datastore-d3
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d5
                   modified: "2017-08-09T22:06:49.06495863+05:30"
                   name: vn-datastore3
                   sizeGiB: "100"
@@ -7152,14 +7282,45 @@ paths:
                   status: OK
                   type: vsan
                 - created: "2017-08-09T22:06:49.064958385+05:30"
-                  id: datastore-d4
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d6
                   modified: "2017-08-09T22:06:49.06495863+05:30"
                   name: vn-datastore4
                   sizeGiB: "200"
                   state: Enabled
                   status: OK
                   type: vsan
+                - created: "2017-08-09T22:06:49.064958385+05:30"
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d4
+                  modified: "2017-08-09T22:06:49.06495863+05:30"
+                  name: shared-datastore2
+                  sizeGiB: "200"
+                  state: Enabled
+                  status: OK
+                  type: vsan
                 error: ""
+                hosts:
+                - datastores:
+                  - 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d4
+                  - 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d5
+                  freeCpuGhz: 38.62
+                  freeMemoryGb: 225.26
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_host-h13
+                  name: 10.10.10.13
+                  osName: VMware ESXi
+                  osVersion: 6.0.0
+                  totalCpuGhz: 41.55
+                  totalMemoryGb: 262.26
+                - datastores:
+                  - 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d4
+                  - 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d6
+                  freeCpuGhz: 38.62
+                  freeMemoryGb: 225.26
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_host-h14
+                  name: 10.10.10.14
+                  osName: VMware ESXi
+                  osVersion: 6.0.0
+                  totalCpuGhz: 41.55
+                  totalMemoryGb: 262.26
                 id: domain-c52
                 modified: "2017-08-09T22:06:49.06495863+05:30"
                 name: Cluster2
@@ -7209,6 +7370,16 @@ paths:
               metrics: []
               modified: "2017-08-09T22:06:49.06495863+05:30"
               name: Zone-VMware-1
+              projectUris:
+              - /rest/projects/01de1d0ccb554f7ca89cf49d15688f95
+              - /rest/projects/19479d6835c34e1d8beba8452a6b5ecd
+              projects:
+              - id: 01de1d0ccb554f7ca89cf49d15688f95
+                name: consumer1
+                uri: /rest/projects/01de1d0ccb554f7ca89cf49d15688f95
+              - id: 19479d6835c34e1d8beba8452a6b5ecd
+                name: project1
+                uri: /rest/projects/19479d6835c34e1d8beba8452a6b5ecd
               provider:
                 created: "2017-08-09T22:06:49.064958385+05:30"
                 id: 2b5a8db7-e145-4ef9-b7f2-9b2d45976cd1
@@ -7292,18 +7463,57 @@ paths:
               id: 2b5a8db7-e145-4ef9-b7f2-9b2d45976cd5
               inTransitKvmServers: []
               kvmServers:
-              - roles:
+              - datastores:
+                - id: ftc-centos-001-volume-1
+                  name: vol1
+                  sizeGiB: "900"
+                  state: Enabled
+                  status: OK
+                  type: lvm
+                host:
+                  datastores:
+                  - ftc-centos-001-volume-1
+                  freeCpuGhz: 38.62
+                  freeMemoryGb: 225.26
+                  id: 2b5a8db7-e145-4ef9-b7f2-9b2d45976cd3
+                  name: ftc-centos-001
+                  osName: centos
+                  osVersion: 7.3.0
+                  totalCpuGhz: 41.55
+                  totalMemoryGb: 262.26
+                roles:
                 - ImageLibrary
                 - BlockStorage
                 serverUri: /rest/servers/2b5a8db7-e145-4ef9-b7f2-9b2d45976cd3
                 state: Enabled
-              - roles: []
+              - datastores:
+                - id: ftc-centos-002-volume-1
+                  name: vol1
+                  sizeGiB: "900"
+                  state: Enabled
+                  status: OK
+                  type: lvm
+                host:
+                  datastores:
+                  - ftc-centos-002-volume-1
+                  freeCpuGhz: 38.62
+                  freeMemoryGb: 225.26
+                  id: 3caa8db7-e145-4ef9-b7f2-9b2d45976cd1
+                  name: ftc-centos-002
+                  osName: centos
+                  osVersion: 7.3.0
+                  totalCpuGhz: 41.55
+                  totalMemoryGb: 262.26
+                roles: []
                 serverUri: /rest/servers/3caa8db7-e145-4ef9-b7f2-9b2d45976cd1
                 state: Enabled
               managed: false
               metrics: []
               modified: "2017-08-09T22:06:49.06495863+05:30"
               name: Zone-KVM-1
+              projectUris:
+              - /rest/projects/01de1d0ccb554f7ca89cf49d15688f95
+              - /rest/projects/19479d6835c34e1d8beba8452a6b5ecd
               providerUri: /rest/providers/2b5a8db7-e145-4ef9-b7f2-9b2d45976cd2
               rates: []
               regionUri: /rest/regions/3caa8db7-e145-4ef9-b7f2-9b2d45976cd2
@@ -7341,20 +7551,50 @@ paths:
               - created: "2017-08-09T22:06:49.064958385+05:30"
                 datastores:
                 - created: "2017-08-09T22:06:49.064958385+05:30"
-                  id: datastore-d1
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d2
                   modified: "2017-08-09T22:06:49.06495863+05:30"
                   name: vn-datastore1
                   sizeGiB: "100"
                   state: Enabled
                   status: OK
                 - created: "2017-08-09T22:06:49.064958385+05:30"
-                  id: datastore-d2
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d3
                   modified: "2017-08-09T22:06:49.06495863+05:30"
                   name: vn-datastore2
                   sizeGiB: "200"
                   state: Enabled
                   status: OK
+                - created: "2017-08-09T22:06:49.064958385+05:30"
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d1
+                  modified: "2017-08-09T22:06:49.06495863+05:30"
+                  name: shared-datastore1
+                  sizeGiB: "200"
+                  state: Enabled
+                  status: OK
                 error: ""
+                hosts:
+                - datastores:
+                  - 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d1
+                  - 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d2
+                  freeCpuGhz: 38.62
+                  freeMemoryGb: 225.26
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_host-h11
+                  name: 10.10.10.11
+                  osName: VMware ESXi
+                  osVersion: 6.0.0
+                  totalCpuGhz: 41.55
+                  totalMemoryGb: 262.26
+                - datastores:
+                  - 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d1
+                  - 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d3
+                  freeCpuGhz: 38.62
+                  freeMemoryGb: 225.26
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_host-h12
+                  name: 10.10.10.12
+                  osName: VMware ESXi
+                  osVersion: 6.0.0
+                  totalCpuGhz: 41.55
+                  totalMemoryGb: 262.26
                 id: domain-c51
                 modified: "2017-08-09T22:06:49.06495863+05:30"
                 name: Cluster1
@@ -7363,20 +7603,50 @@ paths:
               - created: "2017-08-09T22:06:49.064958385+05:30"
                 datastores:
                 - created: "2017-08-09T22:06:49.064958385+05:30"
-                  id: datastore-d3
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d5
                   modified: "2017-08-09T22:06:49.06495863+05:30"
                   name: vn-datastore3
                   sizeGiB: "100"
                   state: Enabled
                   status: OK
                 - created: "2017-08-09T22:06:49.064958385+05:30"
-                  id: datastore-d4
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d6
                   modified: "2017-08-09T22:06:49.06495863+05:30"
                   name: vn-datastore4
                   sizeGiB: "200"
                   state: Enabled
                   status: OK
+                - created: "2017-08-09T22:06:49.064958385+05:30"
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d4
+                  modified: "2017-08-09T22:06:49.06495863+05:30"
+                  name: shared-datastore2
+                  sizeGiB: "200"
+                  state: Enabled
+                  status: OK
                 error: ""
+                hosts:
+                - datastores:
+                  - 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d4
+                  - 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d5
+                  freeCpuGhz: 38.62
+                  freeMemoryGb: 225.26
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_host-h13
+                  name: 10.10.10.13
+                  osName: VMware ESXi
+                  osVersion: 6.0.0
+                  totalCpuGhz: 41.55
+                  totalMemoryGb: 262.26
+                - datastores:
+                  - 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d4
+                  - 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_datastore-d6
+                  freeCpuGhz: 38.62
+                  freeMemoryGb: 225.26
+                  id: 10976FCD-DBS0-4860-9928-DB0DD9AE4D44_host-h14
+                  name: 10.10.10.14
+                  osName: VMware ESXi
+                  osVersion: 6.0.0
+                  totalCpuGhz: 41.55
+                  totalMemoryGb: 262.26
                 id: domain-c52
                 modified: "2017-08-09T22:06:49.06495863+05:30"
                 name: Cluster2
@@ -7438,12 +7708,48 @@ paths:
               id: 2b5a8db7-e145-4ef9-b7f2-9b2d45976cd5
               inTransitKvmServers: []
               kvmServers:
-              - roles:
+              - datastores:
+                - id: ftc-centos-001-volume-1
+                  name: vol1
+                  sizeGiB: "900"
+                  state: Enabled
+                  status: OK
+                  type: lvm
+                host:
+                  datastores:
+                  - ftc-centos-001-volume-1
+                  freeCpuGhz: 38.62
+                  freeMemoryGb: 225.26
+                  id: 2b5a8db7-e145-4ef9-b7f2-9b2d45976cd3
+                  name: ftc-centos-001
+                  osName: centos
+                  osVersion: 7.3.0
+                  totalCpuGhz: 41.55
+                  totalMemoryGb: 262.26
+                roles:
                 - ImageLibrary
                 - BlockStorage
                 serverUri: /rest/servers/2b5a8db7-e145-4ef9-b7f2-9b2d45976cd3
                 state: Enabled
-              - roles: []
+              - datastores:
+                - id: ftc-centos-002-volume-1
+                  name: vol1
+                  sizeGiB: "900"
+                  state: Enabled
+                  status: OK
+                  type: lvm
+                host:
+                  datastores:
+                  - ftc-centos-002-volume-1
+                  freeCpuGhz: 38.62
+                  freeMemoryGb: 225.26
+                  id: 3caa8db7-e145-4ef9-b7f2-9b2d45976cd1
+                  name: ftc-centos-002
+                  osName: centos
+                  osVersion: 7.3.0
+                  totalCpuGhz: 41.55
+                  totalMemoryGb: 262.26
+                roles: []
                 serverUri: /rest/servers/3caa8db7-e145-4ef9-b7f2-9b2d45976cd1
                 state: Enabled
               managed: false
