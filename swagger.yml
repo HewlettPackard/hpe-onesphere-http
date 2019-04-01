@@ -1,4 +1,4 @@
-#(C) Copyright 2017-2018 Hewlett Packard Enterprise Development LP
+#(C) Copyright 2017-2019 Hewlett Packard Enterprise Development LP
 basePath: /rest
 consumes:
 - application/json
@@ -344,6 +344,14 @@ definitions:
         type: string
       status:
         type: string
+      supportedActions:
+        description: Actions that can be performed on catalog. This will depend on
+          state of catalog.
+        items:
+          enum:
+          - refresh
+          type: string
+        type: array
       uri:
         type: string
       url:
@@ -354,6 +362,16 @@ definitions:
     - uri
     - url
     - protected
+    type: object
+  catalogAction:
+    properties:
+      type:
+        description: actions that can be performed on catalog.
+        enum:
+        - refresh
+        type: string
+    required:
+    - type
     type: object
   catalogList:
     properties:
@@ -387,6 +405,9 @@ definitions:
         - private-docker-registry
         - amazon-ecr
         - azure-container-registry
+        - azure-arm
+        - aws-cfn
+        - osb
         - hpe-managed
         type: string
       name:
@@ -398,10 +419,13 @@ definitions:
         - Docker Hub
         - Docker Hub Trusted Registry
         - Docker Registry
-        - Private Docker Registry
+        - Private Docker Hub
         - AWS ECR Containers
         - Azure Container Registry
         - HPE Catalog
+        - Azure ARM Templates
+        - AWS CFN Templates
+        - Open Service Broker
         type: string
       uri:
         enum:
@@ -416,6 +440,9 @@ definitions:
         - /rest/catalog-types/amazon-ecr
         - /rest/catalog-types/azure-container-registry
         - /rest/catalog-types/hpe-managed
+        - /rest/catalog-types/azure-arm
+        - /rest/catalog-types/aws-cfn
+        - /rest/catalog-types/osb
         type: string
     required:
     - id
@@ -580,6 +607,9 @@ definitions:
         - /rest/catalog-types/amazon-ecr
         - /rest/catalog-types/azure-container-registry
         - /rest/catalog-types/hpe-managed
+        - /rest/catalog-types/azure-arm
+        - /rest/catalog-types/aws-cfn
+        - /rest/catalog-types/osb
         example: /rest/service-types/helm-charts-repository
         type: string
       name:
@@ -624,6 +654,19 @@ definitions:
               type: array
           type: object
         type: array
+      httpProxy:
+        description: HTTP proxy to be set on Kubernetes cluster.
+        type: string
+      httpProxyPassword:
+        description: HTTP proxy password to be set on Kubernetes cluster.
+        type: string
+      httpProxyUserName:
+        description: HTTP proxy username to be set on Kubernetes cluster.
+        type: string
+      image:
+        description: Id of the service used to host Kubernetes cluster. Applicable
+          only for Kubernetes cluster.
+        type: string
       k8sDeploymentRegion:
         description: The region to which K8S cluster will be deployed.
         type: string
@@ -652,12 +695,32 @@ definitions:
               type: string
           type: object
         type: array
+      parameters:
+        additionalProperties:
+          properties:
+            value:
+              type: string
+          type: object
+        description: |
+          JSON input for creating deployment. For example, {
+              "username": {
+                  "value": "abcxx"
+               },
+               "password": {
+                   "value": "xxxxxx"
+               }
+          }
+        type: object
       projectUri:
         type: string
       publicKey:
         description: public ssh-key
         type: string
       regionUri:
+        type: string
+      serviceInput:
+        description: Only needed for container service creation.
+        example: --port=80 --targetPort=80
         type: string
       serviceUri:
         type: string
@@ -1166,6 +1229,8 @@ definitions:
           - sizeGiB
           type: object
         type: array
+      zoneTypeUri:
+        type: string
       zoneUri:
         type: string
     required:
@@ -1738,12 +1803,14 @@ definitions:
         - replace
         type: string
       path:
-        description: The path to the property to operate on.
+        description: The path to the property to operate on. Operations on volumes
+          are deprecated.
         enum:
         - example: test
           type: string
           value: /name
-        - items:
+        - description: This is deprecated.
+          items:
             $ref: '#/definitions/updateDeploymentProperty'
           type: array
           value: /volumes
@@ -1944,6 +2011,16 @@ definitions:
         items:
           $ref: '#/definitions/childProvider'
         type: array
+      clientID:
+        description: ClientID which will be used for Azure Resource Manager (ARM)
+          template deployment in on-boarded Azure subscription. Here is the link on
+          how to get clientID for azure https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-create-service-principal-portal#get-application-id-and-authentication-key
+        type: string
+      clientSecret:
+        description: ClientSecret which will be used for Azure Resource Manager (ARM)
+          template deployment in on-boarded Azure subscription. Here is the link on
+          how to get clientSecret for azure https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-create-service-principal-portal#get-application-id-and-authentication-key
+        type: string
       created:
         format: date-time
         type: string
@@ -2903,7 +2980,7 @@ definitions:
     properties:
       op:
         description: |
-          The operation to take on the specified property. See: https://tools.ietf.org/html/rfc6902#section-4
+          The operation to take on the specified property. Operations on volumes are deprecated. See: https://tools.ietf.org/html/rfc6902#section-4
         enum:
         - add
         - replace
@@ -3556,7 +3633,7 @@ definitions:
     required:
     - members
     - total
-host: deic04-hpe.hpeonesphere.com
+host: deic03-hpe.hpeonesphere.com
 info:
   contact:
     name: HPE OneSphere API team
@@ -4046,6 +4123,32 @@ paths:
           description: Bad request.
           schema:
             $ref: '#/definitions/error'
+  /catalogs/{id}/actions:
+    post:
+      description: Peforms an action on catalog
+      operationId: catalogAction
+      parameters:
+      - description: ID of catalog to act on
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Action to perform
+        in: body
+        name: action
+        required: true
+        schema:
+          $ref: '#/definitions/catalogAction'
+      responses:
+        "202":
+          description: Catalog action successfully initiated.
+          examples:
+            POST /rest/catalogs/f0e474ba-f73d-405a-b158-31c210472eaa/actions: '{"action":
+              "refresh"}'
+        "400":
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/error'
   /connect-app:
     get:
       description: Generates connect app s3 url
@@ -4203,6 +4306,13 @@ paths:
         name: id
         required: true
         type: string
+      - description: Allows force deletion of K8S clusters in unresponsive state.
+          Force will attempt to delete all related deployments to the cluster no matter
+          the state.
+        in: query
+        name: force
+        required: false
+        type: boolean
       responses:
         "204":
           description: Deployment deleted; no content
@@ -4264,8 +4374,8 @@ paths:
       - application/json-patch+json
       description: Updates a deployment. **Requires any project role, or 'administrator'
         or 'project creator' global role**. Allowed fields for PATCH of deployments
-        are name(add,replace), volumes(add), k8snumWorkers(add), userData(add), serviceInput(add),
-        version(add).
+        are name(add,replace), volumes(add) Volumes are deprecated, k8snumWorkers(add),
+        userData(add), serviceInput(add), version(add).
       operationId: UpdateDeployment
       parameters:
       - description: ID of deployment to update
@@ -6552,8 +6662,9 @@ paths:
             $ref: '#/definitions/error'
   /volumes:
     get:
+      deprecated: true
       description: Returns volumes. It requires any project role or non-'consumer'
-        global role.
+        global role. This is deprecated.
       operationId: FindVolumes
       parameters:
       - description: URI query string to prune volumes by.
@@ -6593,8 +6704,9 @@ paths:
           schema:
             $ref: '#/definitions/volumeList'
     post:
+      deprecated: true
       description: Creates a new volume. It requires any project role or the **administrator**
-        or **project creator** global role.
+        or **project creator** global role. This is deprecated.
       operationId: CreateVolume
       parameters:
       - description: Add new volume.
@@ -6614,8 +6726,9 @@ paths:
             $ref: '#/definitions/error'
   /volumes/{id}:
     delete:
+      deprecated: true
       description: Delete a volume. It requires any project role or the **administrator**
-        or **project creator** global role.
+        or **project creator** global role. This is deprecated.
       operationId: DeleteVolume
       parameters:
       - description: ID of volume to delete
@@ -6633,8 +6746,9 @@ paths:
           schema:
             $ref: '#/definitions/error'
     get:
+      deprecated: true
       description: Returns a volume based on its id. It requires any project role
-        or non-'consumer' global role.
+        or non-'consumer' global role. This is deprecated.
       operationId: GetVolumeById
       parameters:
       - description: ID of volume to fetch
@@ -6654,9 +6768,10 @@ paths:
     patch:
       consumes:
       - application/json-patch+json
+      deprecated: true
       description: Updates a volume. **Requires any project role or 'administrator'
         or 'project creator' global role**. Allowed fields for PATCH of volumes are
-        name(add,replace), size(add,replace)
+        name(add,replace), size(add,replace). This is deprecated.
       operationId: UpdateVolume
       parameters:
       - description: ID of volume to update
